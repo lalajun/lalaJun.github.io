@@ -15,13 +15,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="啦啦菌NODE">
-<meta property="og:url" content="http://lalajun.com/archives/2017/08/index.html">
+<meta name="description" content="—  从零开始的笔记  —— sql，上传，目录  —">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB-CTF中的绕过">
+<meta property="og:url" content="http://lalajun.com/2017/10/19/WEB-CTF中的绕过/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-11-23T10:46:10.281Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="啦啦菌NODE">
+<meta name="twitter:title" content="WEB-CTF中的绕过">
+<meta name="twitter:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -53,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Archives: 2017/8 | 啦啦菌NODE</title>
+<title>WEB-CTF中的绕过 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -63,8 +68,8 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
-        isArchive: true,
+        isPost: true,
+        isArchive: false,
         isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
@@ -266,56 +271,187 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-WEB-CTF中的绕过" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2017/08/29/WEB-CTF中的SQL注入/" class="archive-article-date">
-      <time datetime="2017-08-28T21:16:14.000Z" itemprop="datePublished">08-29</time>
+    <div class="article-meta">
+      <a href="/2017/10/19/WEB-CTF中的绕过/" class="article-date">
+      <time datetime="2017-10-19T08:51:11.000Z" itemprop="datePublished">2017-10-19</time>
 </a>
 
 
-        </div>
-         
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a>
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WEB-CTF中的绕过
     </h1>
   
 
-        <div class="article-info info-on-archive">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 
-          
+        
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
     </div>
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>—  从零开始的笔记  —<br>— sql，上传，目录  —<br><a id="more"></a></p>
+<hr>
+<h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
+<li>url base64 utf-8… (全部编码或个别编码)</li>
+<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3>SeLeT   不多解释<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3></li>
+<li>两个空格代替一个空格，TAB代替空格</li>
+<li>用注释符号代替空格 /**/</li>
+<li>用括号代替空格 </li>
+<li>用+代替空格  </li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">user</span>() <span class="keyword">from</span> dual <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span>=<span class="number">2</span>;   <span class="comment">---------&gt;   select(user())from dual where(1=1)and(2=2)</span></div><div class="line">利用函数完成猜解  如：  猜解user()第二个字符的ascii码是不是109，若是109，则页面加载将延迟</div><div class="line">	http://www.xxx.com/index.php?id=(sleep(ascii(mid(user()from(2)for(1)))=109))</div></pre></td></tr></table></figure>
+<ul>
+<li>select+user()  +代替空格  不是url编码空格的+而是直接的+</li>
+</ul>
+<h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤="></a>过滤=</h3><ul>
+<li>=用<a href="http://www.runoob.com/mysql/mysql-like-clause.html" target="_blank" rel="external">like</a>代替</li>
+<li>需要与零比较：<code>-1 or 1=1 and ord(substr(user(),1,1))-114</code></li>
+</ul>
+<h3 id="Mysql条件注释的利用-…"><a href="#Mysql条件注释的利用-…" class="headerlink" title="Mysql条件注释的利用  /! … /"></a>Mysql条件注释的利用  /<em>! … </em>/</h3><ul>
+<li><strong>/<em>! … </em>/</strong>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
+<li><strong>/<em>!50000select</em>/</strong>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
+</ul>
+<h3 id="过滤逗号"><a href="#过滤逗号" class="headerlink" title="过滤逗号"></a>过滤逗号</h3><ul>
+<li><strong>limit ,</strong>中的<strong>,</strong> ：<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external">limit offset</a></li>
+<li>substr() mid()等函数中的<strong>,</strong> ：<code>select substr(database() from 1 for 1);</code></li>
+</ul>
+<h3 id="过滤引号"><a href="#过滤引号" class="headerlink" title="过滤引号"></a>过滤引号</h3><p>使用十六进制可以绕过引号<br>如：”users” —&gt; 0x7573657273</p>
+<h3 id="过滤-lt-与-gt"><a href="#过滤-lt-与-gt" class="headerlink" title="过滤&lt;与&gt;"></a>过滤&lt;与&gt;</h3><p>使用<a href="http://www.yiibai.com/sql/sql_function_greatest.html" target="_blank" rel="external">GREATEST()</a>绕过比较操作符。<br><code>select * from users where id=1 and ascii(substr(database(),0,1))&gt;64</code> ——-&gt;<br><code>select * from users where id=1 and greatest(ascii(substr(database(),0,1)),64)=64</code></p>
+<h3 id="过滤sleep"><a href="#过滤sleep" class="headerlink" title="过滤sleep"></a>过滤sleep</h3><p><a href="http://blog.sina.com.cn/s/blog_778e18e90101a48h.html" target="_blank" rel="external">benchmark(x, y)</a><br>benchmark(1000,sha(1)) 1000次sha(1)，来时间延迟  </p>
+<h3 id="过滤注释符号（-，–）"><a href="#过滤注释符号（-，–）" class="headerlink" title="过滤注释符号（#，–）"></a>过滤注释符号（#，–）</h3><ul>
+<li>id=1’ union select 1,2,3||’1</li>
+<li>id=1’ union select 1,2,’3</li>
+</ul>
+<h3 id="过滤单引号"><a href="#过滤单引号" class="headerlink" title="过滤单引号"></a>过滤单引号</h3><p>尝试宽字节    %bf%27 %df%27 %aa%27</p>
+<h3 id="利用等价函数"><a href="#利用等价函数" class="headerlink" title="利用等价函数"></a>利用等价函数</h3><ul>
+<li>hex()、bin() ==&gt; ascii()</li>
+<li>sleep() ==&gt; benchmark()</li>
+<li>concat_ws()==&gt; group_concat()</li>
+<li>mid()、substr() ==&gt; substring()</li>
+<li>@@user ==&gt; user()</li>
+<li>@@datadir ==&gt; datadir()</li>
+</ul>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>当服务器会自动加上.php<br>“.”  “%00” —&gt; ull的url编码<br><code>?file=a.doc..php</code><br><code>?file=a.doc%00.php</code>   </p>
+<h2 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h2><p>加特殊字符  </p>
+<ul>
+<li>空格 &lt; &gt;  </li>
+<li>././././  </li>
+<li>pjpjp(不存在目录)/../</li>
+</ul>
+
+      
+    </div>
+    
   </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2017-10-19, 16:51:11</p>
+        <p><span>最后更新:</span>2017-11-23, 18:46:10</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/10/19/WEB-CTF中的绕过/" title="WEB-CTF中的绕过">http://lalajun.com/2017/10/19/WEB-CTF中的绕过/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/10/19/WEB-CTF中的绕过/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/09/24/WEB-CTF中的sql盲注/">
+                    WEB-CTF中的sql盲注
+                </a>
+            </div>
+        
+    </nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用-…"><span class="toc-text">Mysql条件注释的利用  /! … /</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目录遍历"><span class="toc-text">目录遍历</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="下一篇: WEB-CTF中的sql盲注">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
