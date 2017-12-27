@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="LaLa" />
+
+
+
+<meta name="description" content="— 矿工的世界 —">
+<meta name="keywords" content="比特币">
+<meta property="og:type" content="article">
+<meta property="og:title" content="比特币&amp;区块链与挖矿">
+<meta property="og:url" content="http://lalajun.com/2017/12/27/比特币&区块链与挖矿/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="— 矿工的世界 —">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fmgi0r6p5hj30n707nt99.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fmgi07kgwoj30n40b6t9u.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fmvfzl1rqsj30ap0g9gmt.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fmvgw88o5cj30mw0aywed.jpg">
+<meta property="og:updated_time" content="2017-12-27T10:13:21.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="比特币&amp;区块链与挖矿">
+<meta name="twitter:description" content="— 矿工的世界 —">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fmgi0r6p5hj30n707nt99.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>比特币&amp;区块链与挖矿 | 啦啦菌NODE</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LaLa</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://e-lias.com/">Max</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-比特币&amp;区块链与挖矿" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/27/比特币&区块链与挖矿/" class="article-date">
+      <time datetime="2017-12-27T09:05:28.000Z" itemprop="datePublished">2017-12-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      比特币&amp;区块链与挖矿
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>— 矿工的世界 —<br><a id="more"></a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近这段时间好好学习了下比特币，但也只是初步了解了个大概，也有好多疑问没有解决。<br>根据各个地方收集到的资料，加上自己的理解，写下了这篇博客。</p>
+<h2 id="比特币定义"><a href="#比特币定义" class="headerlink" title="比特币定义"></a>比特币定义</h2><p><strong>比特币</strong>是一种由开源的P2P软件产生的数字货币，是通过计算产生的，由一串串复杂的计算机代码组成。与传统的法定货币不同的是，比特币不依赖于特定的中央发行机构，而是使用遍布整个P2P网络节点的分布式数据库来记录货币的交易，并使用密码学的加密设计来确保货币流通各个环节的安全性。</p>
+<h3 id="比特币总量"><a href="#比特币总量" class="headerlink" title="比特币总量"></a>比特币总量</h3><p>比特币的发行上限为2100万枚</p>
+<h3 id="比特币的产生速度"><a href="#比特币的产生速度" class="headerlink" title="比特币的产生速度"></a>比特币的产生速度</h3><p>大约每10分钟可以产生出25枚比特币，产量每四年会缩减一半（2009-2012年的最初4年内，每10分钟产出50枚比特币）,因此比特币的流通数目将在2140年达到它的发行上限。</p>
+<h2 id="分布式数据库"><a href="#分布式数据库" class="headerlink" title="分布式数据库"></a>分布式数据库</h2><p>分布式数据库系统通常使用较小的计算机系统，每台计算机可单独放在一个地方，每台计算机中都可能有DBMS的一份完整拷贝副本，或者部分拷贝副本，并具有自己局部的数据库，位于不同地点的许多计算机通过网络互相连接，共同组成一个完整的、全局的逻辑上集中、物理上分布的大型数据库。</p>
+<ul>
+<li>无发行机构（政府、个人、企业等）</li>
+<li>任何人都可以挖掘、购买、出售、收取比特币</li>
+<li>交易过程中外人无法识别用户身份信息</li>
+<li>支付速度快1秒内完成交易，10分钟内全网节点记录、验证、确认，实现交易确认</li>
+<li>点对点兑换和交易，成本为零。通过比特币交易所来兑换，支付千分之三或更少手续费</li>
+</ul>
+<h3 id="比特币系统中的数据库——区块和区块链"><a href="#比特币系统中的数据库——区块和区块链" class="headerlink" title="比特币系统中的数据库——区块和区块链"></a>比特币系统中的数据库——区块和区块链</h3><p>区块链是比特币的底层技术，但已经独立地发展为了一种革命性技术。比特币则是区块链最大最成功的的应用。<br>区块链是一个基于共识机制、去中心化的公开数据库。</p>
+<ul>
+<li><em>共识机制</em>使之在分布式系统中保证数据一致性的算法;</li>
+<li><em>去中心化</em>是指参与区块链的所有节点都是权利对等的，没有高低之分，唯一的限制就是个人自己的选择。</li>
+<li><em>公开数据库</em>则意味着所有人都可以看到国王的区块和交易，这也保证了无法造价和改写。</li>
+</ul>
+<p><strong>Block Chain(区块链)</strong>：比特币从开始到现在的每一笔产出或交易的记录文件。<a href="https://link.zhihu.com/?target=http%3A//blockchain.info/" target="_blank" rel="external">Bitcoin Block Explorer</a>可以查看<br><strong>Block(数据区块)</strong>：一个区块是部分或所有最新(未被其他先前的区块记录)比特币交易的记录集。大约10min产生一个。</p>
+<p>以下给出比特币系统中的区块结构，在之后会有说明<br>数据区块结构：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fmgi0r6p5hj30n707nt99.jpg" alt="数据区块结构"><br>区块头结构：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fmgi07kgwoj30n40b6t9u.jpg" alt="区块头结构"></p>
+<h2 id="矿工的世界"><a href="#矿工的世界" class="headerlink" title="矿工的世界"></a>矿工的世界</h2><p>在p2p比特币网络中，一些节点被称为<em>专业节点矿工</em>。<br>矿工的工作：</p>
+<ul>
+<li>接受、验证、中继新交易</li>
+<li>挖矿——开发新的区块</li>
+<li>监听、验证、传播新区块</li>
+</ul>
+<p>矿工们在挖矿过程中会得到两种类型的奖励：</p>
+<ul>
+<li>创建新区块的新币奖励</li>
+<li>区块中所含交易的交易费</li>
+</ul>
+<p>矿工的各种工作大都是<strong>同时</strong>进行的，挖矿的同时在处理交易，并一直监听是否有新的区块产生。<br>1.矿工在网络中收集被广播的比特币交易，把验证过的交易，加到自己的交易池中。根据块龄，矿工费和优先级排序交易，靠前的交易优先被记录。<br>2.当监听到新区块产生，就立刻停下工作，先去验证新的区块。验证通过，会尝试将新的区块连接到现存的区块链，将他们组装起来，并继续传播此区块，同时要将新区块中对应的交易从交易池中移除，确保任何留在内存池中的交易都是未确认的。<br>3.当自己挖到一个新区块，就立刻将新区块发送给相邻节点。<br><em>新区块象征着本轮区块竞争的结束，也是下一轮竞争的开始。</em></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fmvfzl1rqsj30ap0g9gmt.jpg" alt="矿工的工作"></p>
+<h3 id="挖矿"><a href="#挖矿" class="headerlink" title="挖矿"></a>挖矿</h3><p>通过开源的计算方法在比特币特定的数据链上运算正确的比特币数据区块的行为，产生比特币的唯一途径。<br>挖矿三个重要功能：</p>
+<ol>
+<li>维系货币的支付功能(对于比特币系统的最主要功能)</li>
+<li><p>通过算力保障系统安全（防止“双重支付”）</p>
+<blockquote>
+<p>双重支付:2次或多次花费同一笔比特币</p>
+</blockquote>
+</li>
+<li><p>发行新的货币(总量达到之前)</p>
+</li>
+</ol>
+<h3 id="挖矿算法"><a href="#挖矿算法" class="headerlink" title="挖矿算法"></a>挖矿算法</h3><p>区块头参数：</p>
+<ul>
+<li><strong>version</strong>：版本号</li>
+<li><strong>prev_hash</strong>: 上一个Block(父区块)的hash值</li>
+<li><strong>merkle_root</strong>：这个区块中全部交易构成的<a href="http://blog.csdn.net/wo541075754/article/details/54632929" target="_blank" rel="external">merkle树的根</a> (为了防止有交易出现在倒数第二层，如果当前交易数量是奇数的话，那么最后一个交易将会被计算两次哈希值)</li>
+<li><strong>ntime</strong>：区块生成的时刻（以Unix纪元开始到当下的秒数，精确到秒）（每几秒更新） </li>
+<li><strong>nbits</strong>: 当前运算难度，最终反应结果为TARGET的</li>
+<li><strong>X</strong>：正确运算结果的唯一参数，范围是0~2^32</li>
+<li><strong>TARGET</strong>: 比特币系统要求新的哈希值拥有特定的格式——必须以一串特定数量的0开头</li>
+</ul>
+<p><strong>挖矿算法：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SHA256(SHA256(version + prev_hash + merkle_root + ntime + nbits + x)) &lt; TARGET</div></pre></td></tr></table></figure></p>
+<p>对区块头进行哈希运算，将所得哈希值与目标哈希值进行比较，如果当前X值计算的哈希值小于目标哈希值，则挖矿成功。如果这个哈希值不小于目标值，矿工就会修改这个X（通常将之加1）然后再试。</p>
+<h4 id="Q1-如何保证区块更新周期平均是10min？"><a href="#Q1-如何保证区块更新周期平均是10min？" class="headerlink" title="Q1. 如何保证区块更新周期平均是10min？"></a>Q1. 如何保证区块更新周期平均是10min？</h4><p>nbits越大，TARGET越小，解出X的难度越大。<code>target=2**（256-nbits）</code><br>难度值nbits是节点自动调整的。<br><code>New nbits= Old nbits*（Actual time of last 2016 Blocks/ 20160 minutes）</code><br>（即最新2016个区块花费时长与20160分钟（2周）比较所得，期望10min产生一个）</p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fmvgw88o5cj30mw0aywed.jpg" alt="区块的链接"></p>
+<h3 id="区块成熟时间-Maturation-Time"><a href="#区块成熟时间-Maturation-Time" class="headerlink" title="区块成熟时间(Maturation Time)"></a>区块成熟时间(Maturation Time)</h3><p><strong>区块成熟时间</strong>是指矿工产生一个新区块得到25BTC收益后，要等过了100个块后，才能使用这些币。这个100区块时间，即收到100个确认的时间，就是区块成熟时间。<br><em>为什么要设这个时间？</em><br>如果这个区块在分叉时变成了孤立区块，25个BTC的收益将消失，如果矿工挖到比特币后可以马上花掉，就会造成后续的一系列接收者损失比特币，因而设定了100个确认的限制，在这之后产生分叉的可能性非常小，即使产生分叉，也只会影响矿工收益，不会影响到其他人。</p>
+<h4 id="Q2-是否有可能同时解出区块-？"><a href="#Q2-是否有可能同时解出区块-？" class="headerlink" title="Q2. 是否有可能同时解出区块 ？"></a>Q2. 是否有可能同时解出区块 ？</h4><p> 当两个区块产生的时间仅相差几秒时，可能会产生包含一个区块的分叉。</p>
+<h4 id="Q3-同时解出来怎么办-？"><a href="#Q3-同时解出来怎么办-？" class="headerlink" title="Q3. 同时解出来怎么办 ？"></a>Q3. 同时解出来怎么办 ？</h4><p>短暂产生两个分支，矿工节点会根据收到区块的时间，在先收到的区块基础上继续挖矿。哪个区块的后续区块先出现，这个区块就被包括进主链，因为这条块链更长，所有人都会选择这个更长的分支。没选中的区块的矿工，所得比特币无效，其区块中包含的交易也无效(虽然这种交易的无效是暂时的，这些交易会被重新广播投入到交易池中被新的区块重新记录，但是此处引起双重支付的可能)。</p>
+<h4 id="Q4-如何实现双重支付-？"><a href="#Q4-如何实现双重支付-？" class="headerlink" title="Q4. 如何实现双重支付 ？"></a>Q4. 如何实现双重支付 ？</h4><p>在目前公认的数据链上完成交易确认，然后延续另一条数据链，使之成为新的被公认的数据链，则原来被公认的数据块的交易不被承认，在交易重新被认可之前，抢先完成同一笔钱的另一个交易确认，这笔交易就会因为账单中指定地方的钱已经被使用了而作废，但是对方的交易物品已经发送。<br>比如：挖到新的BLOCK不广播，比特币消费给A，继续挖，抢先到达2个区块，前后广播，所有人会以你这个更长的分支为当前的数据链。A收到的比特币不被承认，再消费一次比特币，关于A的账单因为比特币不足作废。<br>解决办法：收款人不要在交易确认后（及产生一个新的区块后）立刻发出货物（实现交易），而是应该在看一段时间，等待基于这个区块的新生成的区块达到6个，并且之前的账簿没有被取消，才确认钱已经到账（你的交易所在的区块链足够强壮）。<br>当整个网络算力足够高，攻击概率极低，或成本极大。</p>
+<h4 id="Q4-难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？"><a href="#Q4-难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？" class="headerlink" title="Q4. 难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？"></a>Q4. 难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？</h4><p>客户端接受“最长”块链作为有效链，整条块链的“长度”是指具有最大难度的链，而不是指具有最多区块数量的块链，可防止某些人创建大量低难度区块，故意使块链分叉，并且让网络接受它成为“最长”的块链。</p>
+<h4 id="Q5-？？？矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换？？？"><a href="#Q5-？？？矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换？？？" class="headerlink" title="Q5. ？？？矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换？？？"></a>Q5. <strong>？？？</strong>矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换<strong>？？？</strong></h4><p>这个问题不是很确定，个人觉得是在先收到的区块上挖矿。这样子对于矿工工作合理一些，但是如此区块头中的时间戳貌似用处也不大。</p>
+<h4 id="Q5-？？？区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash？？？"><a href="#Q5-？？？区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash？？？" class="headerlink" title="Q5. ？？？区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash？？？"></a>Q5. <strong>？？？</strong>区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash<strong>？？？</strong></h4><p>也不是很确定，说两者的都有，个人觉得是上一个区块头的hash，因为区块头包括交易的merkle树的根，已经做到与交易绑定。</p>
+<p>参考：<br>《比特币开发》——申屠青春<br><a href="https://www.jianshu.com/p/b8a0c43d0176" target="_blank" rel="external">比特币:交易的数据结构-姜家志</a><br><a href="https://www.liaoxuefeng.com/article/001482718603696a6b6eb2bebc74211ab967146a952ae0c000" target="_blank" rel="external">深入理解比特币交易的脚本</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/27/比特币&区块链与挖矿/">比特币&amp;区块链与挖矿</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2017-12-27, 17:05:28</p>
+        <p><span>最后更新:</span>2017-12-27, 18:13:21</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/27/比特币&区块链与挖矿/" title="比特币&amp;区块链与挖矿">http://lalajun.com/2017/12/27/比特币&amp;区块链与挖矿/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/12/27/比特币&amp;区块链与挖矿/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/12/27/比特币&区块链与交易/">
+                    比特币&amp;区块链与交易
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/05/WEB-CTF中的SQL文件操作/">
+                    WEB-CTF中的SQL文件操作
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#比特币定义"><span class="toc-text">比特币定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#比特币总量"><span class="toc-text">比特币总量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#比特币的产生速度"><span class="toc-text">比特币的产生速度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分布式数据库"><span class="toc-text">分布式数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#比特币系统中的数据库——区块和区块链"><span class="toc-text">比特币系统中的数据库——区块和区块链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#矿工的世界"><span class="toc-text">矿工的世界</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#挖矿"><span class="toc-text">挖矿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#挖矿算法"><span class="toc-text">挖矿算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q1-如何保证区块更新周期平均是10min？"><span class="toc-text">Q1. 如何保证区块更新周期平均是10min？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#区块成熟时间-Maturation-Time"><span class="toc-text">区块成熟时间(Maturation Time)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q2-是否有可能同时解出区块-？"><span class="toc-text">Q2. 是否有可能同时解出区块 ？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q3-同时解出来怎么办-？"><span class="toc-text">Q3. 同时解出来怎么办 ？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q4-如何实现双重支付-？"><span class="toc-text">Q4. 如何实现双重支付 ？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q4-难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？"><span class="toc-text">Q4. 难度是节点自己自动调控的，是否可以人为利用低难度去产生长分支区块？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q5-？？？矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换？？？"><span class="toc-text">Q5. ？？？矿工节点会在先收到的区块上继续挖矿，还是根据区块头中的时间戳来替换？？？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q5-？？？区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash？？？"><span class="toc-text">Q5. ？？？区块头中上一个区块的hash，是上一个区块全部的hash还是上一个区块头的hash？？？</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/12/27/比特币&区块链与交易/" title="上一篇: 比特币&amp;区块链与交易">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="下一篇: WEB-CTF中的SQL文件操作">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017 LaLa
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
