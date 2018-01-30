@@ -15,20 +15,21 @@
 
 
 
-<meta name="description" content="— 交易与脚本 —">
-<meta name="keywords" content="比特币">
+<meta name="description" content="— 从零开始的笔记 —— HTTP基础知识 —">
+<meta name="keywords" content="web">
 <meta property="og:type" content="article">
-<meta property="og:title" content="比特币&amp;区块链与交易">
-<meta property="og:url" content="http://lalajun.com/2017/12/27/比特币&区块链与交易/index.html">
+<meta property="og:title" content="WEB-HTTP基础">
+<meta property="og:url" content="http://lalajun.com/2018/01/30/WEB-HTTP基础/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="— 交易与脚本 —">
+<meta property="og:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fmgi1yzm5kj30s40fcgsg.jpg">
-<meta property="og:updated_time" content="2017-12-27T10:11:31.329Z">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg">
+<meta property="og:updated_time" content="2018-01-30T09:39:10.543Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="比特币&amp;区块链与交易">
-<meta name="twitter:description" content="— 交易与脚本 —">
-<meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fmgi1yzm5kj30s40fcgsg.jpg">
+<meta name="twitter:title" content="WEB-HTTP基础">
+<meta name="twitter:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
+<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +61,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>比特币&amp;区块链与交易 | 啦啦菌NODE</title>
+<title>WEB-HTTP基础 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -273,11 +274,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-比特币&amp;区块链与交易" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-WEB-HTTP基础" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/12/27/比特币&区块链与交易/" class="article-date">
-      <time datetime="2017-12-27T09:39:54.000Z" itemprop="datePublished">2017-12-27</time>
+      <a href="/2018/01/30/WEB-HTTP基础/" class="article-date">
+      <time datetime="2018-01-30T08:29:33.000Z" itemprop="datePublished">2018-01-30</time>
 </a>
 
 
@@ -292,7 +293,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      比特币&amp;区块链与交易
+      WEB-HTTP基础
     </h1>
   
 
@@ -303,7 +304,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -313,47 +314,94 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>— 交易与脚本 —<br><a id="more"></a></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>区块的内容就是交易，下面介绍比特币的具体交易，也就是账单的内容。<br>但是对于其中脚本的部分，也了解甚微。在这里就提个大概。</p>
-<h2 id="比特币钱包"><a href="#比特币钱包" class="headerlink" title="比特币钱包"></a>比特币钱包</h2><p>首先需要了解一些专用词</p>
-<h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><p><strong>比特币地址</strong>：比特币地址是一个由数字和字母组成的字符串，比特币“账户”的唯一标识，如: 1JwSSubhmg6iPtRjtyqhUYYH76Zg3Lfy1T (以1或3开头，长度25字节；base58解码后，为34或35个字符)。有地址对应“密钥”的人，拥有这个地址里的比特币</p>
-<p><strong>公钥</strong>：有两种形式：压缩与非压缩；早期使用非压缩（65字节，0x04开头），现在默认压缩（32字节，0x02/0x03开头）。非压缩公钥左右两个32字节有关联，因而可以压缩。<br>一个公钥具有两种形式，所以对应两个比特币地址。这两个比特币地址都可由同一私钥签署交易。</p>
-<p><strong>私钥</strong>：巨大的随机整数（256位、32字节），介于:1 ~ 0xFFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFE BAAE DCE6 AF48 A03B BFD2 5E8C D036 4141之间的数。</p>
-<p><strong>BASE58</strong>：Base58是用于比特币中使用的一种独特的编码方式，主要用于产生Bitcoin的钱包地址和私钥。相比Base64，Base58不使用数字”0”，字母大写”O”，字母大写”I”，和字母小写”l”，以及”+”和”/“符号。这样做的主要原因是为了肉眼容易识别，在输入的时候不容易打错，</p>
-<p><strong>私钥字符串</strong>：因为私钥太长，识别度低，不容易记忆。私钥字符串就是对于原始的随机数进行一定的转换，转换为识别率高的形式。通过BASE58转换成WIF（Wallet import Format)格式的私钥。也可以把私钥转换其他形式，比如以单词的形式(12或者24个单词)，脑钱包的形式,又或者自己记住的某一句话来生成私钥，注意脑钱包生成的私钥随机的安全性并不高。</p>
-<ul>
-<li>私钥字符串开头的第一位的不同，是用来区分该私钥使用的公钥是否支持压缩格式</li>
-<li>老版本未压缩公钥的私钥字符串是33位byte数组，第一位存放私钥的Version信息，当前值为128，生成的Base58都是以5开头。</li>
+        <p>— 从零开始的笔记 —<br>— HTTP基础知识 —<br><a id="more"></a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>emmm…终于系统地整理了一下经常看到但是没有去好好了解的HTTP的东西，那么开始。</p>
+<h2 id="HTTP结构"><a href="#HTTP结构" class="headerlink" title="HTTP结构"></a>HTTP结构</h2><p><strong>请求结构</strong>：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg" alt=""><br>HTTP版本有两种：1.0 和 1.1<br>我们需要注意到的差异是 1.1版本请求必须使用HOST请求消息头</p>
+<p><strong>响应结构</strong>：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg" alt=""></p>
+<h2 id="常用HTTP消息头部"><a href="#常用HTTP消息头部" class="headerlink" title="常用HTTP消息头部"></a>常用HTTP消息头部</h2><p>先给出一些通用的消息头<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Connection：HTTP传输后是关闭TCP链接，还是保持链接开放</div><div class="line">Content-Length：消息主体字节长度</div><div class="line">Content-Type：消息主体内容类型；HTML文档内容类型为text/html</div><div class="line">Content-Encoding：为消息主体内容指定编码形式（如gzip）；一些应用使用它来压缩主体，以加快传输速度</div><div class="line">Transfer-Encoding：为方便通过HTTP传输而对消息主体使用的任何编码。使用这个消息头，通常用它指定块编码</div></pre></td></tr></table></figure></p>
+<h2 id="HTTP请求消息头部"><a href="#HTTP请求消息头部" class="headerlink" title="HTTP请求消息头部"></a>HTTP请求消息头部</h2><p>下面开始说明HTTP请求消息部分，先从消息头部开始：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">User-Agent:UA,用户代理，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</div><div class="line">Referer：表示发出请求的原始URL，跳转</div><div class="line">Host：想访问的WEB服务器的域名/IP 地址和端口号</div><div class="line">Accept：客户端可以处理的媒体类型，按优先级排序；在一个以逗号为分隔的列表中，可以定义多种类型和使用通配符。</div><div class="line">Accept-Charset：客户端接收的字符集</div><div class="line">Accept-Encoding: 客户端愿意接受哪些内容编码</div><div class="line">Authorization：用于为一种内置HTTP身份验证向服务器提交证书</div><div class="line">Cookie：提交服务器向客户端发布的其他参数</div><div class="line">If-Modified-Since:用于说明浏览器最后一收到所请求的资源的时间。如果服务器判断资源没有发生变化，就会发送状态码304响应，是客户端使用缓存的资源副本</div><div class="line">If-None-Match：指定一个实体标签——消息主体内容的标识符；服务器可以使用实体标签确定浏览器是否使用资源的缓冲副本</div></pre></td></tr></table></figure></p>
+<h3 id="User-Agent延伸"><a href="#User-Agent延伸" class="headerlink" title="User-Agent延伸"></a>User-Agent延伸</h3><p><a href="http://blog.csdn.net/u012175089/article/details/61199238" target="_blank" rel="external">补充参考1</a> <a href="http://blog.csdn.net/bone_ace/article/details/52476016" target="_blank" rel="external">补充参考2</a><br>IOS6系统格式：<br><code>User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25</code><br>safari5.1–Windows格式：<br><code>User-Agent: Mozilla/5.0(Windows;U;WindowsNT6.1;en-us)AppleWebKit/534.50(KHTML,likeGecko)Version/5.1Safari/534.50</code></p>
+<h3 id="伪造IP的HTTP请求头："><a href="#伪造IP的HTTP请求头：" class="headerlink" title="伪造IP的HTTP请求头："></a>伪造IP的HTTP请求头：</h3><p>X-Forwarded-For<br>Client-IP<br>x-remote-IP<br>x-originating-IP<br>x-remote-addr</p>
+<h2 id="HTTP请求头方法"><a href="#HTTP请求头方法" class="headerlink" title="HTTP请求头方法"></a>HTTP请求头方法</h2><pre><code>GET：获取资源，
+POST：传输实体内容，之后细说
+PUT：上传文件，传输文件到请求URL的位置。自身不带验证机制，存在安全性问题，需要关注。
+DELETE：删除文件，删除请求URL位置的文件，与上同
+HEAD：返回和GET一样的头，不返回主体；用于检查某一资源是否存在
+TRACE：返回服务器接受到的请求头；用于检测客户端与服务器之间是否存在任何操纵请求的代理服务器
+    有Max-Forward首字段：可以控制生存时间STEP
+CONNECT：链接至HTTP代理服务器，[详细说明](http://blog.csdn.net/kobejayandy/article/details/24606521)
+OPTIONS：返回服务器对特定资源可用的HTTP方法
+</code></pre><h3 id="POST方法的Content-Type的四种形式"><a href="#POST方法的Content-Type的四种形式" class="headerlink" title="POST方法的Content-Type的四种形式"></a>POST方法的Content-Type的四种形式</h3><p>通过HTNL的Form表单的Enctype属性指定使用的四种形式<br>application/x-www-form-urlencoded<br>multipart/form-data<br>application/json<br>text/xml</p>
+<h4 id="application-x-www-form-urlencoded-："><a href="#application-x-www-form-urlencoded-：" class="headerlink" title="application/x-www-form-urlencoded ："></a>application/x-www-form-urlencoded ：</h4><p>数据被编码为名称/值对</p>
+<pre><code>POST http://www.example.com HTTP/1.1
+Content-Type: application/x-www-form-urlencoded;charset=utf-8
+
+title=test&amp;sub%5B%5D=1&amp;sub%5B%5D=2&amp;sub%5B%5D=3 
+</code></pre><h4 id="multipart-form-data-："><a href="#multipart-form-data-：" class="headerlink" title="multipart/form-data ："></a>multipart/form-data ：</h4><p>可以使一块内容进行不同的编码形式<br>格式：Content-Type:multipart/form-data; boundary=（+随机的分割字符串）</p>
+<pre><code>POST http://www.example.com HTTP/1.1
+Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA
+
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+Content-Disposition: form-data; name=&quot;text&quot;
+
+title
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA
+Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;chrome.png&quot;
+Content-Type: image/png
+
+PNG ... content of chrome.png ...
+------WebKitFormBoundaryrGKCBY7qhFd3TrwA-- 
+</code></pre><h4 id="application-json-："><a href="#application-json-：" class="headerlink" title="application/json ："></a>application/json ：</h4><p>主体是序列化后的 JSON 字符串</p>
+<pre><code>POST http://www.example.com HTTP/1.1
+Content-Type: application/json;charset=utf-8
+
+{&quot;title&quot;:&quot;test&quot;,&quot;sub&quot;:[1,2,3]} 
+</code></pre><h4 id="text-xml-："><a href="#text-xml-：" class="headerlink" title="text/xml ："></a>text/xml ：</h4><p>以纯文本形式进行编码，其中不含任何控件或格式字符。 </p>
+<pre><code>POST http://www.example.com HTTP/1.1
+Content-Type: text/xml
+
+&lt;!--?xml version=&quot;1.0&quot;?--&gt;
+&lt;methodcall&gt;
+    &lt;methodname&gt;examples.getStateName&lt;/methodname&gt;
+    &lt;params&gt;
+        &lt;param&gt;
+            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;
+
+    &lt;/params&gt;
+&lt;/methodcall&gt; 
+</code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Server：指明WEB服务器软件</div><div class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</div><div class="line">	可选属性：</div><div class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</div><div class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</div><div class="line">	path：用于指定cookie的有效url路径</div><div class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</div><div class="line">	HttpOnly：无法通过客户端JS直接访问cookie</div><div class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</div><div class="line">Cache-Control：设置是否要缓存，及缓存的设置</div><div class="line">Expired：WEB服务器表明该实体将在什么时候过期</div><div class="line">ETag：指定一个实体标签，标志为实体的版本</div><div class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</div></pre></td></tr></table></figure>
+<h2 id="服务端返回状态码"><a href="#服务端返回状态码" class="headerlink" title="服务端返回状态码"></a>服务端返回状态码</h2><ul>
+<li>1XX——提供信息</li>
+<li>2XX——请求被成功提交</li>
+<li>3XX——客户端被重定向到其他资源</li>
+<li>4XX——请求包含某种错误</li>
+<li>5XX——服务器执行请求是遇到错误</li>
 </ul>
-<blockquote>
-<p>老版本未压缩私钥=Base58（version+32位随机数）</p>
-</blockquote>
+<pre><code>100 Continue——当客户端发送包含主体的请求，服务端返回100，表示已经收到请求消息头，让客户端继续发送主体。
+
+200 OK——已经成功提交请求，且响应主体中包含请求的结果。
+201 Created——PUT请求的响应返回状态码，表示请求已成功提交
+
+301 Moved Permanently——重定向到Location消息头中指定的URL，以后客户端应用新的URL替换原始的URL
+302 Found——暂时重定向到Location消息头中指定的URL，随后请求中恢复使用原始URL
+304 Not Modified——指示浏览器使用缓存中保存的所请求资源的副本。
+
+400 Bad Request——表示客户端提交了一个无效的HTTP请求。
+401 Unauthorized——服务器在许可请求前要求HTTP进行身份验证。身份验证类型在消息头WWW-Authenticate中说明
+403 Forbidden——不管是否通过身份验证，禁止任何人访问被请求的资源
+404 Not Found——所请求的资源不存在
+405 Method Not Allowed——URL不支持请求中使用的方法，如不支持PUT
+413 Request Entity Too Large——表示请求主体过长，服务器无法处理
+414 Request URI Too long——表示请求中URL过长，服务器无法处理
+
+500 InternalServer Error——表示服务器在执行请求时遇到错误。
+503 Service Unavailable——尽管WEB服务器运转正常，能够响应请求，但是服务器访问的应用程序无法做出响应。
+</code></pre><h2 id="HTTP身份验证"><a href="#HTTP身份验证" class="headerlink" title="HTTP身份验证"></a>HTTP身份验证</h2><p>在组织内部经常使用来访问内联网服务，但因特网上的Web应用程序很少使用</p>
 <ul>
-<li>支持压缩公钥的私钥字符串是34位byte数组，同样是第一位是version信息，它的值也是128，而多出来的一位是最后一个byte是用来存放是否压缩信息的信息，1就表示是支持压缩格式的公钥。经过Base58处理之后正好是L或者K开头</li>
+<li><strong>Basic</strong>： 在请求消息头中，用户证书以Base64的形式编码发送服务器</li>
+<li><strong>NTLM</strong>：  质询-响应式机制，使用某个windows NTLM协议版本</li>
+<li><strong>Digest</strong>： 质询-响应式机制，随同用户证书一起使用一个随机值MD5校验和。</li>
 </ul>
-<blockquote>
-<p>新版本私钥格式=Base58(version+32位随机数+是否支持压缩)</p>
-</blockquote>
-<p><strong>私钥到公钥</strong>：由私钥经过SECP256K1算法（椭圆曲线算法）处理得到。</p>
-<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fmgi1yzm5kj30s40fcgsg.jpg" alt="私钥，公钥，私钥字符串"></p>
-<p><strong>公钥到比特币地址</strong>：公钥到地址生成的过程是，先对公钥做一次SHA256(哈希算法)。<br>再经过hash160（一种原始完整性校验消息摘要，160标准对应20字节）处理。<br>在这个20位的byte数组前面再加上一个byte,这个byte就是地址的Version信息，地址的Version当前值为0，Version信息在比特币的test网络上会使用不同的值。<br>再在结尾加上验证信息checksum。在得到的hash160中加入地址的version信息 ，再对该信息做两次SHA-256之后取前4位就是checksum。</p>
-<blockquote>
-<p>sha-256-hash= SHA-256(public key)<br>hash160=hash160(sha-256-hash)<br>checksum=get_front_four( SHA-256(SHA-256(version+hash160)))<br>address=Base58(version+hash160(SHA-256(public key))+checksum)</p>
-</blockquote>
-<h2 id="交易"><a href="#交易" class="headerlink" title="交易"></a>交易</h2><p>一个数据块中会有多个交易<br>一个完整的交易由以下的元素构成的：</p>
-<ul>
-<li><strong>版本号</strong> :目前为1（4字节）</li>
-<li><strong>输入数量</strong> :正整数（1-9字节） </li>
-<li><strong>输入列表</strong> :每块的第一个交易的第一个输入叫做“coinbase”，早期版本中内容被忽略</li>
-<li><strong>输出数量</strong> :正整数（1-9字节）</li>
-<li><strong>输出列表</strong> :块中的第一个交易的输出是挖矿所得，一般是矿工自己的钱包地址</li>
-<li><strong>锁定时间</strong> :如果非0并且序列号小于0xFFFFFFFF，是指块序号；如果交易已经终结，则是指时间戳（4字节）</li>
-</ul>
-<p><strong>版本</strong>是明确一笔交易参照的规则，除非有重大升级的情况下，版本号基本无变化，是比较固定的一个值。<br><strong>锁定时间</strong>是被该交易被加到区块的最早时间，在大多数的情况下他的值都是0，表示需要立即被加入区块中。如果锁定时间大于0而小于5亿，它的值就表示区块高度。如果大于5亿就表示一个Unix时间戳。<br>以下详细说明<strong>输入输出列表</strong>：<br>一个简单的交易输入如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Input:</div><div class="line">Previous tx: f5d8ee39a430901c91a5917b9f2dc19d6d1a0e9cea205b009ca73dd04470b9a6</div><div class="line">Index: 0</div><div class="line">scriptSig: 304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d10</div><div class="line">90db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501</div></pre></td></tr></table></figure></p>
-<p>先说明，每一笔交易的每一个输入都要指定是之前存在的哪一笔交易的哪一个输出（即从何处得到的钱）<br>那么看以上的结构，首先是前一笔交易的哈希值（Previous tx），然后是花费的是第几个输出（Index）也叫索引，通过交易Hash和索引（从0开始），即可唯一确定一个未花费的交易输出——UTXO（Unspent Transaction Output）。这样，每一个Tx Input都和之前的某个Tx Output关联了起来。<br>最后是解锁脚本（scriptSig），解锁脚本存在的意义在于验证成立这笔交易的人有权利使用他指定的UTXO。其中解锁脚本=签名+公钥，公钥是该比特币花费者的公钥，签名是对当前这笔交易的更改信息作为message的以私钥进行的签名</p>
-<p>一个简单的交易输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Output:</div><div class="line">Value: 5000000000</div><div class="line">scriptPubKey: OP_DUP OP_HASH160 404371705fa9bd789a2fcd52d2c580b65d35549d</div><div class="line">OP_EQUALVERIFY OP_CHECKSIG</div></pre></td></tr></table></figure></p>
-<p>首先是输出金额（Value），然后是锁定脚本，锁定脚本包括脚本系统中的一系列操作符。</p>
-<h3 id="交易类型"><a href="#交易类型" class="headerlink" title="交易类型"></a>交易类型</h3><p>比特币目前提供了两种不同的交易类型，如下所示。通过这两者类型的交易可以组合出更加复杂的交易，称之为合约。<br>（1）Pay-to-PubkeyHash<br>这个也是最常见的交易，目标地址就是比特币地址，花费时需要提供签名和公钥。<br>（2）Pay-to-Script-Hash（P2SH）<br>在P2SH中，目标地址由脚本哈希取代，解锁脚本中才包含签名和脚本内容。可以设定为类似解锁脚本中只需要5个公钥中任意两个私钥的签名即可。</p>
 
       
     </div>
@@ -362,13 +410,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/12/27/比特币&区块链与交易/">比特币&amp;区块链与交易</a></p>
+        <p><span>本文标题:</span><a href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2017-12-27, 17:39:54</p>
-        <p><span>最后更新:</span>2017-12-27, 18:11:31</p>
+        <p><span>发布时间:</span>2018-01-30, 16:29:33</p>
+        <p><span>最后更新:</span>2018-01-30, 17:39:10</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/12/27/比特币&区块链与交易/" title="比特币&amp;区块链与交易">http://lalajun.com/2017/12/27/比特币&amp;区块链与交易/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/12/27/比特币&amp;区块链与交易/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/30/WEB-HTTP基础/" title="WEB-HTTP基础">http://lalajun.com/2018/01/30/WEB-HTTP基础/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/01/30/WEB-HTTP基础/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -380,16 +428,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/01/25/python笔记/">
-                    python2.7笔记
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/12/27/比特币&区块链与挖矿/">
-                    比特币&amp;区块链与挖矿
+                <a href="/2018/01/25/python笔记/">
+                    python2.7笔记
                 </a>
             </div>
         
@@ -401,7 +443,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#比特币钱包"><span class="toc-text">比特币钱包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#名词解释"><span class="toc-text">名词解释</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#交易"><span class="toc-text">交易</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#交易类型"><span class="toc-text">交易类型</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的四种形式"><span class="toc-text">POST方法的Content-Type的四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务端返回状态码"><span class="toc-text">服务端返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-text">HTTP身份验证</span></a></li></ol>
         
     </div>
     <style>
@@ -432,15 +474,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/25/python笔记/" title="上一篇: python2.7笔记">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/12/27/比特币&区块链与挖矿/" title="下一篇: 比特币&amp;区块链与挖矿">
+            <a href="/2018/01/25/python笔记/" title="下一篇: python2.7笔记">
                 <i class="fa fa-angle-right"></i>
             </a>
         
