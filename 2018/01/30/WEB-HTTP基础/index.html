@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg">
-<meta property="og:updated_time" content="2018-01-30T09:39:10.543Z">
+<meta property="og:updated_time" content="2018-01-31T03:30:57.623Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-HTTP基础">
 <meta name="twitter:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
@@ -370,7 +370,7 @@ Content-Type: text/xml
     &lt;/params&gt;
 &lt;/methodcall&gt; 
 </code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Server：指明WEB服务器软件</div><div class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</div><div class="line">	可选属性：</div><div class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</div><div class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</div><div class="line">	path：用于指定cookie的有效url路径</div><div class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</div><div class="line">	HttpOnly：无法通过客户端JS直接访问cookie</div><div class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</div><div class="line">Cache-Control：设置是否要缓存，及缓存的设置</div><div class="line">Expired：WEB服务器表明该实体将在什么时候过期</div><div class="line">ETag：指定一个实体标签，标志为实体的版本</div><div class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</div></pre></td></tr></table></figure>
-<h2 id="服务端返回状态码"><a href="#服务端返回状态码" class="headerlink" title="服务端返回状态码"></a>服务端返回状态码</h2><ul>
+<h2 id="HTTP响应返回状态码"><a href="#HTTP响应返回状态码" class="headerlink" title="HTTP响应返回状态码"></a>HTTP响应返回状态码</h2><ul>
 <li>1XX——提供信息</li>
 <li>2XX——请求被成功提交</li>
 <li>3XX——客户端被重定向到其他资源</li>
@@ -413,7 +413,7 @@ Content-Type: text/xml
         <p><span>本文标题:</span><a href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
         <p><span>发布时间:</span>2018-01-30, 16:29:33</p>
-        <p><span>最后更新:</span>2018-01-30, 17:39:10</p>
+        <p><span>最后更新:</span>2018-01-31, 11:30:57</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/01/30/WEB-HTTP基础/" title="WEB-HTTP基础">http://lalajun.com/2018/01/30/WEB-HTTP基础/</a>
             <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/01/30/WEB-HTTP基础/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -443,7 +443,7 @@ Content-Type: text/xml
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的四种形式"><span class="toc-text">POST方法的Content-Type的四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务端返回状态码"><span class="toc-text">服务端返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-text">HTTP身份验证</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的四种形式"><span class="toc-text">POST方法的Content-Type的四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应返回状态码"><span class="toc-text">HTTP响应返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-text">HTTP身份验证</span></a></li></ol>
         
     </div>
     <style>

@@ -61,7 +61,7 @@ Content-Type: text/xml
     &lt;/params&gt;
 &lt;/methodcall&gt; 
 </code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Server：指明WEB服务器软件</div><div class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</div><div class="line">	可选属性：</div><div class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</div><div class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</div><div class="line">	path：用于指定cookie的有效url路径</div><div class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</div><div class="line">	HttpOnly：无法通过客户端JS直接访问cookie</div><div class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</div><div class="line">Cache-Control：设置是否要缓存，及缓存的设置</div><div class="line">Expired：WEB服务器表明该实体将在什么时候过期</div><div class="line">ETag：指定一个实体标签，标志为实体的版本</div><div class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</div></pre></td></tr></table></figure>
-<h2 id="服务端返回状态码"><a href="#服务端返回状态码" class="headerlink" title="服务端返回状态码"></a>服务端返回状态码</h2><ul>
+<h2 id="HTTP响应返回状态码"><a href="#HTTP响应返回状态码" class="headerlink" title="HTTP响应返回状态码"></a>HTTP响应返回状态码</h2><ul>
 <li>1XX——提供信息</li>
 <li>2XX——请求被成功提交</li>
 <li>3XX——客户端被重定向到其他资源</li>
