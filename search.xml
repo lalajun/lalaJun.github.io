@@ -3,6 +3,74 @@
   
     
     <entry>
+      <title><![CDATA[Cookie注入与伪静态注入]]></title>
+      <url>/2018/02/26/Cookie%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%BC%AA%E9%9D%99%E6%80%81%E6%B3%A8%E5%85%A5/</url>
+      <content type="html"><![CDATA[<p>—  从零开始的笔记  —<br>— cookie 伪静态 中转 —<br><a id="more"></a></p>
+<hr>
+<p>因为cookie注入与伪静态注入都可以利用到中转注入，所以合在一起说明了<br>但是对于中转注入的编写，还停留在工具上，并没有自己实践编写，所以这里只是简单提一下。</p>
+<h2 id="Cookie注入"><a href="#Cookie注入" class="headerlink" title="Cookie注入"></a>Cookie注入</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>一开始看到教程一大篇，以为很高端….结果….还是属于sql注入，而且emmmm很极端啊= =<br>asp设计的特性使之更容易出现在<code>.ASP</code>文件中</p>
+<h3 id="使用条件"><a href="#使用条件" class="headerlink" title="使用条件"></a>使用条件</h3><ul>
+<li>服务器使用客户端传递的参数时候，使用的是<code>Request</code>对象</li>
+<li>专门检查了<code>Request.QueryString</code>与<code>Request.form</code>中的参数，没有专门检查<code>Request.Cookies</code>中的参数</li>
+<li>使用参数时，没有详细区分，使用<code>Request(&quot;参数名称&quot;)</code></li>
+</ul>
+<p><code>REQUEST</code>：ASP脚本中的request对象。它被用于从用户那里获取信息。<br>Request对象的通常使用：<strong>request.[集合名称]（参数名称）</strong><br>如 <strong>request.form(“参数名称”)</strong><br>但是request集合名称可以<strong>省略</strong>，即可以省略from<br>若省略，ASP规定是按QueryString（GET）、Form（POST）、Cookies、ServerVariables（服务器变量）的顺序来获取数据的。<br>所以request(“id”)，程序员实际是想从get或者post中获取，但事实是也可以从cookie中获取，而request.Cookies并没有被过滤，从而导致Cookie注入</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>极其简单，把原来在GET或POST中的参数写到cookie中就可以了<br>大多数手注教程中都在地址栏中填入类似的js脚本来修改Cookie（自己在火狐浏览器中实践时，浏览器会吞掉 javascript: 需手打）<br><code>javascript:alert(document.cookie=&quot;id=&quot;+escape(&quot;payload&quot;));</code></p>
+<ul>
+<li>alert()：弹出窗口</li>
+<li>document.cookie：缓存在本地的Cookies</li>
+<li>=：实际为添加Cookie不是覆盖全部</li>
+<li>escape：编码，防止乱码</li>
+</ul>
+<p>实际上burpsuite 抓包修改cookie,再<strong>URL编码</strong>，即可</p>
+<h2 id="伪静态注入"><a href="#伪静态注入" class="headerlink" title="伪静态注入"></a>伪静态注入</h2><h3 id="伪静态技术"><a href="#伪静态技术" class="headerlink" title="伪静态技术"></a>伪静态技术</h3><p>伪静态页面技术：把动态页面的地址转换成以htm或html结尾的地址，看起来是静态的，实际是依然是动态页面。<br>通常分为两种形式:</p>
+<ul>
+<li>框架伪静态：动态内容链入主框架页面。整个网页URL是一样的。</li>
+<li>利用组件把asp、aspx、php等后缀及参数隐藏，显示为htm或html。可以通过访问源页面</li>
+</ul>
+<p>伪静态技术的优点：</p>
+<ul>
+<li>防止sql注入，隐藏参数，或转变参数使其不容易被直接发现</li>
+<li>为了SEO（搜索引擎优化）方便检测抓取，搜索引擎一般不去抓取<strong>?</strong>之后的内容</li>
+</ul>
+<h3 id="伪静态实现方法"><a href="#伪静态实现方法" class="headerlink" title="伪静态实现方法"></a>伪静态实现方法</h3><p>1.PHP的pathinfo实现：利用pathinfo()函数解析url，然后重构<br>原URL：<code>http://localhost/index.php?m=Index&amp;a=test</code><br>转化URL：<code>http://localhost/index.php/Index/test</code><br>2.web服务器apache实现：可自己设计，隐藏掉页面名称</p>
+<h3 id="伪静态的apache实现"><a href="#伪静态的apache实现" class="headerlink" title="伪静态的apache实现"></a>伪静态的apache实现</h3><p>利用 Apache的URL重写（mod_rewrite）功能映射。<br><a href="http://blog.csdn.net/qq_16241043/article/details/54176442" target="_blank" rel="external">详细操作</a></p>
+<p>真实页面<code>bbs.itcast.cn/index.php?m=article&amp;id=1</code><br>URL显示页面<code>bbs.itcast.cn/news/1.html</code><br><strong>Apache 的伪静态规则：</strong><br><code>RewriteRule ^news/([0-9]+)\.html$ index.php?m=article&amp;id=$1 [L]</code>     </p>
+<ul>
+<li><strong>RewriteRule</strong>：固定开头</li>
+<li><strong>^news/([0-9]+).html$</strong>：这部分是匹配当前的url地址, 也就是伪静态的地址</li>
+<li><strong>[0-9]+</strong>：表示至少有1个数字,可以是0也可以是无限大</li>
+<li><strong>index.php?m=article&amp;id=$1</strong>：这里是指向对应的真实地址</li>
+<li><strong>$1</strong>：配对上面的第一个括号, $2匹配第二个以此类推</li>
+<li><strong>[L]</strong>：L意思是如果此规则匹配,则停止,不在匹配后面的,减少无必要查询 。</li>
+</ul>
+<h3 id="伪静态注入-1"><a href="#伪静态注入-1" class="headerlink" title="伪静态注入"></a>伪静态注入</h3><p>伪静态的注入和URL的普通GET注入不太相同。<br>普通url的get注入的%20(空格),%23(#),+等都可以用；但是伪静态不行，会被直接传递到到url中。<br>另外用/**/这个注释符号表示空格。</p>
+<pre><code>http://www.XXXXX.com/vote /5453′/1 报错，
+http://www.XXXXX.com/vote/5453-0/1 返回正常游戏名字 （使用-号，是因为+号会被当做url编码）
+http://www.2cto.com /vote/5453-1/1 返回5452的游戏名字，判断存在注入点
+
+http://www.xxx.com/page/html/56&apos;/**/and/**/1=1/*.html 正常
+http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
+</code></pre><p>之后按照正常套路注入</p>
+<h2 id="中转注入"><a href="#中转注入" class="headerlink" title="中转注入"></a>中转注入</h2><p>所谓<code>中转注入</code>即在目标与本机之间建立第三方服务器来中转攻击。<br>可以是在本地建立一个网站，访问本地网站，让这个网站去访问目标网站然后返回访问结果。</p>
+<p>中转注入在COOKIE注入与伪静态注入中适用的地方在于可以<strong>方便简化注入的步骤</strong></p>
+<ul>
+<li>在<strong>COOKIE注入</strong>中，可以用自己建立的网站来转化GET参数为COOKIE，构造访问请求发送给目标网站,之后只在自己建立的网站中修改get参数即可</li>
+<li>在<strong>伪静态注入</strong>中，可以用自己建立的网站来转变URL把对方静态页面的参数再转变为<strong>?参数=值</strong>的形式，之后只在自己建立的网站中输入get参数即可。</li>
+</ul>
+<p>接下来就只要访问自己建立的网站就可以进行下一步攻击。另外有ASP的注入中转生成器可以利用。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[WEB-HTTP基础]]></title>
       <url>/2018/01/30/WEB-HTTP%E5%9F%BA%E7%A1%80/</url>
       <content type="html"><![CDATA[<p>— 从零开始的笔记 —<br>— HTTP基础知识 —<br><a id="more"></a></p>
@@ -22,7 +90,7 @@ TRACE：返回服务器接受到的请求头；用于检测客户端与服务器
     有Max-Forward首字段：可以控制生存时间STEP
 CONNECT：链接至HTTP代理服务器，[详细说明](http://blog.csdn.net/kobejayandy/article/details/24606521)
 OPTIONS：返回服务器对特定资源可用的HTTP方法
-</code></pre><h3 id="POST方法的Content-Type的四种形式"><a href="#POST方法的Content-Type的四种形式" class="headerlink" title="POST方法的Content-Type的四种形式"></a>POST方法的Content-Type的四种形式</h3><p>通过HTNL的Form表单的Enctype属性指定使用的四种形式<br>application/x-www-form-urlencoded<br>multipart/form-data<br>application/json<br>text/xml</p>
+</code></pre><h3 id="POST方法的Content-Type的常用四种形式"><a href="#POST方法的Content-Type的常用四种形式" class="headerlink" title="POST方法的Content-Type的常用四种形式"></a>POST方法的Content-Type的常用四种形式</h3><p>通过HTNL的Form表单的Enctype属性指定使用的常用四种形式<br>application/x-www-form-urlencoded<br>multipart/form-data<br>application/json<br>text/xml<br>除此以外还有<br>application/x-java-serialized-object ： java序列化<br>application/x-amf：Flash序列化<br>application/soap+msbin1：Silverlight序列化</p>
 <h4 id="application-x-www-form-urlencoded-："><a href="#application-x-www-form-urlencoded-：" class="headerlink" title="application/x-www-form-urlencoded ："></a>application/x-www-form-urlencoded ：</h4><p>数据被编码为名称/值对</p>
 <pre><code>POST http://www.example.com HTTP/1.1
 Content-Type: application/x-www-form-urlencoded;charset=utf-8
