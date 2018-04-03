@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="……好好学习了下python2.7.放笔记放笔记">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-01-25T08:46:08.970Z">
+<meta property="og:updated_time" content="2018-03-25T09:24:04.893Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python2.7笔记">
 <meta name="twitter:description" content="……好好学习了下python2.7.放笔记放笔记">
@@ -145,13 +145,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -269,7 +269,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-python笔记" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -323,6 +323,68 @@
 <li>成员运算符 in  not in (判断是否包含)</li>
 <li>身份运算符 is  not is (判断地址是否相同)</li>
 </ul>
+<h3 id="运算符优先级"><a href="#运算符优先级" class="headerlink" title="运算符优先级"></a>运算符优先级</h3><table>
+<thead>
+<tr>
+<th style="text-align:center">符号</th>
+<th style="text-align:center">意思</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"> **</td>
+<td style="text-align:center">指数 (最高优先级)</td>
+</tr>
+<tr>
+<td style="text-align:center"> ~ + -</td>
+<td style="text-align:center">按位翻转, 一元加号和减号 (最后两个的方法名为 +@ 和 -@)</td>
+</tr>
+<tr>
+<td style="text-align:center"> * / % //</td>
+<td style="text-align:center">乘，除，取模和取整除</td>
+</tr>
+<tr>
+<td style="text-align:center"> + -</td>
+<td style="text-align:center">加法减法</td>
+</tr>
+<tr>
+<td style="text-align:center"> &gt;&gt; &lt;&lt;</td>
+<td style="text-align:center">右移，左移运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &amp;</td>
+<td style="text-align:center">位 ‘AND’</td>
+</tr>
+<tr>
+<td style="text-align:center"> ^ ｜</td>
+<td style="text-align:center">位运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &lt;= &lt; &gt; &gt;=</td>
+<td style="text-align:center">比较运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> &lt;&gt; == !=</td>
+<td style="text-align:center">等于运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> = %= /= //= -= += <em>= *</em>=</td>
+<td style="text-align:center">赋值运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> is is not</td>
+<td style="text-align:center">身份运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> in not in</td>
+<td style="text-align:center">成员运算符</td>
+</tr>
+<tr>
+<td style="text-align:center"> not or and</td>
+<td style="text-align:center">逻辑运算符</td>
+</tr>
+</tbody>
+</table>
 <h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="数字变量"><a href="#数字变量" class="headerlink" title="数字变量"></a>数字变量</h3><p>类型：<strong>int long bool float complex(复数)</strong><br>long 不固定长度，受限于虚拟内存</p>
 <h3 id="字符串变量"><a href="#字符串变量" class="headerlink" title="字符串变量"></a>字符串变量</h3><p>表现形式：<strong>‘str’ ‘’str’’ ‘’’str’’’</strong><br>三引号可以保留字符串中的所有格式信息<br>字符串加 <strong>r</strong>或<strong>R</strong> 前缀表示不使用转义字符而是原生字符</p>
 <h2 id="字符串运算、索引、切片"><a href="#字符串运算、索引、切片" class="headerlink" title="字符串运算、索引、切片"></a>字符串运算、索引、切片</h2><h3 id="字符串运算"><a href="#字符串运算" class="headerlink" title="字符串运算"></a>字符串运算</h3><p>str1+str2 拼接字符串<br>str*3 重复字符串<br>str in string 判断包含</p>
@@ -415,6 +477,9 @@
 <h3 id="出现次数范围"><a href="#出现次数范围" class="headerlink" title="出现次数范围"></a>出现次数范围</h3><p>限定{}前面的元素重现次数<br>{num} 固定次数<br>{min,max} 次数范围<br>如 [a-zA-Z]{1,5} 匹配1~5个大小写字母<br>? 等于 {0,1}</p>
 <h3 id="（）"><a href="#（）" class="headerlink" title="（）"></a>（）</h3><p>每个括号都有一个编号，从左往右，从1开始<br>1.记忆被匹配到的文本<br>    多个（）一一对应多个变量<br>2.用于|的多选项范围<br>    （）内加 ?: 不记忆这部分被匹配到的内容<br>3.用于? * +的量词作用范围<br>    （）内加 ?: 不记忆这部分被匹配到的内容<br>4.指定别名<br>(?P<name>…) 指定一个别名<br>(?P=name) 引用别名为name的分组匹配到的字符串</name></p>
 <p>对于以上<strong>所有</strong>用到的特殊字符，用转义字符’\’来表示本身<br>如 ([a-z]+) ==&gt; (very)</p>
+<h2 id="requests"><a href="#requests" class="headerlink" title="requests"></a>requests</h2><blockquote>
+<p>//requests 包的使用<br>   1.使用requests.get(url=urlforflag)<br>       后者需要手动进行url加密 需要修改变量的地方断开使用字符串链接来构造payload<br>   2.使用response=requests.get(url=url,params=data)<br>       data = {“id”: sql_forflag % (i, x)}<br>       data内的内容会被自动url加密；可以用response.url查看发送的真实url<br>   3.使用response=requests.post(url=url,data=data,cookies=cookies)\<br>       data = {“id”: sql_forflag % (i, x)}<br>       cookies = {dict(PHPSESSID=’c3vg3kihmut0ne06ubhja3hgv6’,hello=’123’)}</p>
+</blockquote>
 
       
     </div>
@@ -423,17 +488,17 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2018/01/25/python笔记/">python2.7笔记</a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2018-01-25, 15:07:58</p>
-        <p><span>Updated:</span>2018-01-25, 16:46:08</p>
+        <p><span>本文标题:</span><a href="/2018/01/25/python笔记/">python2.7笔记</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2018-01-25, 15:07:58</p>
+        <p><span>最后更新:</span>2018-03-25, 17:24:04</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2018/01/25/python笔记/" title="python2.7笔记">http://lalajun.com/2018/01/25/python笔记/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/01/25/python笔记/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/25/python笔记/" title="python2.7笔记">http://lalajun.com/2018/01/25/python笔记/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/01/25/python笔记/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
@@ -460,9 +525,9 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入输出及NULL"><span class="toc-text">输入输出及NULL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数导入"><span class="toc-text">函数导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算符"><span class="toc-text">运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数字变量"><span class="toc-text">数字变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串变量"><span class="toc-text">字符串变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串运算、索引、切片"><span class="toc-text">字符串运算、索引、切片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串运算"><span class="toc-text">字符串运算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串索引"><span class="toc-text">字符串索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串切片"><span class="toc-text">字符串切片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串方法"><span class="toc-text">字符串方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串格式化"><span class="toc-text">字符串格式化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#str-format"><span class="toc-text">str.format()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#“”"><span class="toc-text">“” % ( )</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型转换函数"><span class="toc-text">类型转换函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python2-x关键词"><span class="toc-text">python2.x关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数调用"><span class="toc-text">函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda函数"><span class="toc-text">Lambda函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map函数"><span class="toc-text">map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce函数"><span class="toc-text">Reduce函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Filter函数"><span class="toc-text">Filter函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eval-函数"><span class="toc-text">Eval()函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表（序列、List）"><span class="toc-text">列表（序列、List）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enumerate-函数"><span class="toc-text">enumerate()函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套列表"><span class="toc-text">嵌套列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列表实例"><span class="toc-text">列表实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#元组-tuple"><span class="toc-text">元组(tuple)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-1"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元组实例"><span class="toc-text">元组实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字典"><span class="toc-text">字典</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-2"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字典应用"><span class="toc-text">字典应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代"><span class="toc-text">迭代</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合"><span class="toc-text">集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-3"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集合运算"><span class="toc-text">集合运算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件读写"><span class="toc-text">文件读写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zip函数"><span class="toc-text">Zip函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Numpy"><span class="toc-text">Numpy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ndarray对象"><span class="toc-text">ndarray对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ndarray函数"><span class="toc-text">ndarray函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存取数组"><span class="toc-text">存取数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#where函数"><span class="toc-text">where函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ufunc运算"><span class="toc-text">ufunc运算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pandas"><span class="toc-text">Pandas</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Series"><span class="toc-text">Series</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#读取数据"><span class="toc-text">读取数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除"><span class="toc-text">删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#筛选"><span class="toc-text">筛选</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataFrame"><span class="toc-text">DataFrame</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#生成"><span class="toc-text">生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DataFrame取值赋值-——-变为Series"><span class="toc-text">DataFrame取值赋值 —— 变为Series</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#选取"><span class="toc-text">选取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重新索引"><span class="toc-text">重新索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#排序"><span class="toc-text">排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件加载、写入"><span class="toc-text">文件加载、写入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正则表达式"><span class="toc-text">正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令"><span class="toc-text">命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊字符"><span class="toc-text">特殊字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符组"><span class="toc-text">字符组 []</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#出现次数范围"><span class="toc-text">出现次数范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（）"><span class="toc-text">（）</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#输入输出及NULL"><span class="toc-text">输入输出及NULL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数导入"><span class="toc-text">函数导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运算符"><span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符优先级"><span class="toc-text">运算符优先级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量"><span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数字变量"><span class="toc-text">数字变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串变量"><span class="toc-text">字符串变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串运算、索引、切片"><span class="toc-text">字符串运算、索引、切片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串运算"><span class="toc-text">字符串运算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串索引"><span class="toc-text">字符串索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串切片"><span class="toc-text">字符串切片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串方法"><span class="toc-text">字符串方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串格式化"><span class="toc-text">字符串格式化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#str-format"><span class="toc-text">str.format()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#“”"><span class="toc-text">“” % ( )</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型转换函数"><span class="toc-text">类型转换函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#python2-x关键词"><span class="toc-text">python2.x关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#函数"><span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#函数调用"><span class="toc-text">函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lambda函数"><span class="toc-text">Lambda函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map函数"><span class="toc-text">map函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reduce函数"><span class="toc-text">Reduce函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Filter函数"><span class="toc-text">Filter函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Eval-函数"><span class="toc-text">Eval()函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表（序列、List）"><span class="toc-text">列表（序列、List）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enumerate-函数"><span class="toc-text">enumerate()函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套列表"><span class="toc-text">嵌套列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#列表实例"><span class="toc-text">列表实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#元组-tuple"><span class="toc-text">元组(tuple)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-1"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#元组实例"><span class="toc-text">元组实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字典"><span class="toc-text">字典</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-2"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字典应用"><span class="toc-text">字典应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代"><span class="toc-text">迭代</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合"><span class="toc-text">集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基础操作-3"><span class="toc-text">基础操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集合运算"><span class="toc-text">集合运算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件读写"><span class="toc-text">文件读写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zip函数"><span class="toc-text">Zip函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Numpy"><span class="toc-text">Numpy</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ndarray对象"><span class="toc-text">ndarray对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ndarray函数"><span class="toc-text">ndarray函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#存取数组"><span class="toc-text">存取数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#where函数"><span class="toc-text">where函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ufunc运算"><span class="toc-text">ufunc运算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pandas"><span class="toc-text">Pandas</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Series"><span class="toc-text">Series</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#读取数据"><span class="toc-text">读取数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除"><span class="toc-text">删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#筛选"><span class="toc-text">筛选</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DataFrame"><span class="toc-text">DataFrame</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#生成"><span class="toc-text">生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DataFrame取值赋值-——-变为Series"><span class="toc-text">DataFrame取值赋值 —— 变为Series</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#选取"><span class="toc-text">选取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#重新索引"><span class="toc-text">重新索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#排序"><span class="toc-text">排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#文件加载、写入"><span class="toc-text">文件加载、写入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正则表达式"><span class="toc-text">正则表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令"><span class="toc-text">命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊字符"><span class="toc-text">特殊字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符组"><span class="toc-text">字符组 []</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#出现次数范围"><span class="toc-text">出现次数范围</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#（）"><span class="toc-text">（）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#requests"><span class="toc-text">requests</span></a></li></ol>
         
     </div>
     <style>
@@ -476,10 +541,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -493,21 +558,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/01/30/WEB-HTTP基础/" title="Pre: WEB-HTTP基础">
+            <a href="/2018/01/30/WEB-HTTP基础/" title="上一篇: WEB-HTTP基础">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/12/27/比特币&区块链与交易/" title="Next: 比特币&amp;区块链与交易">
+            <a href="/2017/12/27/比特币&区块链与交易/" title="下一篇: 比特币&amp;区块链与交易">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -524,14 +589,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -540,7 +605,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -573,9 +638,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
