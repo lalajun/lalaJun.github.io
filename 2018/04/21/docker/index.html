@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="LaLa" />
+
+
+
+<meta name="description" content="— docker安装使用 —— docker下LAMP搭建 —— linoda/lamp使用 —">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker使用">
+<meta property="og:url" content="http://lalajun.com/2018/04/21/docker/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="— docker安装使用 —— docker下LAMP搭建 —— linoda/lamp使用 —">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fqjgynt734j30sg0lcdi0.jpg">
+<meta property="og:updated_time" content="2018-04-22T06:45:02.222Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker使用">
+<meta name="twitter:description" content="— docker安装使用 —— docker下LAMP搭建 —— linoda/lamp使用 —">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fqjgynt734j30sg0lcdi0.jpg">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Docker使用 | 啦啦菌NODE</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LaLa</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-docker" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/04/21/docker/" class="article-date">
+      <time datetime="2018-04-21T05:07:12.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker使用
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>— docker安装使用 —<br>— docker下LAMP搭建 —<br>— linoda/lamp使用 —<br><a id="more"></a><br>出题需要….入坑….翻滚….翻滚…..坑中来回翻滚…</p>
+<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><p><a href="https://blog.csdn.net/u013814153/article/details/53925790" target="_blank" rel="external">kali下安装docker</a><br><a href="https://docs.docker-cn.com" target="_blank" rel="external">官方文档</a>(需要翻墙)</p>
+<h2 id="Docker层次"><a href="#Docker层次" class="headerlink" title="Docker层次"></a>Docker层次</h2><p>仓库（Repository）—— 镜像（Image）—— 容器（Container）<br>仓库在云端，有官方有个人的很多很多镜像<br>镜像运行成为容器<br>先弄一个自己的仓库吧，可以传上去传下来<br>申请一个Docker账号，就可以有自己的仓库（虽然事后证明，因为网速问题，并不可以传上去传下来）</p>
+<h2 id="Docker账号与代理"><a href="#Docker账号与代理" class="headerlink" title="Docker账号与代理"></a>Docker账号与代理</h2><p><a href="https://cloud.docker.com/" target="_blank" rel="external">申请docker账号</a>(不翻墙很慢)<br><a href="https://www.cnblogs.com/anliven/p/6218741.html" target="_blank" rel="external">代理加速</a>(文章其中的docker login的账号密码应该docker的账号和密码)</p>
+<h2 id="Docker-仓库-操作"><a href="#Docker-仓库-操作" class="headerlink" title="Docker 仓库 操作"></a>Docker 仓库 操作</h2><p><code>Docker login</code>：登录个人Docker<br><code>Docker logout</code>：退出个人Docker<br><code>Docker search XXXX</code>：从官方仓库个人仓库，搜索类似的镜像 比如Docker search ubuntu</p>
+<h2 id="Docker-文件-lt-–-gt-镜像-lt-–-gt-仓库"><a href="#Docker-文件-lt-–-gt-镜像-lt-–-gt-仓库" class="headerlink" title="Docker 文件&lt;–&gt;镜像&lt;–&gt;仓库"></a>Docker 文件&lt;–&gt;镜像&lt;–&gt;仓库</h2><p><code>docker push [用户/仓库：标签]</code>：推送一个镜像到个人仓库<br><code>docker pull [用户/仓库：标签]</code>：从仓库拉取一个镜像到本地<br><code>docker save -o 文件 镜像</code>：镜像输出到文件<br><code>docker load -i 文件</code>：文件读取成镜像</p>
+<h2 id="通过-Dockerfile-新建Docker镜像"><a href="#通过-Dockerfile-新建Docker镜像" class="headerlink" title="通过 Dockerfile 新建Docker镜像"></a>通过 Dockerfile 新建Docker镜像</h2><p>在拥有Dockerfile的文件夹下运行<br><code>docker build [options] PATH/URL</code></p>
+<ul>
+<li>-t images_name:指定镜像名字</li>
+<li>-f:指定Dockerfile文件，如果没有，默认在上下文中</li>
+<li>PATH/URL：指定本地上下文路径，或远程Dockerfile<br>关于Dockerfile的语法，在本文最后总结，这个比较难</li>
+</ul>
+<h2 id="Docker镜像-操作"><a href="#Docker镜像-操作" class="headerlink" title="Docker镜像 操作"></a>Docker镜像 操作</h2><p><code>docker images</code>：查看本地镜像<br><code>docker rmi &lt;image_name&gt;</code>:删除本地镜像</p>
+<h2 id="docker镜像-–-gt-容器"><a href="#docker镜像-–-gt-容器" class="headerlink" title="docker镜像 –&gt; 容器"></a>docker镜像 –&gt; 容器</h2><p><code>docker run 镜像ID / 仓库名：标签名</code>:通过本地镜像生成容器<br>参数：</p>
+<ul>
+<li>-i:以交互模式运行容器</li>
+<li>-d:容器在后台运行</li>
+<li>-t:启动后进入命令行</li>
+<li>-p:端口映射</li>
+<li>-v：挂载文件，可以在外面操作里面的文件</li>
+</ul>
+<h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><p>端口映射：使用<code>-p</code>参数会分配宿主机的端口映射到虚拟机<br><code>docker run -p ip:hostPort:containerPort</code><br>ip：宿主机的ip地址<br>hostPort：宿主机需要映射的端口<br>containerPort：虚拟机的端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -p 127.0.0.1:3306:3306，映射本机的3306端口到虚拟机的3306端口。</div></pre></td></tr></table></figure>
+<h3 id="检查端口"><a href="#检查端口" class="headerlink" title="检查端口"></a>检查端口</h3><p><code>docker port cortainerid</code>：查看容器端口映射情况</p>
+<h2 id="Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库"><a href="#Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库" class="headerlink" title="Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库"></a>Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库</h2><p><code>docker commit [参数] 容器ID [用户/仓库：标签]</code>：把容器固化成镜像<br>参数：</p>
+<ul>
+<li>-m 说明 </li>
+<li>-a 作者信息<br><code>docker import -m &quot;message&quot; file|URL 名称</code>：从文件读入<br><code>docker export -m &quot;message&quot; file|URL 名称</code>：读出到文件</li>
+</ul>
+<h2 id="Docker容器-操作"><a href="#Docker容器-操作" class="headerlink" title="Docker容器 操作"></a>Docker容器 操作</h2><p><code>docker ps</code>:查看运行中的container</p>
+<ul>
+<li>-a：查看所有容器包括停止状态的容器</li>
+</ul>
+<p><code>docker start CONTAINER ID</code><br><code>docker stop CONTAINER ID</code><br><code>docker restart CONTAINER ID</code><br><code>ctrl + p then ctrl + q</code>:挂起正在运行中的容器的命令行<br><code>docker attach CONTAINER ID</code>:链接正在运行的挂起容器<br><code>docker rm &lt;CONTAINER_ID/CONTAINER_NAME&gt;</code>:删除容器<br>ps.CONTAINER ID:容器ID，可以缩写，即前几位</p>
+<h2 id="Docker容器-lt-–-gt-本机-传输文件"><a href="#Docker容器-lt-–-gt-本机-传输文件" class="headerlink" title="Docker容器 &lt;–&gt; 本机 传输文件"></a>Docker容器 &lt;–&gt; 本机 传输文件</h2><p><code>docker cp 本地文件路径 ID全称:容器路径</code><br><code>docker cp ID全称:容器文件路径 本地路径</code></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqjgynt734j30sg0lcdi0.jpg" alt="docker"></p>
+<h2 id="Dockerfile-命令"><a href="#Dockerfile-命令" class="headerlink" title="Dockerfile 命令"></a>Dockerfile 命令</h2><p><strong>FROM 指定基础镜像</strong><br>格式：<code>FROM &lt;image&gt;/&lt;image&gt;:&lt;tag&gt;</code></p>
+<p><strong>MAINTAINER 指定维护者信息</strong><br>格式：<code>MAINTAINER image_creator@docker.com</code><br>该信息会写入生成镜像的Author属性域中</p>
+<p><strong>WORKDIR 指定容器工作目录</strong><br>格式：<code>WORKDIR /path</code></p>
+<p><strong>COPY 复制文件</strong><br>格式：<code>COPY &lt;源路径&gt; &lt;目标路径&gt;</code></p>
+<ul>
+<li>源路径：在上下文目录中，为上下文根目录的相对路径</li>
+<li>目标路径：可以是容器内绝对路径，也可以是相对于工作目录的相对路径</li>
+</ul>
+<p><strong>ADD 高级复制文件</strong><br>格式：<code>ADD &lt;源路径&gt; &lt;目标路径&gt;</code></p>
+<ul>
+<li>源路径：可以是URL，会先下载这个URL指向的文件到目标路径去取；如果是tar压缩文件，会自动解压</li>
+</ul>
+<p><strong>RUN 运行指定命令</strong><br>格式：<code>RUN &lt;command&gt; / RUN [&#39;executable&#39;,&quot;param1&quot;,&quot;param2&quot;]</code></p>
+<ul>
+<li>前者在shell中断中执行命令，即 /bin/sh -c</li>
+<li>后者使用exec执行</li>
+</ul>
+<p>每条RUN指令将在当前镜像的基础上执行指定命令并提交为新的镜像。<br>可以命令较长，可以使用\换行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RUN apt-get update</div></pre></td></tr></table></figure></p>
+<p><strong>CMD 指定启动容器时默认执行的命令</strong></p>
+<ul>
+<li>CMD [“executable”,”param1”,”param2”] 使用exec执行，是推荐使用的方式</li>
+<li>CMD param1 param2 在/bin/sh中执行，提供给需要交互的应用；</li>
+<li>CMD [“param1”,”param2”] 提供给ENTRYPOINT的默认参数。</li>
+</ul>
+<p>每个Dockerfile只能有一条CMD命令。如果指定了多条命令，只有最后一条会被执行。</p>
+<p><strong>EXPOSE 声明端口监听</strong><br>格式：<code>EXPOSE &lt;POST&gt;</code><br>只起到声明的作用，不会自动完成端口映射。还是需要docker run -p来指定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXPOSE 22 80 443 3306 ##这些端口需要监听，即映射到外部</div></pre></td></tr></table></figure></p>
+<p><a href="https://www.cnblogs.com/fengzheng/p/5181222.html" target="_blank" rel="external">其他Dockerfile命令</a></p>
+<h2 id="DOCKER下-LAMP-搭建"><a href="#DOCKER下-LAMP-搭建" class="headerlink" title="DOCKER下 LAMP 搭建"></a>DOCKER下 LAMP 搭建</h2><p>利用了官方ubuntu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install vim-gtk</div><div class="line">apt-get install net-tools</div><div class="line"><span class="comment">#可以更新源</span></div><div class="line">apt-get install mysql-server</div><div class="line">service mysql start</div><div class="line">apt-get install apache2</div><div class="line">service apache2 start</div><div class="line">apt-get install php7.0 php7.0-mcrypt</div><div class="line"></div><div class="line">vim /etc/apache2/sites-available <span class="comment"># 修改网站根目录</span></div></pre></td></tr></table></figure></p>
+<p>发现装错了。。。应该php5.5<br>删除php7 更换php5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#移除默认已安装的PHP包</span></div><div class="line">apt-get install aptitude</div><div class="line">aptitude purge `dpkg -l | grep php| awk <span class="string">'&#123;print $2&#125;'</span> |tr <span class="string">"\n"</span> <span class="string">" "</span>`</div><div class="line"><span class="comment">#安装切换源的add-apt-repository所依赖的两个包</span></div><div class="line">apt-get install python-software-properties</div><div class="line">apt-get install software-properties-common</div><div class="line">apt-get update</div><div class="line"><span class="comment">##更新得到PPA源</span></div><div class="line">add-apt-repository ppa:ondrej/phpe</div><div class="line"><span class="comment">##出错WARNING: could not open file '/etc/apt/sources.list'</span></div><div class="line">之前改过sources.list</div><div class="line">把原来的sources.list 替换回去 就可以</div><div class="line"><span class="comment">##出错WARNING: add-apt-repository is broken with non-UTF-8 locales</span></div><div class="line">根据提示内容修改命令</div><div class="line">LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php</div><div class="line">apt-get update</div><div class="line"><span class="comment">##安装php对应版本</span></div><div class="line">apt-get install php5.6</div><div class="line">apt-get install php5.6-gd</div><div class="line">apt-get install php5.6-mysql</div></pre></td></tr></table></figure></p>
+<p>…..好了 下载速度贼慢，疯狂断<br>再换…</p>
+<h2 id="docker下利用linoda-lamp"><a href="#docker下利用linoda-lamp" class="headerlink" title="docker下利用linoda/lamp"></a>docker下利用linoda/lamp</h2><p><a href="https://hub.docker.com/r/linode/lamp/" target="_blank" rel="external">官方文档</a><br><a href="https://blog.csdn.net/MasonQAQ/article/details/78048112?locationNum=5&amp;fps=1" target="_blank" rel="external">网上教程</a></p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p><code>service mysql start</code><br><code>mysql -u root -p</code><br><code>Admin2015</code></p>
+<h3 id="apache2-配置文件"><a href="#apache2-配置文件" class="headerlink" title="apache2 配置文件"></a>apache2 配置文件</h3><p><code>/etc/apache2/apache2.conf</code>:apache2启动时自动读取文件<br><code>/etc/apache2/sites-enabled</code>：指向sites-available文件的符号链接<br><code>/etc/apache2/sites-available</code>：真正配置文件所在</p>
+<p>如果apache上配置了多个虚拟主机，每个虚拟主机的配置文件都放在 sites-available下，那么对于虚拟主机的停用、启用就非常方便了。<br>当在sites-enabled下建立一个指向某个虚拟主机配置文件的链 接时，就启用了它；如果要关闭某个虚拟主机的话，只需删除相应的链接即可，根本不用去改配置文件。</p>
+<p>删除/etc/apache2/sites-enabled下的文件<br>删除/etc/apache2/sites-available下的example什么的，修改000什么的修改网站根目录<br>restart</p>
+<h3 id="php"><a href="#php" class="headerlink" title="php"></a>php</h3><p><code>php -v</code> 查看版本<br><code>php -m</code> 查看扩展<br>发现pdo-mysql扩展没有<br>网上一堆说重新编译，但是重新编译需要知道php安装路径，mysql安装路径，phpize一些东西，还需要下源码等<br>在别人的docker里，让人想死<br>其实<br>通过<code>apt-get install php5-mysql</code>安装即可<br><code>service apache2 restart</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/04/21/docker/">Docker使用</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2018-04-21, 13:07:12</p>
+        <p><span>最后更新:</span>2018-04-22, 14:45:02</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/21/docker/" title="Docker使用">http://lalajun.com/2018/04/21/docker/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/04/21/docker/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/04/09/WEB-SQL报错注入/">
+                    WEB-SQL报错注入
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker安装"><span class="toc-text">Docker安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker层次"><span class="toc-text">Docker层次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker账号与代理"><span class="toc-text">Docker账号与代理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-仓库-操作"><span class="toc-text">Docker 仓库 操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-文件-lt-–-gt-镜像-lt-–-gt-仓库"><span class="toc-text">Docker 文件<–>镜像<–>仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过-Dockerfile-新建Docker镜像"><span class="toc-text">通过 Dockerfile 新建Docker镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker镜像-操作"><span class="toc-text">Docker镜像 操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker镜像-–-gt-容器"><span class="toc-text">docker镜像 –> 容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#端口映射"><span class="toc-text">端口映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检查端口"><span class="toc-text">检查端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库"><span class="toc-text">Docker 容器文件<–>容器–>镜像/仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker容器-操作"><span class="toc-text">Docker容器 操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker容器-lt-–-gt-本机-传输文件"><span class="toc-text">Docker容器 <–> 本机 传输文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dockerfile-命令"><span class="toc-text">Dockerfile 命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DOCKER下-LAMP-搭建"><span class="toc-text">DOCKER下 LAMP 搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#docker下利用linoda-lamp"><span class="toc-text">docker下利用linoda/lamp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql"><span class="toc-text">mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#apache2-配置文件"><span class="toc-text">apache2 配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#php"><span class="toc-text">php</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/04/09/WEB-SQL报错注入/" title="下一篇: WEB-SQL报错注入">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 LaLa
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

