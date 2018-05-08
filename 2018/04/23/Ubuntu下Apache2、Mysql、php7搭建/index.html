@@ -15,13 +15,18 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="啦啦菌NODE">
-<meta property="og:url" content="http://lalajun.com/archives/2017/12/index.html">
+<meta name="description" content="— LAMP搭建 —">
+<meta name="keywords" content="web,linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下Apache2、Mysql、php7搭建">
+<meta property="og:url" content="http://lalajun.com/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="— LAMP搭建 —">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-04-23T08:23:09.616Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="啦啦菌NODE">
+<meta name="twitter:title" content="Ubuntu下Apache2、Mysql、php7搭建">
+<meta name="twitter:description" content="— LAMP搭建 —">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -53,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Archives: 2017/12 | 啦啦菌NODE</title>
+<title>Ubuntu下Apache2、Mysql、php7搭建 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -63,8 +68,8 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
-        isArchive: true,
+        isPost: true,
+        isArchive: false,
         isTag: false,
         isCategory: false,
         fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
@@ -270,122 +275,150 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-Ubuntu下Apache2、Mysql、php7搭建" class="article article-type-post" itemscope itemprop="blogPost">
   
+    <div class="article-meta">
+      <a href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/" class="article-date">
+      <time datetime="2018-04-23T06:07:12.000Z" itemprop="datePublished">2018-04-23</time>
+</a>
+
+
+    </div>
   
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ubuntu下Apache2、Mysql、php7搭建
+    </h1>
+  
+
+      </header>
       
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2017/12/27/比特币&区块链与交易/" class="archive-article-date">
-      <time datetime="2017-12-27T09:39:54.000Z" itemprop="datePublished">12-27</time>
-</a>
-
-
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/27/比特币&区块链与交易/">比特币&amp;区块链与交易</a>
-    </h1>
-  
-
-        <div class="article-info info-on-archive">
+    <div class="article-entry" itemprop="articleBody">
+      
           
+        <p>— LAMP搭建 —<br><a id="more"></a></p>
+<h2 id="Ubuntu-下-LAMP-搭建"><a href="#Ubuntu-下-LAMP-搭建" class="headerlink" title="Ubuntu 下 LAMP 搭建"></a>Ubuntu 下 LAMP 搭建</h2><p>在docker下搭建，利用了官方ubuntu:lastest<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line"><span class="comment">#安装vim net-tools  包括netstat等</span></div><div class="line">apt-get install vim-gtk</div><div class="line">apt-get install net-tools</div><div class="line"><span class="comment">#可以更新源 详情百度</span></div><div class="line">apt-get install mysql-server</div><div class="line">service mysql start</div><div class="line">apt-get install apache2</div><div class="line">service apache2 start</div><div class="line">apt-get install php7.0 php7.0-mcrypt</div><div class="line"></div><div class="line">vim /etc/apache2/sites-available <span class="comment"># 修改网站根目录</span></div></pre></td></tr></table></figure></p>
+<p>删除php7 更换php5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#移除默认已安装的PHP包</span></div><div class="line">apt-get install aptitude</div><div class="line">aptitude purge `dpkg -l | grep php| awk <span class="string">'&#123;print $2&#125;'</span> |tr <span class="string">"\n"</span> <span class="string">" "</span>`</div><div class="line"><span class="comment">#安装切换源的add-apt-repository所依赖的两个包</span></div><div class="line">apt-get install python-software-properties</div><div class="line">apt-get install software-properties-common</div><div class="line">apt-get update</div><div class="line"><span class="comment">##更新得到PPA源</span></div><div class="line">add-apt-repository ppa:ondrej/phpe</div><div class="line"><span class="comment">##出错WARNING: could not open file '/etc/apt/sources.list'</span></div><div class="line">之前改过sources.list</div><div class="line">把原来的sources.list 替换回去 就可以</div><div class="line"><span class="comment">##出错WARNING: add-apt-repository is broken with non-UTF-8 locales</span></div><div class="line">根据提示内容修改命令</div><div class="line">LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php</div><div class="line">apt-get update</div><div class="line"><span class="comment">##安装php对应版本</span></div><div class="line">apt-get install php5.6</div><div class="line">apt-get install php5.6-gd</div><div class="line">apt-get install php5.6-mysql </div><div class="line"><span class="comment">##网速极慢...</span></div></pre></td></tr></table></figure></p>
+<h2 id="phpstudy"><a href="#phpstudy" class="headerlink" title="phpstudy"></a>phpstudy</h2><p>当需要各种版本的php<br>事情的最后，你会发现还是phpstudy好用<br>安装：<a href="http://www.phpstudy.net/download.html" target="_blank" rel="external">phpstudy_linux</a><br>使用：<br>apache配置文件：/phpstudy/server/httpd/conf/httpd.conf<br>PHP配置文件：/phpstudy/server/php/etc/php.ini<br>打开MySQL控制台：/phpstudy/mysql/bin/mysql -uroot -proot<br>网站根目录 /phpstudy/www</p>
 
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/区块链/">区块链</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2018-04-23, 14:07:12</p>
+        <p><span>最后更新:</span>2018-04-23, 16:23:09</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/" title="Ubuntu下Apache2、Mysql、php7搭建">http://lalajun.com/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
     </div>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/04/27/WEB-RPO攻击/">
+                    WEB-RPO攻击
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/04/21/docker/">
+                    Docker使用
+                </a>
+            </div>
+        
+    </nav>
+
+  
 </article>
-  
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ubuntu-下-LAMP-搭建"><span class="toc-text">Ubuntu 下 LAMP 搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpstudy"><span class="toc-text">phpstudy</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2017/12/27/比特币&区块链与挖矿/" class="archive-article-date">
-      <time datetime="2017-12-27T09:05:28.000Z" itemprop="datePublished">12-27</time>
-</a>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/27/比特币&区块链与挖矿/">比特币&amp;区块链与挖矿</a>
-    </h1>
-  
 
-        <div class="article-info info-on-archive">
-          
 
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/区块链/">区块链</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/04/27/WEB-RPO攻击/" title="上一篇: WEB-RPO攻击">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/04/21/docker/" title="下一篇: Docker使用">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
     </div>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-          <div class="article-meta">
-              <a href="/2017/12/05/WEB-CTF中的SQL文件操作/" class="archive-article-date">
-      <time datetime="2017-12-05T07:08:41.000Z" itemprop="datePublished">12-05</time>
-</a>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
-        </div>
-         
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a>
-    </h1>
-  
 
-        <div class="article-info info-on-archive">
-          
 
-          
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-    </div>
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">

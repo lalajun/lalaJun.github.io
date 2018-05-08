@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90u3ty4j30em02jq2t.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb91002yij30hh03n0sp.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb9178typj30fu05t74j.jpg">
-<meta property="og:updated_time" content="2018-03-31T08:32:57.745Z">
+<meta property="og:updated_time" content="2018-04-25T00:39:11.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-PHP核心配置">
 <meta name="twitter:description" content="— 从零开始的笔记 ——PHP5核心配置及测试—">
@@ -194,7 +194,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
                     </div>
                 </section>
                 
@@ -203,9 +203,13 @@
                 <section class="switch-part switch-part3">
                     <div id="js-friends">
                     
+                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
+                    
                       <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
                     
                       <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
                     
                       <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
                     
@@ -375,7 +379,7 @@
 </blockquote>
 <p><strong>作用</strong>：设置为On时，可以直接包含远程文件(http:// 与ftp:// )，比如include包含。<code>include($var)</code> 当$var可控时，可以执行PHP代码<br>讲<strong>allow_url_include</strong>的同时就会提到<strong>allow_url_fopen</strong>。因为在官方文档中使用<em>allow_url_include</em>的前提是<em>allow_url_fopen</em>为On</p>
 <h3 id="allow-url-fopen-是否允许打开远程文件"><a href="#allow-url-fopen-是否允许打开远程文件" class="headerlink" title="allow_url_fopen(是否允许打开远程文件)"></a>allow_url_fopen(是否允许打开远程文件)</h3><p>在 PHP &lt;= 4.3.4 时是 PHP_INI_ALL。之后版本是 PHP_INI_SYSTEM,默认为On<br><strong>作用</strong>：设置为On时，允许打开远程文件，比如fopen打开。</p>
-<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="">戳这里</a> </p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">戳这里</a> </p>
 <h2 id="magic-quotes-gpc-魔术引号自动过滤"><a href="#magic-quotes-gpc-魔术引号自动过滤" class="headerlink" title="magic_quotes_gpc(魔术引号自动过滤)"></a>magic_quotes_gpc(魔术引号自动过滤)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>，之后是 <strong>PHP_INI_PERDIR</strong>， 默认为On。<br>从 PHP 5.3.0 起不推荐使用。 在 PHP 5.4.0 中移除该选项。（避免了magic_quotes_gpc未设置，用户依赖这个设置而带来了安全隐患）<br><strong>作用</strong>：为 GPC (Get/Post/Cookie) 操作设置 magic_quotes 状态。当 magic_quotes 为 on，自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠()。不会过滤<strong>$_SERVER</strong>变量，可以利用client-ip、referer一类的漏洞。<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_gpc</p>
 <h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90lzewyj30go040glk.jpg" alt="10.png"><br></div>
@@ -587,7 +591,7 @@ system — 执行外部程序，并且显示输出
         <p><span>本文标题:</span><a href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
         <p><span>发布时间:</span>2018-03-06, 14:07:12</p>
-        <p><span>最后更新:</span>2018-03-31, 16:32:57</p>
+        <p><span>最后更新:</span>2018-04-25, 08:39:11</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/03/06/WEB-PHP核心配置/" title="WEB-PHP核心配置">http://lalajun.com/2018/03/06/WEB-PHP核心配置/</a>
             <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/03/06/WEB-PHP核心配置/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -668,7 +672,7 @@ system — 执行外部程序，并且显示输出
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF_writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
