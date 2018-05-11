@@ -16,7 +16,7 @@
 
 
 <meta name="description" content="— 第二届网强杯 —">
-<meta name="keywords" content="web,writeup">
+<meta name="keywords" content="writeup,web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WEB-网强杯-WEB-writeup">
 <meta property="og:url" content="http://lalajun.com/2018/03/26/WEB-网强杯 WEB writeup/index.html">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg">
-<meta property="og:updated_time" content="2018-05-08T12:49:25.175Z">
+<meta property="og:updated_time" content="2018-05-09T00:48:35.550Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-网强杯-WEB-writeup">
 <meta name="twitter:description" content="— 第二届网强杯 —">
@@ -152,13 +152,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
+                        <li>Menu</li>
+                        <li>Tags</li>
                         
-                        <li>友情链接</li>
+                        <li>Friends</li>
                         
                         
-                        <li>关于我</li>
+                        <li>About Me</li>
                         
                     </ul>
                 </div>
@@ -280,7 +280,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
       <div class="body-wrap"><article id="post-WEB-网强杯 WEB writeup" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -330,20 +330,32 @@
 <p><code>===</code> 精准匹配。<br>利用<code>md5()</code>漏洞，数组传入返回null，使 null===null<br>param1[]=1  param2[]=2</p>
 <h3 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>((string)$_POST[<span class="string">'param1'</span>]!==(string)$_POST[<span class="string">'param2'</span>] &amp;&amp; md5($_POST[<span class="string">'param1'</span>]) === md5($_POST[<span class="string">'param2'</span>])</div><div class="line">    <span class="keyword">die</span>(<span class="string">"success!"</span>);</div></pre></td></tr></table></figure>
 <p>无论输入什么都会变成字符串。没法绕过。<br>利用<a href="https://crypto.stackexchange.com/questions/1434/are-there-two-known-strings-which-have-the-same-md5-hash-value" target="_blank" rel="external">hash碰撞</a>生成2进制文件,使用burpsuite或者python-requests读取文件发送<br>burpsuite就不细说了，python脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">fp1=open(<span class="string">"msg1.bin"</span>)</div><div class="line">fp2=open(<span class="string">"msg2.bin"</span>)</div><div class="line">url=<span class="string">"http://39.107.33.96:10000/"</span></div><div class="line">data=&#123;<span class="string">'param1'</span>:fp1.read(),<span class="string">'param2'</span>:fp2.read()&#125;</div><div class="line">cookie=&#123;<span class="string">'PHPSESSID'</span>: <span class="string">'0n7qa29j2kvas7n402idu87aj1'</span>&#125;</div><div class="line">r=requests.post(url,data=data,cookies=cookie)</div><div class="line"><span class="keyword">print</span> r.text</div></pre></td></tr></table></figure></p>
-<h2 id="Three-hit"><a href="#Three-hit" class="headerlink" title="Three hit"></a>Three hit</h2><p>开始<code>index.php</code>页面，有登录(?func=login)和注册(?func=register)两个功能<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97quaj4j30ez0ckaa7.jpg" alt="111.png"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97uxoc7j30d30gfaa4.jpg" alt="222.png"><br>输入有过滤</p>
+<h2 id="Three-hit"><a href="#Three-hit" class="headerlink" title="Three hit"></a>Three hit</h2><p>开始<code>index.php</code>页面，有登录(?func=login)和注册(?func=register)两个功能</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97quaj4j30ez0ckaa7.jpg" alt="111.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97uxoc7j30d30gfaa4.jpg" alt="222.png"><br></div>
+
+<p>输入有过滤</p>
 <ul>
 <li>账号需要是 0-9a-zA-Z</li>
 <li>年龄需要是数字</li>
 <li>密码没有过滤</li>
 </ul>
-<p>注册后登录，进入 <code>profile.php</code><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97zr4w8j30k3085whd.jpg" alt="333.png"><br>跑目录，找到一个<strong>config.php</strong>，但没有内容<br>抓包查看，其中login页面有回显，估计是数据库查询内容回显，其他页面正常<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg" alt="444.png"><br>思索…..</p>
+<p>注册后登录，进入 <code>profile.php</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97zr4w8j30k3085whd.jpg" alt="333.png"><br></div>
+
+<p>跑目录，找到一个<strong>config.php</strong>，但没有内容<br>抓包查看，其中login页面有回显，估计是数据库查询内容回显，其他页面正常<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg" alt="444.png"><br>思索…..</p>
 <ul>
 <li>php中判断是数字可能用到<code>is_numeric()</code>，is_numeric判断数字不严格，可以是16进制。</li>
 <li>猜测后端数据库语句是<br><code>insert into lesson1(name,age,password) values(name,age,password)</code><br>在insert语句中，16进制插入会解析成字符，存入数据库中</li>
 </ul>
 <p>以上两点结合在一起<br>可以通过age输入payload转成16进制，通过insert注入数据库中，再通过login的回显判断是否成功<br>再通过页面逻辑，判断<code>profile.php</code>中的数据库语句是<br><code>select * from 表 where age = (我们的age)</code></p>
 <p>构造payload测试(因为回显判断4列)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">age=1 and 0 union select 1,2,3,4 #</div><div class="line">age=0x3120616e64203020756e696f6e2073656c65637420312c322c332c342023</div></pre></td></tr></table></figure></p>
-<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg" alt="555.png"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg" alt="666.png"><br>成功<br>之后省略注入过程<br>得到<strong>user()</strong>,<strong>database()</strong>,尝试<strong>information_schema</strong>可行，得到表结构</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg" alt="555.png"><br></div>
+
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg" alt="666.png"><br></div>
+
+<p>成功<br>之后省略注入过程<br>得到<strong>user()</strong>,<strong>database()</strong>,尝试<strong>information_schema</strong>可行，得到表结构</p>
 <table>
 <thead>
 <tr>
@@ -374,17 +386,17 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-03-26, 14:07:12</p>
-        <p><span>最后更新:</span>2018-05-08, 20:49:25</p>
+        <p><span>Title:</span><a href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
+        <p><span>Created:</span>2018-03-26, 14:07:12</p>
+        <p><span>Updated:</span>2018-05-09, 08:48:35</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/03/26/WEB-网强杯 WEB writeup/" title="WEB-网强杯-WEB-writeup">http://lalajun.com/2018/03/26/WEB-网强杯 WEB writeup/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/03/26/WEB-网强杯 WEB writeup/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2018/03/26/WEB-网强杯 WEB writeup/" title="WEB-网强杯-WEB-writeup">http://lalajun.com/2018/03/26/WEB-网强杯 WEB writeup/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/03/26/WEB-网强杯 WEB writeup/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
         </p>
     </div>
 
@@ -411,7 +423,7 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
+        <strong class="toc-title">Contents</strong>
         
             <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web签到"><span class="toc-text">web签到</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一关"><span class="toc-text">第一关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二关"><span class="toc-text">第二关</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三关"><span class="toc-text">第三关</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Three-hit"><span class="toc-text">Three hit</span></a></li></ol>
         
@@ -427,10 +439,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
 
     <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
     </script>
 
 
@@ -444,21 +456,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/04/03/web-phpinfo包含临时文件/" title="上一篇: WEB-基于phpinfo的包含临时文件">
+            <a href="/2018/04/03/web-phpinfo包含临时文件/" title="Pre: WEB-基于phpinfo的包含临时文件">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/03/19/WEB-LFI与RFI利用/" title="下一篇: WEB-LFI与RFI利用">
+            <a href="/2018/03/19/WEB-LFI与RFI利用/" title="Next: WEB-LFI与RFI利用">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">mysql-字符集漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -475,14 +487,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -491,7 +503,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -524,9 +536,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window

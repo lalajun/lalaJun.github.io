@@ -3,6 +3,117 @@
   
     
     <entry>
+      <title></title>
+      <url>/2018/05/11/mysql-%E5%AD%97%E7%AC%A6%E9%9B%86%E6%BC%8F%E6%B4%9E/</url>
+      <content type="html"><![CDATA[<h1 id="mysql字符集漏洞"><a href="#mysql字符集漏洞" class="headerlink" title="mysql字符集漏洞"></a>mysql字符集漏洞</h1><p>此篇将介绍两种有关mysql字符集的漏洞。<br>一者是 <strong>字符集转换漏洞</strong> ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询</p>
+<p>一者是 <strong>宽字节注入</strong> ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入  </p>
+<p>在介绍这两种漏洞之前，先介绍一些Mysql语句</p>
+<h2 id="Mysql语句"><a href="#Mysql语句" class="headerlink" title="Mysql语句"></a>Mysql语句</h2><h3 id="查看字符集"><a href="#查看字符集" class="headerlink" title="查看字符集"></a>查看字符集</h3><p>查看Mysql中的字符集设置<br><code>show variables like &#39;character_set_%&#39;</code></p>
+<h3 id="设置客户端字符集"><a href="#设置客户端字符集" class="headerlink" title="设置客户端字符集"></a>设置客户端字符集</h3><p>在php中，常用以下语句来设置php客户端在Mysql中的字符集<br><code>set names utf8</code><br>这个语句会修改如下几项客户端设置<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">character_set_client=utf8</div><div class="line">character_set_connection=utf8</div><div class="line">character_set_results=utf8</div></pre></td></tr></table></figure></p>
+<p>然而如下服务端设置不会修改<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">character_set_database</div><div class="line">character_set_server</div><div class="line">character_set_filesysytem</div><div class="line">character_set_system</div></pre></td></tr></table></figure></p>
+<p>这样就造成了 服务端与客户端 不匹配<br>从而会造成<strong>字符集转换漏洞</strong></p>
+<p>而当设置的客户端字符集为GBK时，即<code>set names gbk</code><br>(此处以GBK作为典范，但不只是GBK会产生宽字节注入，之后细说)<br>从而会造成<strong>宽字节注入</strong></p>
+<p>下面说明字符集转换漏洞</p>
+<h2 id="Mysql字符集转换漏洞"><a href="#Mysql字符集转换漏洞" class="headerlink" title="Mysql字符集转换漏洞"></a>Mysql字符集转换漏洞</h2><blockquote>
+<p>当我们的mysql接受到客户端的数据后，会认为他的编码是character_set_client，然后会将之将换成character_set_connection的编码，然后进入具体表和字段后，再转换成字段对应的编码。<br>当查询结果产生后，会从表和字段的编码，转换成character_set_results编码，返回给客户端。</p>
+</blockquote>
+<p>于是从php到mysql执行命令的字符集转换关系是</p>
+<p>character_set_client -&gt; character_set_connection -&gt; 内部操作字符集(如果是对于数据表字段进行操作，就是那个数据表字段的字符集)</p>
+<h3 id="字符集转换漏洞"><a href="#字符集转换漏洞" class="headerlink" title="字符集转换漏洞"></a>字符集转换漏洞</h3><p>假设客户端执行了<code>set names utf8</code>，然而服务端的数据库字段格式是 Latin1<br>即字符集转换是：<code>utf8-&gt;utf8-&gt;latin1</code></p>
+<p>进行以下测试<br>php源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ($username === <span class="string">'admin'</span>) &#123;</div><div class="line">    <span class="keyword">if</span> ($_SERVER[<span class="string">'REMOTE_ADDR'</span>] !== <span class="string">'127.0.0.1'</span>) &#123;</div><div class="line">        <span class="keyword">die</span>(<span class="string">'Permission denied!'</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">$result = $mysqli-&gt;query(<span class="string">"SELECT * FROM z_users where username = '&#123;$username&#125;' and password = '&#123;$password&#125;'"</span>);</div></pre></td></tr></table></figure></p>
+<p>php中过滤了username参数admin，然后从数据库中返回username的内容<br>我们的目的是：<code>绕过PHP过滤，仍然可以从数据库中查询被过滤admin的内容</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http://localhost/1.php?username=admin%e4     #在mysql中utf8转为latin1被截断为admin</div><div class="line">http://localhost/1.php?username=admin%e4%bd  #在mysql中utf8转为latin1被截断为admin</div><div class="line">http://localhost/1.php?username=admin%e4%bd%ac  #在mysql中utf8转为latin1失败，出错</div></pre></td></tr></table></figure>
+<blockquote>
+<p>中文‘佬’的utf8的16进制<code>\xE4\xBD\xAC</code><br>查看汉字UTF8编码：python <code>#encoding:utf8  print &#39;佬&#39;.encode(&#39;hex&#39;)</code></p>
+<p>转换出错原因：latin1不支持汉字<br>截断原因：Mysql在转换字符集的时候，会将不完整的字符忽略</p>
+</blockquote>
+<p>所以只要我们给出UTF-8识别的16进制数据，然而不足以转化为latin1的字节数量，就会被截断<br>payload:<code>?username=admin%e4</code></p>
+<h3 id="只有部分字符可以使用"><a href="#只有部分字符可以使用" class="headerlink" title="只有部分字符可以使用"></a>只有部分字符可以使用</h3><p>然而像%e4这样的16进制字符。并不是%00开始到%FF，都是可以被作为截断利用的<br>这关系到UTF-8的字符实现<br><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="external">戳这里先了解UTF8</a><br><a href="http://utf8-chartable.de/unicode-utf8-table.pl" target="_blank" rel="external">这里可以查询UTF8 表</a></p>
+<p>提取出重点，UTF-8是变长编码，有可能是1~4字节表示:</p>
+<ul>
+<li>一个字节时，字节的范围是[00-7F]</li>
+<li>两个字节时，字节的范围是[C0-DF] [80-BF]</li>
+<li>三个字节时，字节的范围是[E0-EF] [80-BF] [80-BF]</li>
+<li>四个字节时，字节的范围是[F0-F7] [80-BF] [80-BF] [80-BF]</li>
+</ul>
+<p>然后根据RFC 3629规范，又有一些字节值是不允许出现在UTF-8编码中的：</p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr67z2z8w0j30yk0b6aen.jpg" alt="RFC 2629"></p>
+<p>最终，规范UTF-8的第一字节的取值范围是:[00-7F] [C2-F4]</p>
+<h3 id="Mysql-UTF8-特性"><a href="#Mysql-UTF8-特性" class="headerlink" title="Mysql UTF8 特性"></a>Mysql UTF8 特性</h3><p>又因为，Mysql 对于UTF-8有一特性：</p>
+<blockquote>
+<p>Mysql的utf8其实是阉割版utf-8编码，Mysql中的utf8字符集最长只支持三个字节<br>utf8mb4编码才是包含完整的UTF8</p>
+</blockquote>
+<p>所以s，对于类似的绕过利用</p>
+<ul>
+<li>对于UTF8，可以利用第一个字节范围<code>[00-7F] [C2-EF]</code></li>
+<li>对于UTF8mb4，可以利用第一个字节范围<code>[00-7F] [C2-F4]</code></li>
+</ul>
+<h2 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h2><p>上面说到 当<code>set names gbk</code>时，可以绕过addslashes过滤，达成sql注入</p>
+<h3 id="addslashes过滤原理"><a href="#addslashes过滤原理" class="headerlink" title="addslashes过滤原理"></a>addslashes过滤原理</h3><p>addslashes() 函数返回在预定义字符之前添加反斜杠的字符串。<br>预定义字符变化是：</p>
+<ul>
+<li>单引号(‘) -&gt; <code>\&#39;</code></li>
+<li>双引号(“) -&gt; <code>\&quot;</code></li>
+<li>反斜杠() -&gt; <code>\\</code></li>
+<li>NULL -&gt; <code>\NULL</code></li>
+</ul>
+<p>当关闭php设置magic_quotes_gpc，在外界参数进入sql语句之前,使用addslashes转移非法符号,再放入sql语句的变量中’’，可以防止sql注入<br>实例代码如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">//连接数据库部分，注意使用了gbk编码，把数据库信息填写进去</span></div><div class="line">$conn = mysql_connect(<span class="string">'localhost'</span>, <span class="string">'root'</span>, <span class="string">'toor!@#$'</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">'bad!'</span>);</div><div class="line">mysql_query(<span class="string">"SET NAMES 'gbk'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>, $conn) <span class="keyword">OR</span> emMsg(<span class="string">"连接数据库失败，未找到您填写的数据库"</span>);</div><div class="line"><span class="comment">//执行sql语句</span></div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>]) ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error()); <span class="comment">//sql出错会报错，方便观察</span></div><div class="line"><span class="meta">?&gt;</span></div><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;meta charset=<span class="string">"gbk"</span> /&gt;</div><div class="line">&lt;title&gt;新闻&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$row = mysql_fetch_array($result, MYSQL_ASSOC);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;h2&gt;&#123;$row['title']&#125;&lt;/h2&gt;&lt;p&gt;&#123;$row['content']&#125;&lt;p&gt;\n"</span>;</div><div class="line">mysql_free_result($result);</div><div class="line"><span class="meta">?&gt;</span></div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure></p>
+<p>payload:<code>?id=1&#39;</code><br>经过addslashes函数，进入sql语句就变成<br><code>SELECT * FROM news WHERE tid=&#39;1\&#39;&#39;</code><br>无法造成单引号闭合，防止了sql注入</p>
+<h3 id="绕过原理"><a href="#绕过原理" class="headerlink" title="绕过原理"></a>绕过原理</h3><p>得知addslashes过滤原理，就可以从两方面来绕过：</p>
+<ul>
+<li>在addslashes添加的<code>\</code>前面加入一个或奇数个<code>\</code>，变成<code>\\&#39;</code>，这样<code>\</code>被转义了，<code>&#39;</code>逃出了限制</li>
+<li>想办法把addslashes添加的<code>\</code>弄没</li>
+</ul>
+<blockquote>
+<p>GBK字符有一字节和双字节编码<br>一个字节时，字节的范围是[00-7F]<br>两个字节时，字节的范围是[81–FE] [40–7E]/[80-FE] 有根据第一个字节划分情况<br>Mysql的特性:mysql在使用GBK编码的时候，会认为两个字符是一个汉字（前一个ascii码要大于128，才到汉字的范围）</p>
+</blockquote>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr7lkcgyw4j30d60addg9.jpg" alt="GBK编码"></p>
+<p>利用以上特性，假如在\前加入一个ASCII码大于128的字符</p>
+<p><code>\&#39;</code>-&gt;%5c%27-&gt;<code>\&#39;</code><br><code>%df\&#39;</code>-&gt;%df%5c%27-&gt;<code>運&#39;</code><br><code>SELECT * FROM news WHERE tid=&#39;1運&#39;&#39;</code></p>
+<p>以上的转换过程可以看出mysql对于字符的转化过程，单引号逃逸，闭合成功</p>
+<h3 id="除了-df的其他字符"><a href="#除了-df的其他字符" class="headerlink" title="除了%df的其他字符"></a>除了%df的其他字符</h3><p>那么除了<code>%df</code>的还有什么字符可以呢，因为是mysql判断这个字符是不是宽字节字符(2个字节一个字符)<br>实际上，根据gbk编码，第一个字节ascii码大于128(即16进制80)，基本上就可以了。<br>比如修改<code>%df</code>为<code>%a1</code><br><code>%a1%5c</code>可能不是一个汉字，但一定会被mysql认为是一个宽字符，能够让后面的%27逃逸(%57 -&gt; \ %27 -&gt; ‘) </p>
+<p>同时对于其他被addslashes过滤的符号，当然也可以用这种方法绕过</p>
+<h3 id="除了GBK编码的其他编码"><a href="#除了GBK编码的其他编码" class="headerlink" title="除了GBK编码的其他编码"></a>除了GBK编码的其他编码</h3><p>那么除了GBK编码以外，还有什么其他编码可以用来宽字节注入<br>尝试跟GBK类似的<strong>GB2312</strong>，注入是不成功的</p>
+<p>GB2312的两字节字符范围是[0xA1-0xF7] [0xA1~0xFE]</p>
+<p>因为我们需要我们可控的 <strong>自定义的字节</strong> 与 <strong>0x57</strong> (\) 构成宽字节<br>而<code>0x57</code>根本不能作为GB2312的低字节字符，所以就不会被前面的自定义字节当做2个字节的宽字节字符吃掉，所以注入失败</p>
+<p>所以我们可以得出：只要低位(最低位)的范围中含有0x5c的编码，就可以进行宽字符注入。</p>
+<h3 id="mysql-real-escape-string-替代-addslashes-产生的漏洞"><a href="#mysql-real-escape-string-替代-addslashes-产生的漏洞" class="headerlink" title="mysql_real_escape_string 替代 addslashes 产生的漏洞"></a>mysql_real_escape_string 替代 addslashes 产生的漏洞</h3><p>在开发寻找宽字节的解决方案时，会考虑 <strong>mysql_real_escape_string</strong><br>因为在官方文档中说明这个函数会计及连接的当前字符集</p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr6ivuhbwxj30og07igmf.jpg" alt=""></p>
+<p>于是，有的cms就把addslashes替换成mysql_real_escape_string，来抵御宽字符注入。</p>
+<p>但是这样并没有用，仍然可以造成注入<br>原因就是，程序没有指定php连接mysql的字符集。我们需要在执行sql语句之前调用一下mysql_set_charset函数，设置当前连接的字符集为gbk。</p>
+<p>即：</p>
+<p><code>mysql_set_charset(&#39;gbk&#39;,$conn);</code><br><code>mysql_real_escape_string($_GET[&#39;id&#39;])</code></p>
+<p>这样就可以避免注入</p>
+<h3 id="防护宽字节注入"><a href="#防护宽字节注入" class="headerlink" title="防护宽字节注入"></a>防护宽字节注入</h3><ul>
+<li>mysql_set_charset + mysql_real_escape_string</li>
+<li>character_set_client设置为binary<br><code>SET character_set_connection=gbk,character_set_results=gbk,character_set_client=binary</code></li>
+<li>不使用mysql函数调用数据库，使用mysqli或PDO</li>
+</ul>
+<h2 id="类似漏洞原理的php中的iconv"><a href="#类似漏洞原理的php中的iconv" class="headerlink" title="类似漏洞原理的php中的iconv"></a>类似漏洞原理的php中的iconv</h2><p>很多cms会将接收到数据，调用这样一个函数，转换其编码：<br><code>iconv(&#39;utf-8&#39;, &#39;gbk&#39;, $_GET[&#39;word&#39;]);</code><br><code>iconv(&#39;gbk&#39;, &#39;utf-8&#39;, $_GET[&#39;word&#39;]);</code><br>目的一般是为了避免乱码，特别是在搜索框的位置，这样子的字符集转换，也会有着类似的<strong>字符集转换漏洞</strong>。<br>关键源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql_query(<span class="string">"SET NAMES 'GBK'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>,$conn) <span class="keyword">OR</span> emMsg(<span class="string">'链接数据库失败'</span>);</div><div class="line">mysql_query(<span class="string">"SET character_setconnection=gbk,character_set_results=gbk,character_set_client=binary"</span>,$conn);</div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>] ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$id = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>,$id);</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error());</div></pre></td></tr></table></figure></p>
+<p>可以看到<code>character_set_client=binary</code>已经进行宽字节注入的防护<br>试试能不能通过<code>iconv</code>绕过addslashes</p>
+<h3 id="iconv-‘utf-8’-‘gbk’-GET-‘id’"><a href="#iconv-‘utf-8’-‘gbk’-GET-‘id’" class="headerlink" title="iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])"></a>iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])</h3><blockquote>
+<p>通常来说，一个gbk编码汉字，占用2个字节。一个utf-8编码的汉字，占用3个字节。</p>
+</blockquote>
+<p>如何绕过呢?<br>UTF-8的编码字符 会转化成GBK下对应的字符，即：<br>只要一个字符存在于<strong>UTF-8</strong>和<strong>GBK</strong>编码中，我们就可以控制UTF-8的字符，去得到GBK的字符</p>
+<p>我们又知道在addslashes的影响下，输入<code>&#39;</code>会形成<code>%5c%27</code>，那么可以想办法输入一个<code>%5c</code>去注释addslashes加入的5c么<br>直接输入<code>%5c</code>自然是不行的，因为5c就是<code>\</code>也会被addslashes过滤</p>
+<p>那么<code>錦</code>就可以作为这样的一个输入。<br>“錦”这个字，它的utf-8编码是<code>0xe98ca6</code>，它的gbk编码是<code>0xe55c</code></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr7lp6wgpkj30cb0563yk.jpg" alt="utf8"></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr7lplvr6jj30cr058q2y.jpg" alt="gbk"></p>
+<p>当我们的<code>錦</code>被iconv从utf-8转换成gbk后，变成了<code>%e5%5c</code>，而后面的’被addslashes变成了%5c%27，这样组合起来就是%e5%5c%5c%27，两个%5c就是\，正好把反斜杠转义了，导致’逃逸出单引号，产生注入。</p>
+<blockquote>
+<p>那么神奇的问题出现了，按照GBK的编码规律，前一个字节大于ASCII码128(即0x80) 会被当成<strong>双字节字符</strong>解析成一个字符，<code>%e5&gt;%80</code>明明会被当成双字节解析，把后一个5c吃掉，咋会变成都是单字节解析，5c转义5c的尼？<br>花了忒长时间写这篇了….这里就不测试了，哪个小学弟小学妹帮我测试下吧，弄懂告诉我哈~</p>
+</blockquote>
+<p>那么假如反过来呢</p>
+<h3 id="iconv-‘gbk’-‘utf-8’-GET-‘id’"><a href="#iconv-‘gbk’-‘utf-8’-GET-‘id’" class="headerlink" title="iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])"></a>iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])</h3><p>相同的环境，编码转换反过来，可以利用这个语句来绕过addslashes过滤么</p>
+<p>这个利用原理就跟<code>宽字节注入</code>一模一样了吧，只是一个转换是在Mysql中，一个转换是在PHP中而已。<br>直接<code>%df&#39;</code>-&gt;<code>%df/&#39;</code>-&gt;<code>%df%5c%27</code><br>在iconv gbk 变成 utf-8时，会把<code>%df%5c</code>当做一个字符，转化成utf8编码的该字符，从而形成<code>%27</code>单引号逃逸</p>
+<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>尽管是一些比较老的漏洞了，一个PDO预编译+同一字符集就可以解决问题<br>但是也算是给自己在<strong>字符集转换漏洞</strong>上面理解了个大概。</p>
+<p>理解各个字符集对于16进制数据的处理是很关键的，何时当做单字节字符，何时当做多字节字符，边界16进制范围是多少等。<br>当弄清楚这些时，去发掘字符集漏洞应该也有些许头绪了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html</a><br>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html</a></p>
+]]></content>
+      
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[ZJGSCTF-2018-web writup]]></title>
       <url>/2018/05/06/ZJGSCTF-2018-writeup/</url>
       <content type="html"><![CDATA[<p>— ZJGSCTF 2018 —<br>—     web部分   —<br><a id="more"></a></p>
@@ -50,7 +161,7 @@
 <p>进行测试</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorpo4b79j30ga09j3ym.jpg" alt="wp2.png"><br></div>
 
-<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;a href="//index.php " &lt;/a&gt; 1 &lt;a  href="" class="btn btn-lg btn-default"&gt;Current Page&lt;/a&gt;</div></pre></td></tr></table></figure></p>
+<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"//index.php "</span>&gt;</span> <span class="tag">&lt;/<span class="name">a</span>&gt;</span> 1 <span class="tag">&lt;<span class="name">a</span>  <span class="attr">href</span>=<span class="string">""</span> <span class="attr">class</span>=<span class="string">"btn btn-lg btn-default"</span>&gt;</span>Current Page<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorq32nyrj30ko05iglp.jpg" alt="wp3.png"><br></div>
 
 <p>payload:<code>&quot;&gt; &lt;/a&gt; &lt;script&gt;alert(1)&lt;/script&gt; &lt;a  href= /</code></p>
@@ -126,15 +237,25 @@
 </blockquote>
 <p>事实是 不可以的。<br>admin用户去访问<code>/admin/index.php</code>会让服务器去访问<code>/admin/index.php?path=view</code><br>但是服务器在访问<code>/admin/index.php</code>的时候不能通过<code>check验证</code><br>所以就没法包含进view页面的php代码。</p>
 <p>那如果admin用户是在服务端的浏览器查看的，可不可以呢，也是不可以的。<br>include 远程文件 是不能包含cookie的</p>
-<h3 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h3><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
+<h2 id="永恒之蓝"><a href="#永恒之蓝" class="headerlink" title="永恒之蓝"></a>永恒之蓝</h2><p>以下writeup来自betamao:</p>
+<h3 id="发现"><a href="#发现" class="headerlink" title="发现"></a>发现</h3><p>使用nmap扫描发现开了443端口，为windows服务器，还开了明显被永恒之蓝入侵的端口：</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr57hg3d27j30w00bswg6.jpg" alt=""><br></div>
+
+<h3 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h3><p>使用metasploit扫描果然存在漏洞：</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fr57huj9wij314f084q2y.jpg" alt=""><br></div>
+
+<p>直接攻击得到shell</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr57is68agj30zt0irjrs.jpg" alt=""><br></div>
+
+<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
 ]]></content>
       
         
         <tags>
             
-            <tag> web </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> web </tag>
             
         </tags>
         
@@ -200,7 +321,7 @@
 
 <p>所以，此处就形成了<code>把php文件当做是静态文件解析</code><br>单单这种形式的漏洞，利用空间较少，你必须要能向index.php中嵌入css(如果是加载作为js的话，就是嵌入js代码)才行,除了对于IE9,IE10的也可以利用同域文件<a href="">前端小姿势</a></p>
 <h3 id="pathinfo例子"><a href="#pathinfo例子" class="headerlink" title="pathinfo例子"></a>pathinfo例子</h3><p>此例子参考<a href="http://www.bendawang.site/2017/09/16/RPO%E4%BA%8C%E4%B8%89%E4%BA%8B/" target="_blank" rel="external">rpo二三事</a></p>
-<p>由于我们需要能在index.php中写入css，构筑index.php代码,进入同目录下css(其内容不重要)<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"style.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></div><div class="line">&lt;?php echo htmlspecialchars($_SERVER['PHP_SELF']);</div><div class="line">echo "&lt;br&gt;&lt;";</div><div class="line">?&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>由于我们需要能在index.php中写入css，构筑index.php代码,进入同目录下css(其内容不重要)<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"style.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> /&gt;</span></div><div class="line"><span class="php"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> htmlspecialchars($_SERVER[<span class="string">'PHP_SELF'</span>]);</span></div><div class="line"><span class="php"><span class="keyword">echo</span> <span class="string">"&lt;br&gt;&lt;"</span>;</span></div><div class="line"><span class="php"><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>正常访问情况</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqrjvihfg0j30ei06tjrj.jpg" alt="12.png"><br></div>
 
@@ -496,20 +617,32 @@
 <p><code>===</code> 精准匹配。<br>利用<code>md5()</code>漏洞，数组传入返回null，使 null===null<br>param1[]=1  param2[]=2</p>
 <h3 id="第三关"><a href="#第三关" class="headerlink" title="第三关"></a>第三关</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>((string)$_POST[<span class="string">'param1'</span>]!==(string)$_POST[<span class="string">'param2'</span>] &amp;&amp; md5($_POST[<span class="string">'param1'</span>]) === md5($_POST[<span class="string">'param2'</span>])</div><div class="line">    <span class="keyword">die</span>(<span class="string">"success!"</span>);</div></pre></td></tr></table></figure>
 <p>无论输入什么都会变成字符串。没法绕过。<br>利用<a href="https://crypto.stackexchange.com/questions/1434/are-there-two-known-strings-which-have-the-same-md5-hash-value" target="_blank" rel="external">hash碰撞</a>生成2进制文件,使用burpsuite或者python-requests读取文件发送<br>burpsuite就不细说了，python脚本如下<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line">fp1=open(<span class="string">"msg1.bin"</span>)</div><div class="line">fp2=open(<span class="string">"msg2.bin"</span>)</div><div class="line">url=<span class="string">"http://39.107.33.96:10000/"</span></div><div class="line">data=&#123;<span class="string">'param1'</span>:fp1.read(),<span class="string">'param2'</span>:fp2.read()&#125;</div><div class="line">cookie=&#123;<span class="string">'PHPSESSID'</span>: <span class="string">'0n7qa29j2kvas7n402idu87aj1'</span>&#125;</div><div class="line">r=requests.post(url,data=data,cookies=cookie)</div><div class="line"><span class="keyword">print</span> r.text</div></pre></td></tr></table></figure></p>
-<h2 id="Three-hit"><a href="#Three-hit" class="headerlink" title="Three hit"></a>Three hit</h2><p>开始<code>index.php</code>页面，有登录(?func=login)和注册(?func=register)两个功能<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97quaj4j30ez0ckaa7.jpg" alt="111.png"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97uxoc7j30d30gfaa4.jpg" alt="222.png"><br>输入有过滤</p>
+<h2 id="Three-hit"><a href="#Three-hit" class="headerlink" title="Three hit"></a>Three hit</h2><p>开始<code>index.php</code>页面，有登录(?func=login)和注册(?func=register)两个功能</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97quaj4j30ez0ckaa7.jpg" alt="111.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97uxoc7j30d30gfaa4.jpg" alt="222.png"><br></div>
+
+<p>输入有过滤</p>
 <ul>
 <li>账号需要是 0-9a-zA-Z</li>
 <li>年龄需要是数字</li>
 <li>密码没有过滤</li>
 </ul>
-<p>注册后登录，进入 <code>profile.php</code><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97zr4w8j30k3085whd.jpg" alt="333.png"><br>跑目录，找到一个<strong>config.php</strong>，但没有内容<br>抓包查看，其中login页面有回显，估计是数据库查询内容回显，其他页面正常<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg" alt="444.png"><br>思索…..</p>
+<p>注册后登录，进入 <code>profile.php</code></p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq97zr4w8j30k3085whd.jpg" alt="333.png"><br></div>
+
+<p>跑目录，找到一个<strong>config.php</strong>，但没有内容<br>抓包查看，其中login页面有回显，估计是数据库查询内容回显，其他页面正常<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpq983ffhtj30b508eweo.jpg" alt="444.png"><br>思索…..</p>
 <ul>
 <li>php中判断是数字可能用到<code>is_numeric()</code>，is_numeric判断数字不严格，可以是16进制。</li>
 <li>猜测后端数据库语句是<br><code>insert into lesson1(name,age,password) values(name,age,password)</code><br>在insert语句中，16进制插入会解析成字符，存入数据库中</li>
 </ul>
 <p>以上两点结合在一起<br>可以通过age输入payload转成16进制，通过insert注入数据库中，再通过login的回显判断是否成功<br>再通过页面逻辑，判断<code>profile.php</code>中的数据库语句是<br><code>select * from 表 where age = (我们的age)</code></p>
 <p>构造payload测试(因为回显判断4列)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">age=1 and 0 union select 1,2,3,4 #</div><div class="line">age=0x3120616e64203020756e696f6e2073656c65637420312c322c332c342023</div></pre></td></tr></table></figure></p>
-<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg" alt="555.png"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg" alt="666.png"><br>成功<br>之后省略注入过程<br>得到<strong>user()</strong>,<strong>database()</strong>,尝试<strong>information_schema</strong>可行，得到表结构</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpq987soqwj30bg08e3yr.jpg" alt="555.png"><br></div>
+
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fpq98az6sij30l50b8q7t.jpg" alt="666.png"><br></div>
+
+<p>成功<br>之后省略注入过程<br>得到<strong>user()</strong>,<strong>database()</strong>,尝试<strong>information_schema</strong>可行，得到表结构</p>
 <table>
 <thead>
 <tr>
@@ -537,9 +670,9 @@
         
         <tags>
             
-            <tag> web </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> web </tag>
             
         </tags>
         
