@@ -15,22 +15,23 @@
 
 
 
-<meta name="description" content="mysql字符集漏洞此篇将介绍两种有关mysql字符集的漏洞。一者是 字符集转换漏洞 ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询 一者是 宽字节注入 ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入   在介绍这两种漏">
+<meta name="description" content="— Mysql字符集漏洞 ——  PHP 字符集漏洞  —">
+<meta name="keywords" content="Mysql,漏洞分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="啦啦菌NODE">
+<meta property="og:title" content="Mysql-字符集漏洞分析">
 <meta property="og:url" content="http://lalajun.com/2018/05/11/mysql-字符集漏洞/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="mysql字符集漏洞此篇将介绍两种有关mysql字符集的漏洞。一者是 字符集转换漏洞 ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询 一者是 宽字节注入 ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入   在介绍这两种漏">
+<meta property="og:description" content="— Mysql字符集漏洞 ——  PHP 字符集漏洞  —">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fr67z2z8w0j30yk0b6aen.jpg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fr7lkcgyw4j30d60addg9.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fr6ivuhbwxj30og07igmf.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fr7lp6wgpkj30cb0563yk.jpg">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fr7lplvr6jj30cr058q2y.jpg">
-<meta property="og:updated_time" content="2018-05-11T12:01:30.092Z">
+<meta property="og:updated_time" content="2018-05-11T12:58:45.522Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="啦啦菌NODE">
-<meta name="twitter:description" content="mysql字符集漏洞此篇将介绍两种有关mysql字符集的漏洞。一者是 字符集转换漏洞 ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询 一者是 宽字节注入 ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入   在介绍这两种漏">
+<meta name="twitter:title" content="Mysql-字符集漏洞分析">
+<meta name="twitter:description" content="— Mysql字符集漏洞 ——  PHP 字符集漏洞  —">
 <meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fr67z2z8w0j30yk0b6aen.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -63,7 +64,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>啦啦菌NODE</title>
+<title>Mysql-字符集漏洞分析 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -150,13 +151,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -191,7 +192,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li></ul>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li></ul>
                     </div>
                 </section>
                 
@@ -278,13 +279,13 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-mysql-字符集漏洞" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2018/05/11/mysql-字符集漏洞/" class="article-date">
-      <time datetime="2018-05-11T12:01:45.796Z" itemprop="datePublished">2018-05-11</time>
+      <time datetime="2018-05-11T13:39:54.000Z" itemprop="datePublished">2018-05-11</time>
 </a>
 
 
@@ -295,17 +296,43 @@
       <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mysql-字符集漏洞分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="mysql字符集漏洞"><a href="#mysql字符集漏洞" class="headerlink" title="mysql字符集漏洞"></a>mysql字符集漏洞</h1><p>此篇将介绍两种有关mysql字符集的漏洞。<br>一者是 <strong>字符集转换漏洞</strong> ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询</p>
-<p>一者是 <strong>宽字节注入</strong> ———— 因为字符集不同 躲过SQL注入过滤函数addslashes()  使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入  </p>
+        <p>— Mysql字符集漏洞 —<br>—  PHP 字符集漏洞  —<br><a id="more"></a></p>
+<h1 id="mysql字符集漏洞"><a href="#mysql字符集漏洞" class="headerlink" title="mysql字符集漏洞"></a>mysql字符集漏洞</h1><p>此篇将介绍两种有关mysql字符集的漏洞,再提及一点类似原理的PHP字符集。</p>
+<ul>
+<li>一者是 <strong>字符集转换漏洞</strong> ———— 因为字符集不同 躲过关键词过滤  进入mysql后产生的截断 恢复关键词查询</li>
+<li>一者是 <strong>宽字节注入</strong> ———— 因为字符集不同 躲过SQL注入过滤函数<strong>addslashes()</strong>使addslashes过滤的单引号、双引号、反斜杠、NULL 可以利用，从而绕过SQL注入防护，达成SQL注入  </li>
+</ul>
 <p>在介绍这两种漏洞之前，先介绍一些Mysql语句</p>
 <h2 id="Mysql语句"><a href="#Mysql语句" class="headerlink" title="Mysql语句"></a>Mysql语句</h2><h3 id="查看字符集"><a href="#查看字符集" class="headerlink" title="查看字符集"></a>查看字符集</h3><p>查看Mysql中的字符集设置<br><code>show variables like &#39;character_set_%&#39;</code></p>
 <h3 id="设置客户端字符集"><a href="#设置客户端字符集" class="headerlink" title="设置客户端字符集"></a>设置客户端字符集</h3><p>在php中，常用以下语句来设置php客户端在Mysql中的字符集<br><code>set names utf8</code><br>这个语句会修改如下几项客户端设置<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">character_set_client=utf8</div><div class="line">character_set_connection=utf8</div><div class="line">character_set_results=utf8</div></pre></td></tr></table></figure></p>
 <p>然而如下服务端设置不会修改<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">character_set_database</div><div class="line">character_set_server</div><div class="line">character_set_filesysytem</div><div class="line">character_set_system</div></pre></td></tr></table></figure></p>
-<p>这样就造成了 服务端与客户端 不匹配<br>从而会造成<strong>字符集转换漏洞</strong></p>
-<p>而当设置的客户端字符集为GBK时，即<code>set names gbk</code><br>(此处以GBK作为典范，但不只是GBK会产生宽字节注入，之后细说)<br>从而会造成<strong>宽字节注入</strong></p>
+<p>这样就造成了 服务端与客户端 不匹配<br>从而会造成 <strong>字符集转换漏洞</strong></p>
+<p>而当设置的客户端字符集为GBK时，即<code>set names gbk</code><br>(此处以GBK作为典范，但不只是GBK会产生宽字节注入，之后细说)<br>从而会造成 <strong>宽字节注入</strong></p>
 <p>下面说明字符集转换漏洞</p>
 <h2 id="Mysql字符集转换漏洞"><a href="#Mysql字符集转换漏洞" class="headerlink" title="Mysql字符集转换漏洞"></a>Mysql字符集转换漏洞</h2><blockquote>
 <p>当我们的mysql接受到客户端的数据后，会认为他的编码是character_set_client，然后会将之将换成character_set_connection的编码，然后进入具体表和字段后，再转换成字段对应的编码。<br>当查询结果产生后，会从表和字段的编码，转换成character_set_results编码，返回给客户端。</p>
@@ -336,7 +363,7 @@
 <blockquote>
 <p>Mysql的utf8其实是阉割版utf-8编码，Mysql中的utf8字符集最长只支持三个字节<br>utf8mb4编码才是包含完整的UTF8</p>
 </blockquote>
-<p>所以s，对于类似的绕过利用</p>
+<p>所以，对于类似的绕过利用</p>
 <ul>
 <li>对于UTF8，可以利用第一个字节范围<code>[00-7F] [C2-EF]</code></li>
 <li>对于UTF8mb4，可以利用第一个字节范围<code>[00-7F] [C2-F4]</code></li>
@@ -381,7 +408,7 @@
 <li>character_set_client设置为binary<br><code>SET character_set_connection=gbk,character_set_results=gbk,character_set_client=binary</code></li>
 <li>不使用mysql函数调用数据库，使用mysqli或PDO</li>
 </ul>
-<h2 id="类似漏洞原理的php中的iconv"><a href="#类似漏洞原理的php中的iconv" class="headerlink" title="类似漏洞原理的php中的iconv"></a>类似漏洞原理的php中的iconv</h2><p>很多cms会将接收到数据，调用这样一个函数，转换其编码：<br><code>iconv(&#39;utf-8&#39;, &#39;gbk&#39;, $_GET[&#39;word&#39;]);</code><br><code>iconv(&#39;gbk&#39;, &#39;utf-8&#39;, $_GET[&#39;word&#39;]);</code><br>目的一般是为了避免乱码，特别是在搜索框的位置，这样子的字符集转换，也会有着类似的<strong>字符集转换漏洞</strong>。<br>关键源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql_query(<span class="string">"SET NAMES 'GBK'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>,$conn) <span class="keyword">OR</span> emMsg(<span class="string">'链接数据库失败'</span>);</div><div class="line">mysql_query(<span class="string">"SET character_setconnection=gbk,character_set_results=gbk,character_set_client=binary"</span>,$conn);</div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>] ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$id = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>,$id);</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error());</div></pre></td></tr></table></figure></p>
+<h1 id="类似漏洞原理的php中的iconv"><a href="#类似漏洞原理的php中的iconv" class="headerlink" title="类似漏洞原理的php中的iconv"></a>类似漏洞原理的php中的iconv</h1><p>很多cms会将接收到数据，调用这样一个函数，转换其编码：<br><code>iconv(&#39;utf-8&#39;, &#39;gbk&#39;, $_GET[&#39;word&#39;]);</code><br><code>iconv(&#39;gbk&#39;, &#39;utf-8&#39;, $_GET[&#39;word&#39;]);</code><br>目的一般是为了避免乱码，特别是在搜索框的位置，这样子的字符集转换，也会有着类似的<strong>字符集转换漏洞</strong>。<br>关键源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql_query(<span class="string">"SET NAMES 'GBK'"</span>);</div><div class="line">mysql_select_db(<span class="string">'test'</span>,$conn) <span class="keyword">OR</span> emMsg(<span class="string">'链接数据库失败'</span>);</div><div class="line">mysql_query(<span class="string">"SET character_setconnection=gbk,character_set_results=gbk,character_set_client=binary"</span>,$conn);</div><div class="line">$id = <span class="keyword">isset</span>($_GET[<span class="string">'id'</span>] ? addslashes($_GET[<span class="string">'id'</span>]) : <span class="number">1</span>;</div><div class="line">$id = iconv(<span class="string">'utf-8'</span>,<span class="string">'gbk'</span>,$id);</div><div class="line">$sql = <span class="string">"SELECT * FROM news WHERE tid='&#123;$id&#125;'"</span>;</div><div class="line">$result = mysql_query($sql, $conn) <span class="keyword">or</span> <span class="keyword">die</span>(mysql_error());</div></pre></td></tr></table></figure></p>
 <p>可以看到<code>character_set_client=binary</code>已经进行宽字节注入的防护<br>试试能不能通过<code>iconv</code>绕过addslashes</p>
 <h3 id="iconv-‘utf-8’-‘gbk’-GET-‘id’"><a href="#iconv-‘utf-8’-‘gbk’-GET-‘id’" class="headerlink" title="iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])"></a>iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])</h3><blockquote>
 <p>通常来说，一个gbk编码汉字，占用2个字节。一个utf-8编码的汉字，占用3个字节。</p>
@@ -398,9 +425,9 @@
 <p>那么假如反过来呢</p>
 <h3 id="iconv-‘gbk’-‘utf-8’-GET-‘id’"><a href="#iconv-‘gbk’-‘utf-8’-GET-‘id’" class="headerlink" title="iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])"></a>iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])</h3><p>相同的环境，编码转换反过来，可以利用这个语句来绕过addslashes过滤么</p>
 <p>这个利用原理就跟<code>宽字节注入</code>一模一样了吧，只是一个转换是在Mysql中，一个转换是在PHP中而已。<br>直接<code>%df&#39;</code>-&gt;<code>%df/&#39;</code>-&gt;<code>%df%5c%27</code><br>在iconv gbk 变成 utf-8时，会把<code>%df%5c</code>当做一个字符，转化成utf8编码的该字符，从而形成<code>%27</code>单引号逃逸</p>
-<h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>尽管是一些比较老的漏洞了，一个PDO预编译+同一字符集就可以解决问题<br>但是也算是给自己在<strong>字符集转换漏洞</strong>上面理解了个大概。</p>
+<h1 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h1><p>尽管是一些比较老的漏洞了，一个PDO预编译+同一字符集就可以解决问题<br>但是也算是给自己在<strong>字符集转换漏洞</strong>上面理解了个大概。</p>
 <p>理解各个字符集对于16进制数据的处理是很关键的，何时当做单字节字符，何时当做多字节字符，边界16进制范围是多少等。<br>当弄清楚这些时，去发掘字符集漏洞应该也有些许头绪了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html</a><br>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html</a><br>离别歌：<a href="https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/mutibyte-sql-inject.html</a></p>
 
       
     </div>
@@ -409,23 +436,29 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2018/05/11/mysql-字符集漏洞/"></a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2018-05-11, 20:01:45</p>
-        <p><span>Updated:</span>2018-05-11, 20:01:30</p>
+        <p><span>本文标题:</span><a href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2018-05-11, 21:39:54</p>
+        <p><span>最后更新:</span>2018-05-11, 20:58:45</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2018/05/11/mysql-字符集漏洞/" title="">http://lalajun.com/2018/05/11/mysql-字符集漏洞/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/05/11/mysql-字符集漏洞/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/05/11/mysql-字符集漏洞/" title="Mysql-字符集漏洞分析">http://lalajun.com/2018/05/11/mysql-字符集漏洞/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/05/11/mysql-字符集漏洞/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
 
 
     <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/07/11/Vue/">
+                    Vue-基础
+                </a>
+            </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
@@ -440,9 +473,9 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mysql字符集漏洞"><span class="toc-text">mysql字符集漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql语句"><span class="toc-text">Mysql语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看字符集"><span class="toc-text">查看字符集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置客户端字符集"><span class="toc-text">设置客户端字符集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql字符集转换漏洞"><span class="toc-text">Mysql字符集转换漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符集转换漏洞"><span class="toc-text">字符集转换漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#只有部分字符可以使用"><span class="toc-text">只有部分字符可以使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql-UTF8-特性"><span class="toc-text">Mysql UTF8 特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#宽字节注入"><span class="toc-text">宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#addslashes过滤原理"><span class="toc-text">addslashes过滤原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绕过原理"><span class="toc-text">绕过原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#除了-df的其他字符"><span class="toc-text">除了%df的其他字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#除了GBK编码的其他编码"><span class="toc-text">除了GBK编码的其他编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-real-escape-string-替代-addslashes-产生的漏洞"><span class="toc-text">mysql_real_escape_string 替代 addslashes 产生的漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#防护宽字节注入"><span class="toc-text">防护宽字节注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类似漏洞原理的php中的iconv"><span class="toc-text">类似漏洞原理的php中的iconv</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iconv-‘utf-8’-‘gbk’-GET-‘id’"><span class="toc-text">iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iconv-‘gbk’-‘utf-8’-GET-‘id’"><span class="toc-text">iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后言"><span class="toc-text">后言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#mysql字符集漏洞"><span class="toc-text">mysql字符集漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql语句"><span class="toc-text">Mysql语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查看字符集"><span class="toc-text">查看字符集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置客户端字符集"><span class="toc-text">设置客户端字符集</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mysql字符集转换漏洞"><span class="toc-text">Mysql字符集转换漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#字符集转换漏洞"><span class="toc-text">字符集转换漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#只有部分字符可以使用"><span class="toc-text">只有部分字符可以使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql-UTF8-特性"><span class="toc-text">Mysql UTF8 特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#宽字节注入"><span class="toc-text">宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#addslashes过滤原理"><span class="toc-text">addslashes过滤原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绕过原理"><span class="toc-text">绕过原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#除了-df的其他字符"><span class="toc-text">除了%df的其他字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#除了GBK编码的其他编码"><span class="toc-text">除了GBK编码的其他编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql-real-escape-string-替代-addslashes-产生的漏洞"><span class="toc-text">mysql_real_escape_string 替代 addslashes 产生的漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#防护宽字节注入"><span class="toc-text">防护宽字节注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#类似漏洞原理的php中的iconv"><span class="toc-text">类似漏洞原理的php中的iconv</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#iconv-‘utf-8’-‘gbk’-GET-‘id’"><span class="toc-text">iconv(‘utf-8’, ‘gbk’, $_GET[‘id’])</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#iconv-‘gbk’-‘utf-8’-GET-‘id’"><span class="toc-text">iconv(‘gbk’, ‘utf-8’, $_GET[‘id’])</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#后言"><span class="toc-text">后言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
         
     </div>
     <style>
@@ -456,10 +489,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -473,19 +506,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+            <a href="/2018/07/11/Vue/" title="上一篇: Vue-基础">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/05/06/ZJGSCTF-2018-writeup/" title="Next: ZJGSCTF-2018-web writup">
+            <a href="/2018/05/06/ZJGSCTF-2018-writeup/" title="下一篇: ZJGSCTF-2018-web writup">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">mysql-字符集漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -502,14 +537,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -518,7 +553,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -551,9 +586,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
