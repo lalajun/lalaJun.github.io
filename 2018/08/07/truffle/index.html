@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="LaLa" />
+
+
+
+<meta name="description" content="— Truffle安装&amp;amp;使用 —">
+<meta name="keywords" content="智能合约">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Truffle框架">
+<meta property="og:url" content="http://lalajun.com/2018/08/07/truffle/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="— Truffle安装&amp;amp;使用 —">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-07T10:16:12.608Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Truffle框架">
+<meta name="twitter:description" content="— Truffle安装&amp;amp;使用 —">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Truffle框架 | 啦啦菌NODE</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LaLa</a></h1>
+        </hgroup>
+
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
+                            
+                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
+                            
+                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-truffle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/07/truffle/" class="article-date">
+      <time datetime="2018-08-07T10:07:12.000Z" itemprop="datePublished">2018-08-07</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Truffle框架
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能合约/">智能合约</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>— Truffle安装&amp;使用 —<br><a id="more"></a></p>
+<h1 id="truffle"><a href="#truffle" class="headerlink" title="truffle"></a>truffle</h1><p>智能合约开发部署测试框架。<br><a href="https://truffleframework.com/" target="_blank" rel="external">truffle 官网</a><br>翻墙食用</p>
+<h2 id="truffle安装"><a href="#truffle安装" class="headerlink" title="truffle安装"></a>truffle安装</h2><p>需要node.js环境使用npm安装<br><code>npm install -g truffle</code></p>
+<h2 id="Ganache测试客户端"><a href="#Ganache测试客户端" class="headerlink" title="Ganache测试客户端"></a>Ganache测试客户端</h2><p>和Truffle一起使用，需要有Ethereum客户端。<br>Truffle官方推出了Ganache作为测试客户端（前身testrpc)<br>当基于Ganache充分测试之后，通过官方客户端进行发布，比如Geth，Parity，Cpp-ethereum等。</p>
+<h2 id="truffle使用"><a href="#truffle使用" class="headerlink" title="truffle使用"></a>truffle使用</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">指令</th>
+<th style="text-align:center">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>truffle init</code></td>
+<td style="text-align:center">初始化一个新的工程，默认包含简单实例 </td>
+</tr>
+<tr>
+<td style="text-align:center"><code>trffle compile</code></td>
+<td style="text-align:center">编译工程，编译输出位于build/contracts</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle migrate</code></td>
+<td style="text-align:center">运行部署脚本</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle migrate --reset</code></td>
+<td style="text-align:center">当增加或者删除了某个合约后，可以执行命令重新部署合约。</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle deploy</code></td>
+<td style="text-align:center">运行部署脚本</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle build</code></td>
+<td style="text-align:center">基于配置文件，构建整个项目</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle test</code></td>
+<td style="text-align:center">执行测试</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle develop</code></td>
+<td style="text-align:center">启动测试链，使用Ganache当做测试链的话不需要使用 </td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle console</code></td>
+<td style="text-align:center">启动truffle console，命令行</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle create</code></td>
+<td style="text-align:center">帮助你创建新的合约、部署脚本、测试脚本</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle networks</code></td>
+<td style="text-align:center">展示各个网络上部署的合约的地址</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle watch</code></td>
+<td style="text-align:center">查看是否有代码文件修改，如果有的话，重新构建整个项目</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle serve</code></td>
+<td style="text-align:center">启动一个本地服务器，展示该项目的代码目录和编译情况</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle exec</code></td>
+<td style="text-align:center">在Truffle环境中执行JS脚本</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle unbox</code></td>
+<td style="text-align:center">获取一个Truffle Box 项目</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle version</code></td>
+<td style="text-align:center">显示Truffle 版本</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle install</code></td>
+<td style="text-align:center">从 Ethereum Package Registry 上安装一个依赖包</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>truffle publish</code></td>
+<td style="text-align:center">向 Ethereum Package Registry 发布一个包</td>
+</tr>
+</tbody>
+</table>
+<h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p><code>truffle init</code>：需要新建一个空的文件夹作为项目工作空间<br>成功后会生成几个子目录:</p>
+<ul>
+<li><strong>contracts/</strong>：开发者编写的智能合约</li>
+<li><strong>migrations/</strong>：存放部署脚本</li>
+<li><strong>test/</strong>：存放测试文件</li>
+<li><strong>truffle.js</strong>：Truffle默认配置文件</li>
+</ul>
+<p>项目创建成功后，可以使用<code>create</code>命令来生成合约文件、测试文件和部署文件</p>
+<p><code>truffle create &lt;文件类型&gt; &lt;文件名称&gt;</code></p>
+<ul>
+<li><strong>文件类型</strong>：contract、test、migration</li>
+<li><strong>文件名称</strong>：驼峰写法</li>
+</ul>
+<p>引用官网、社区的模板和实例<br><code>truffle unbox &lt;box名称&gt;</code></p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><code>truffle compile</code>：自动将contracts目录下的sol文件进行编译，便已生成的Artifacts（实际上是智能合约对应的ABI信息）会放在<code>build/contracts</code>文件夹下（没有会自动创建）。</p>
+<ul>
+<li><strong>–all</strong>：强制编译所有智能合约文件，即使没有修改</li>
+<li><strong>–network name</strong>：指定使用的网络，需要在配置文件中先声明这个网络的名称</li>
+</ul>
+<blockquote>
+<p>如果合约文件没有改变，再次调用不会重新编译</p>
+</blockquote>
+<h3 id="编译合约之间的依赖"><a href="#编译合约之间的依赖" class="headerlink" title="编译合约之间的依赖"></a>编译合约之间的依赖</h3><p>依赖同个文件夹下的合约文件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">"./AnotherContract.sol"</span>;</div></pre></td></tr></table></figure></p>
+<p>依赖相关包中的合约文件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">"somepackage/SomeContract.sol"</span>;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>先从 EthPM 的包中引用 再从 NPM 的包总引用</p>
+</blockquote>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p><code>truffle migrate</code>：部署合约。会自动检查有没有需要重新编译的智能合约文件。</p>
+<ul>
+<li><strong>–compile-all</strong>：不输钱强制重新编译所有智能合约</li>
+<li><strong>–network name</strong>：指定使用的网络名称。</li>
+<li><strong>–verbose-rpc</strong>：显示出Truffle和RPC客户端之间的通讯日志</li>
+<li><strong>–reset</strong>：从最开始一次执行所有migration</li>
+<li><strong>-f number</strong>：从指定的migration开始执行。number是指各个部署脚本的数字前缀</li>
+</ul>
+<p>会根据<code>/migrations/</code>文件夹下存放的Truffle部署文件来将智能合约部署到Ethereum网络中。</p>
+<blockquote>
+<p>truffle项目会默认包含一个叫做Migrations.sol的智能合约，这个合约可以讲用户执行步骤的历史记录下来</p>
+</blockquote>
+<h3 id="部署文件"><a href="#部署文件" class="headerlink" title="部署文件"></a>部署文件</h3><p><strong>部署文件</strong>是用JavaScript编写的脚本，支持智能合约之间的依赖关系。<br>部署文件文件名如下格式<br><code>4_example_migration.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> MyContract = artifacts.require(<span class="string">"MyContract"</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer</span>) </span>&#123;</div><div class="line">  <span class="comment">// deployment steps</span></div><div class="line">  deployer.deploy(MyContract);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="artifacts-require"><a href="#artifacts-require" class="headerlink" title="artifacts.require"></a>artifacts.require</h4><p><code>var MyContract = artifacts.require(&quot;MyContract&quot;);</code><br><code>artifacts.require</code>类似于Node的<code>require</code>，但是是引入一个合约的抽象类<br>此处引入的名称 是 合约内的合约定义名称，而不是 合约文件名<br>因为一个合约文件中可以定义多个合约，如果有多个，就需要一个个引入</p>
+<h4 id="model-exports"><a href="#model-exports" class="headerlink" title="model.exports"></a>model.exports</h4><p><code>module.exports = function(deployer) {</code></p>
+<blockquote>
+<p>此处deployer一般为固定参数，还可以传入其他参数如network，accounts等<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer, network</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (network == <span class="string">"live"</span>) &#123;</div><div class="line">    <span class="comment">// Do something specific to the network named "live".</span></div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="comment">// Perform a different step otherwise.</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer, network, accounts</span>) </span>&#123;</div><div class="line">  <span class="comment">// Use the accounts within your migrations.</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>具体说明<a href="https://truffleframework.com/docs/getting_started/migrations#network-considerations" target="_blank" rel="external">这里</a></p>
+<h4 id="deployer"><a href="#deployer" class="headerlink" title="deployer"></a>deployer</h4><p><code>deployer.deploy(MyContract);</code><br><a href="https://truffleframework.com/docs/getting_started/migrations#deployer-api" target="_blank" rel="external">官网API</a><br>按顺序部署<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在B之前部署A</span></div><div class="line">deployer.deploy(A);</div><div class="line">deployer.deploy(B);</div></pre></td></tr></table></figure></p>
+<p>依赖部署<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//部署A，然后部署B，传入一个新部署的地址</span></div><div class="line">deployer.deploy(A).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> deployer.deploy(B, A.address);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>此处的依赖部署，需要在B合约中初始化导入参数A的地址，详情下面举例说明</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><code>truffle test</code>/<code>truffle test ./path/test/file.js</code>：前者全部测试，后者选取一个测试<br>支持两种文件测试</p>
+<ul>
+<li>支持JavaScript文件的测试：<code>.js</code>,<code>.es</code>,<code>.es6</code>,<code>.jsx</code></li>
+<li>支持Solidity文件的测试:<code>.sol</code><br>两种测试方式各有千秋,所有测试文件都放在<code>./test</code>文件下</li>
+</ul>
+<h3 id="JS测试文件"><a href="#JS测试文件" class="headerlink" title="JS测试文件"></a>JS测试文件</h3><p>Truffle测试是通过 Mocha 作为框架,Chai 作为断言。<br>步骤大致如下</p>
+<ul>
+<li>引入合约</li>
+<li>建立测试项</li>
+<li>返回通过或者错误</li>
+</ul>
+<p>使用<code>.then</code>形式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> MetaCoin = artifacts.require(<span class="string">"MetaCoin"</span>);</div><div class="line"></div><div class="line">contract(<span class="string">'MetaCoin'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">accounts</span>) </span>&#123;</div><div class="line">  it(<span class="string">"should put 10000 MetaCoin in the first account"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> MetaCoin.deployed().then(<span class="function"><span class="keyword">function</span>(<span class="params">instance</span>) </span>&#123;</div><div class="line">      <span class="keyword">return</span> instance.getBalance.call(accounts[<span class="number">0</span>]);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">balance</span>) </span>&#123;</div><div class="line">      assert.equal(balance.valueOf(), <span class="number">10000</span>, <span class="string">"10000 wasn't in the first account"</span>);</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">  it(<span class="string">"should call a function that depends on a linked library"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> meta;</div><div class="line">    <span class="keyword">var</span> metaCoinBalance;</div><div class="line">    <span class="keyword">var</span> metaCoinEthBalance;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> MetaCoin.deployed().then(<span class="function"><span class="keyword">function</span>(<span class="params">instance</span>) </span>&#123;</div><div class="line">      meta = instance;</div><div class="line">      <span class="keyword">return</span> meta.getBalance.call(accounts[<span class="number">0</span>]);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">outCoinBalance</span>) </span>&#123;</div><div class="line">      metaCoinBalance = outCoinBalance.toNumber();</div><div class="line">      <span class="keyword">return</span> meta.getBalanceInEth.call(accounts[<span class="number">0</span>]);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">outCoinBalanceEth</span>) </span>&#123;</div><div class="line">      metaCoinEthBalance = outCoinBalanceEth.toNumber();</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      assert.equal(metaCoinEthBalance, <span class="number">2</span> * metaCoinBalance, <span class="string">"Library function returned unexpected function, linkage may be broken"</span>);</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">  it(<span class="string">"should send coin correctly"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> meta;</div><div class="line"></div><div class="line">    <span class="comment">// Get initial balances of first and second account.</span></div><div class="line">    <span class="keyword">var</span> account_one = accounts[<span class="number">0</span>];</div><div class="line">    <span class="keyword">var</span> account_two = accounts[<span class="number">1</span>];</div><div class="line"></div><div class="line">    <span class="keyword">var</span> account_one_starting_balance;</div><div class="line">    <span class="keyword">var</span> account_two_starting_balance;</div><div class="line">    <span class="keyword">var</span> account_one_ending_balance;</div><div class="line">    <span class="keyword">var</span> account_two_ending_balance;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> amount = <span class="number">10</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> MetaCoin.deployed().then(<span class="function"><span class="keyword">function</span>(<span class="params">instance</span>) </span>&#123;</div><div class="line">      meta = instance;</div><div class="line">      <span class="keyword">return</span> meta.getBalance.call(account_one);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">balance</span>) </span>&#123;</div><div class="line">      account_one_starting_balance = balance.toNumber();</div><div class="line">      <span class="keyword">return</span> meta.getBalance.call(account_two);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">balance</span>) </span>&#123;</div><div class="line">      account_two_starting_balance = balance.toNumber();</div><div class="line">      <span class="keyword">return</span> meta.sendCoin(account_two, amount, &#123;<span class="attr">from</span>: account_one&#125;);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">return</span> meta.getBalance.call(account_one);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">balance</span>) </span>&#123;</div><div class="line">      account_one_ending_balance = balance.toNumber();</div><div class="line">      <span class="keyword">return</span> meta.getBalance.call(account_two);</div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">balance</span>) </span>&#123;</div><div class="line">      account_two_ending_balance = balance.toNumber();</div><div class="line"></div><div class="line">      assert.equal(account_one_ending_balance, account_one_starting_balance - amount, <span class="string">"Amount wasn't correctly taken from the sender"</span>);</div><div class="line">      assert.equal(account_two_ending_balance, account_two_starting_balance + amount, <span class="string">"Amount wasn't correctly sent to the receiver"</span>);</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>使用<code>async/await</code>形式<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> MetaCoin = artifacts.require(<span class="string">"MetaCoin"</span>);</div><div class="line"></div><div class="line">contract(<span class="string">'2nd MetaCoin test'</span>, <span class="keyword">async</span> (accounts) =&gt; &#123;</div><div class="line"></div><div class="line">  it(<span class="string">"should put 10000 MetaCoin in the first account"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">     <span class="keyword">let</span> instance = <span class="keyword">await</span> MetaCoin.deployed();</div><div class="line">     <span class="keyword">let</span> balance = <span class="keyword">await</span> instance.getBalance.call(accounts[<span class="number">0</span>]);</div><div class="line">     assert.equal(balance.valueOf(), <span class="number">10000</span>);</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  it(<span class="string">"should call a function that depends on a linked library"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">    <span class="keyword">let</span> meta = <span class="keyword">await</span> MetaCoin.deployed();</div><div class="line">    <span class="keyword">let</span> outCoinBalance = <span class="keyword">await</span> meta.getBalance.call(accounts[<span class="number">0</span>]);</div><div class="line">    <span class="keyword">let</span> metaCoinBalance = outCoinBalance.toNumber();</div><div class="line">    <span class="keyword">let</span> outCoinBalanceEth = <span class="keyword">await</span> meta.getBalanceInEth.call(accounts[<span class="number">0</span>]);</div><div class="line">    <span class="keyword">let</span> metaCoinEthBalance = outCoinBalanceEth.toNumber();</div><div class="line">    assert.equal(metaCoinEthBalance, <span class="number">2</span> * metaCoinBalance);</div><div class="line"></div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  it(<span class="string">"should send coin correctly"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line"></div><div class="line">    <span class="comment">// Get initial balances of first and second account.</span></div><div class="line">    <span class="keyword">let</span> account_one = accounts[<span class="number">0</span>];</div><div class="line">    <span class="keyword">let</span> account_two = accounts[<span class="number">1</span>];</div><div class="line"></div><div class="line">    <span class="keyword">let</span> amount = <span class="number">10</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">let</span> instance = <span class="keyword">await</span> MetaCoin.deployed();</div><div class="line">    <span class="keyword">let</span> meta = instance;</div><div class="line"></div><div class="line">    <span class="keyword">let</span> balance = <span class="keyword">await</span> meta.getBalance.call(account_one);</div><div class="line">    <span class="keyword">let</span> account_one_starting_balance = balance.toNumber();</div><div class="line"></div><div class="line">    balance = <span class="keyword">await</span> meta.getBalance.call(account_two);</div><div class="line">    <span class="keyword">let</span> account_two_starting_balance = balance.toNumber();</div><div class="line">    <span class="keyword">await</span> meta.sendCoin(account_two, amount, &#123;<span class="attr">from</span>: account_one&#125;);</div><div class="line"></div><div class="line">    balance = <span class="keyword">await</span> meta.getBalance.call(account_one);</div><div class="line">    <span class="keyword">let</span> account_one_ending_balance = balance.toNumber();</div><div class="line"></div><div class="line">    balance = <span class="keyword">await</span> meta.getBalance.call(account_two);</div><div class="line">    <span class="keyword">let</span> account_two_ending_balance = balance.toNumber();</div><div class="line"></div><div class="line">    assert.equal(account_one_ending_balance, account_one_starting_balance - amount, <span class="string">"Amount wasn't correctly taken from the sender"</span>);</div><div class="line">    assert.equal(account_two_ending_balance, account_two_starting_balance + amount, <span class="string">"Amount wasn't correctly sent to the receiver"</span>);</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<h3 id="合约测试文件"><a href="#合约测试文件" class="headerlink" title="合约测试文件"></a>合约测试文件</h3><p>分函数测试，直接看例子：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="string">"truffle/Assert.sol"</span>;<span class="comment">//引入断言库</span></div><div class="line"><span class="keyword">import</span> <span class="string">"truffle/DeployedAddresses.sol"</span>;<span class="comment">//引入获取合约地址的库</span></div><div class="line"><span class="keyword">import</span> <span class="string">"../contracts/MetaCoin.sol"</span>;</div><div class="line"></div><div class="line">contract TestMetacoin &#123;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">testInitialBalanceUsingDeployedContract</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    MetaCoin meta = MetaCoin(DeployedAddresses.MetaCoin());</div><div class="line"></div><div class="line">    uint expected = <span class="number">10000</span>;</div><div class="line"></div><div class="line">    Assert.equal(meta.getBalance(tx.origin), expected, <span class="string">"Owner should have 10000 MetaCoin initially"</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">testInitialBalanceWithNewMetaCoin</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    MetaCoin meta = <span class="keyword">new</span> MetaCoin();</div><div class="line"></div><div class="line">    uint expected = <span class="number">10000</span>;</div><div class="line"></div><div class="line">    Assert.equal(meta.getBalance(tx.origin), expected, <span class="string">"Owner should have 10000 MetaCoin initially"</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>测试结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ truffle <span class="built_in">test</span></div><div class="line">Compiling ConvertLib.sol...</div><div class="line">Compiling MetaCoin.sol...</div><div class="line">Compiling truffle/Assert.sol</div><div class="line">Compiling truffle/DeployedAddresses.sol</div><div class="line">Compiling ../<span class="built_in">test</span>/TestMetacoin.sol...</div><div class="line"></div><div class="line">  TestMetacoin</div><div class="line">    ✓ testInitialBalanceUsingDeployedContract (61ms)</div><div class="line">    ✓ testInitialBalanceWithNewMetaCoin (69ms)</div><div class="line"></div><div class="line">  2 passing (3s)</div></pre></td></tr></table></figure>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>部署到Ganache 或其他链上时，配置配置文件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">  networks: &#123;</div><div class="line">    development: &#123;</div><div class="line">      host: <span class="string">"127.0.0.1"</span>,</div><div class="line">      port: <span class="number">7545</span>,</div><div class="line">      network_id: <span class="string">"*"</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h2 id="truffle-使用实例"><a href="#truffle-使用实例" class="headerlink" title="truffle 使用实例"></a>truffle 使用实例</h2><h3 id="部署合约依赖"><a href="#部署合约依赖" class="headerlink" title="部署合约依赖"></a>部署合约依赖</h3><p>在 Contract.sol 中使用 Coin 合约<br><code>Contract.sol</code>：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.15</span>;</div><div class="line"><span class="keyword">import</span> <span class="string">"./Coin.sol"</span>;</div><div class="line"></div><div class="line">contract Contract &#123;</div><div class="line">    Coin coin;</div><div class="line">    address owner;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">Contract</span>(<span class="params">address _address</span>) <span class="title">public</span> </span>&#123;</div><div class="line">        coin = Coin(_address);</div><div class="line">        owner = msg.sender;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><code>2_deploy_all.js</code>部署文件：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Coin = artifacts.require(<span class="string">"./Coin.sol"</span>);</div><div class="line"><span class="keyword">var</span> Contract = artifacts.require(<span class="string">"./Contract.sol"</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer</span>) </span>&#123;</div><div class="line">  deployer.deploy(Coin).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> deployer.deploy(Contract,Coin.address);</div><div class="line">  &#125;);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2018/08/07/truffle/">Truffle框架</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
+        <p><span>Created:</span>2018-08-07, 18:07:12</p>
+        <p><span>Updated:</span>2018-08-07, 18:16:12</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2018/08/07/truffle/" title="Truffle框架">http://lalajun.com/2018/08/07/truffle/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/08/07/truffle/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/08/07/truffle_contact/">
+                    Truffle-Contract中间件
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/07/11/Vue组件/">
+                    Vue-组件
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#truffle"><span class="toc-text">truffle</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle安装"><span class="toc-text">truffle安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ganache测试客户端"><span class="toc-text">Ganache测试客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle使用"><span class="toc-text">truffle使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建"><span class="toc-text">创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译"><span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译合约之间的依赖"><span class="toc-text">编译合约之间的依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署文件"><span class="toc-text">部署文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#artifacts-require"><span class="toc-text">artifacts.require</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#model-exports"><span class="toc-text">model.exports</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#deployer"><span class="toc-text">deployer</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JS测试文件"><span class="toc-text">JS测试文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合约测试文件"><span class="toc-text">合约测试文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置文件"><span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle-使用实例"><span class="toc-text">truffle 使用实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署合约依赖"><span class="toc-text">部署合约依赖</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/08/07/truffle_contact/" title="Pre: Truffle-Contract中间件">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/07/11/Vue组件/" title="Next: Vue-组件">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 LaLa
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+             post: ".article-entry a[href], .copyright a[href]", 
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

