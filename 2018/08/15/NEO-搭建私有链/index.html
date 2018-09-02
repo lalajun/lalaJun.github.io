@@ -15,18 +15,22 @@
 
 
 
-<meta name="description" content="—  从零开始的笔记  —— cookie 伪静态 中转 —">
-<meta name="keywords" content="web">
+<meta name="description" content="— cityofzion大法好 —">
+<meta name="keywords" content="NEO,区块链">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WEB-Cookie注入与伪静态注入">
-<meta property="og:url" content="http://lalajun.com/2018/02/26/WEB-Cookie注入与伪静态注入/index.html">
+<meta property="og:title" content="NEO-搭建私有链">
+<meta property="og:url" content="http://lalajun.com/2018/08/15/NEO-搭建私有链/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="—  从零开始的笔记  —— cookie 伪静态 中转 —">
+<meta property="og:description" content="— cityofzion大法好 —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-03-06T06:48:36.880Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqrjzd4j30rc09x755.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqwbhktj30ra09vjt3.jpg">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fubnqzkg7yj30qn081my9.jpg">
+<meta property="og:updated_time" content="2018-09-02T02:20:59.330Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WEB-Cookie注入与伪静态注入">
-<meta name="twitter:description" content="—  从零开始的笔记  —— cookie 伪静态 中转 —">
+<meta name="twitter:title" content="NEO-搭建私有链">
+<meta name="twitter:description" content="— cityofzion大法好 —">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqrjzd4j30rc09x755.jpg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +62,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>WEB-Cookie注入与伪静态注入 | 啦啦菌NODE</title>
+<title>NEO-搭建私有链 | 啦啦菌NODE</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -277,11 +281,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-WEB-Cookie注入与伪静态注入" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-NEO-搭建私有链" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/" class="article-date">
-      <time datetime="2018-02-26T07:07:12.000Z" itemprop="datePublished">2018-02-26</time>
+      <a href="/2018/08/15/NEO-搭建私有链/" class="article-date">
+      <time datetime="2018-08-15T09:05:28.000Z" itemprop="datePublished">2018-08-15</time>
 </a>
 
 
@@ -296,7 +300,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      WEB-Cookie注入与伪静态注入
+      NEO-搭建私有链
     </h1>
   
 
@@ -307,7 +311,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NEO/">NEO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/区块链/">区块链</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -317,60 +321,91 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>—  从零开始的笔记  —<br>— cookie 伪静态 中转 —<br><a id="more"></a></p>
-<hr>
-<p>因为cookie注入与伪静态注入都可以利用到中转注入，所以合在一起说明了<br>但是对于中转注入的编写，还停留在工具上，并没有自己实践编写，所以这里只是简单提一下。</p>
-<h2 id="Cookie注入"><a href="#Cookie注入" class="headerlink" title="Cookie注入"></a>Cookie注入</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>一开始看到教程一大篇，以为很高端….结果….还是属于sql注入，而且emmmm很极端啊= =<br>asp设计的特性使之更容易出现在<code>.ASP</code>文件中</p>
-<h3 id="使用条件"><a href="#使用条件" class="headerlink" title="使用条件"></a>使用条件</h3><ul>
-<li>服务器使用客户端传递的参数时候，使用的是<code>Request</code>对象</li>
-<li>专门检查了<code>Request.QueryString</code>与<code>Request.form</code>中的参数，没有专门检查<code>Request.Cookies</code>中的参数</li>
-<li>使用参数时，没有详细区分，使用<code>Request(&quot;参数名称&quot;)</code></li>
-</ul>
-<p><code>REQUEST</code>：ASP脚本中的request对象。它被用于从用户那里获取信息。<br>Request对象的通常使用：<strong>request.[集合名称]（参数名称）</strong><br>如 <strong>request.form(“参数名称”)</strong><br>但是request集合名称可以<strong>省略</strong>，即可以省略from<br>若省略，ASP规定是按QueryString（GET）、Form（POST）、Cookies、ServerVariables（服务器变量）的顺序来获取数据的。<br>所以request(“id”)，程序员实际是想从get或者post中获取，但事实是也可以从cookie中获取，而request.Cookies并没有被过滤，从而导致Cookie注入</p>
-<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><p>极其简单，把原来在GET或POST中的参数写到cookie中就可以了<br>大多数手注教程中都在地址栏中填入类似的js脚本来修改Cookie（自己在火狐浏览器中实践时，浏览器会吞掉 javascript: 需手打）<br><code>javascript:alert(document.cookie=&quot;id=&quot;+escape(&quot;payload&quot;));</code></p>
-<ul>
-<li>alert()：弹出窗口</li>
-<li>document.cookie：缓存在本地的Cookies</li>
-<li>=：实际为添加Cookie不是覆盖全部</li>
-<li>escape：编码，防止乱码</li>
-</ul>
-<p>实际上burpsuite 抓包修改cookie,再<strong>URL编码</strong>，即可</p>
-<h2 id="伪静态注入"><a href="#伪静态注入" class="headerlink" title="伪静态注入"></a>伪静态注入</h2><h3 id="伪静态技术"><a href="#伪静态技术" class="headerlink" title="伪静态技术"></a>伪静态技术</h3><p>伪静态页面技术：把动态页面的地址转换成以htm或html结尾的地址，看起来是静态的，实际是依然是动态页面。<br>通常分为两种形式:</p>
-<ul>
-<li>框架伪静态：动态内容链入主框架页面。整个网页URL是一样的。</li>
-<li>利用组件把asp、aspx、php等后缀及参数隐藏，显示为htm或html。可以通过访问源页面</li>
-</ul>
-<p>伪静态技术的优点：</p>
-<ul>
-<li>防止sql注入，隐藏参数，或转变参数使其不容易被直接发现</li>
-<li>为了SEO（搜索引擎优化）方便检测抓取，搜索引擎一般不去抓取<strong>?</strong>之后的内容</li>
-</ul>
-<h3 id="伪静态实现方法"><a href="#伪静态实现方法" class="headerlink" title="伪静态实现方法"></a>伪静态实现方法</h3><p>1.PHP的pathinfo实现：利用pathinfo()函数解析url，然后重构<br>原URL：<code>http://localhost/index.php?m=Index&amp;a=test</code><br>转化URL：<code>http://localhost/index.php/Index/test</code><br>2.web服务器apache实现：可自己设计，隐藏掉页面名称</p>
-<h3 id="伪静态的apache实现"><a href="#伪静态的apache实现" class="headerlink" title="伪静态的apache实现"></a>伪静态的apache实现</h3><p>利用 Apache的URL重写（mod_rewrite）功能映射。<br><a href="http://blog.csdn.net/qq_16241043/article/details/54176442" target="_blank" rel="external">详细操作</a></p>
-<p>真实页面<code>bbs.itcast.cn/index.php?m=article&amp;id=1</code><br>URL显示页面<code>bbs.itcast.cn/news/1.html</code><br><strong>Apache 的伪静态规则：</strong><br><code>RewriteRule ^news/([0-9]+)\.html$ index.php?m=article&amp;id=$1 [L]</code>     </p>
-<ul>
-<li><strong>RewriteRule</strong>：固定开头</li>
-<li><strong>^news/([0-9]+).html$</strong>：这部分是匹配当前的url地址, 也就是伪静态的地址</li>
-<li><strong>[0-9]+</strong>：表示至少有1个数字,可以是0也可以是无限大</li>
-<li><strong>index.php?m=article&amp;id=$1</strong>：这里是指向对应的真实地址</li>
-<li><strong>$1</strong>：配对上面的第一个括号, $2匹配第二个以此类推</li>
-<li><strong>[L]</strong>：L意思是如果此规则匹配,则停止,不在匹配后面的,减少无必要查询 。</li>
-</ul>
-<h3 id="伪静态注入-1"><a href="#伪静态注入-1" class="headerlink" title="伪静态注入"></a>伪静态注入</h3><p>伪静态的注入和URL的普通GET注入不太相同。<br>普通url的get注入的%20(空格),%23(#),+等都可以用；但是伪静态不行，会被直接传递到到url中。<br>另外用/**/这个注释符号表示空格。</p>
-<pre><code>http://www.XXXXX.com/vote /5453′/1 报错，
-http://www.XXXXX.com/vote/5453-0/1 返回正常游戏名字 （使用-号，是因为+号会被当做url编码）
-http://www.2cto.com /vote/5453-1/1 返回5452的游戏名字，判断存在注入点
+        <p>— cityofzion大法好 —</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
 
-http://www.xxx.com/page/html/56&apos;/**/and/**/1=1/*.html 正常
-http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
-</code></pre><p>之后按照正常套路注入</p>
-<h2 id="中转注入"><a href="#中转注入" class="headerlink" title="中转注入"></a>中转注入</h2><p>所谓<code>中转注入</code>即在目标与本机之间建立第三方服务器来中转攻击。<br>可以是在本地建立一个网站，访问本地网站，让这个网站去访问目标网站然后返回访问结果。</p>
-<p>中转注入在COOKIE注入与伪静态注入中适用的地方在于可以<strong>方便简化注入的步骤</strong></p>
+<p>因为测试链不给GAS…只能自己搭建私有链。</p>
+<p>关于NEO私有链的搭建，官网有教程，NEL有教程，毫无疑问，这些教程都很详细，很深入，很透彻……很麻烦…..<br>感觉搭建一个私有链，就是已经要了解整个区块链的机制哎，难道不是先给个实验的地方，然后一步步慢慢去了解么，都感觉本末倒置了。</p>
+<p>没有链 -&gt; 雾里看花 -&gt; 测试链不给币 -&gt; 搭建私有链 -&gt; 超多麻烦 -&gt; 还是没有链 = 劝退</p>
+<p>然后cityofzion的看上去最简单的拿着试了下。<br>cityofzion大法好！本以为会是一如既往艰难险阻疑无路的大坑，没想到！真的几步就好了！哇，这个社区太给力了<br>好好学习英语！</p>
+<p><a href="https://hub.docker.com/r/cityofzion/neo-privatenet/" target="_blank" rel="external">docker镜像及说明</a><br><a href="https://github.com/CityOfZion/neo-privatenet-docker" target="_blank" rel="external">CityOfZion通过docker搭建NEO私有链</a></p>
+<h1 id="两步搭建"><a href="#两步搭建" class="headerlink" title="两步搭建"></a>两步搭建</h1><hr>
+
+<blockquote>
+<p>前提 装好docker，会使用docker</p>
+</blockquote>
+<p>1.下载镜像<br><code>docker pull cityofzion/neo-privatenet</code><br>2.运行镜像<br><code>docker run --rm -d --name neo-privatenet -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp cityofzion/neo-privatenet</code></p>
+<h1 id="两步配置neo-gui"><a href="#两步配置neo-gui" class="headerlink" title="两步配置neo-gui"></a>两步配置neo-gui</h1><hr>
+
+<blockquote>
+<p>为了不出错，新下载一个neo-gui客户端来链接测试链，因为改测试链上的 需要删区块，没必要</p>
+</blockquote>
+<p>1.拷贝<a href="https://github.com/CityOfZion/neo-privatenet-docker/blob/master/configs/protocol.json" target="_blank" rel="external">protocol.json</a>到新neo-gui目录下<br>2.拷贝<a href="https://github.com/CityOfZion/neo-privatenet-docker/blob/master/configs/config-windows.json" target="_blank" rel="external">config.json</a>到新neo-gui目录下 </p>
+<blockquote>
+<p>如果docker不是在本机运行，而是在虚拟机或其他服务器上运行，修改以上两个配置文件中的 127.0.0.1/localhost 为 对应虚拟机IP地址</p>
+</blockquote>
+<p>启动 neo-gui 等待同步完成</p>
+<h1 id="两步确认运行"><a href="#两步确认运行" class="headerlink" title="两步确认运行"></a>两步确认运行</h1><hr>
+
+<p>如果不放心可以去确认区块的生成</p>
+<p><code>docker exec -it neo-privatenet /bin/bash</code><br><code>screen -d -r node1</code></p>
+<h1 id="一步有钱"><a href="#一步有钱" class="headerlink" title="一步有钱"></a>一步有钱</h1><hr>
+
+<p>neo-gui中右键-导入-导入WIF-<code>KxDgvEKzgSBPPfuVfw67oPQBSjidEiqTHURKSDL1R7yGaGYAeYnr</code></p>
+<p>搞定</p>
+<h1 id="远程调用rpc"><a href="#远程调用rpc" class="headerlink" title="远程调用rpc"></a>远程调用rpc</h1><hr>
+
+<p>远程调用rpc 就是利用neo-cli读取链上信息</p>
+<p>私有链的远程调用端口是：<code>30333-30336</code></p>
+<p>官网说明：<a href="http://docs.neo.org/zh-cn/node/cli/2.7.6/api.html" target="_blank" rel="external">这里</a></p>
+<p>GET:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://somewebsite.com:10332?jsonrpc=2.0&amp;method=getblockcount&amp;params=[]&amp;id=1</div></pre></td></tr></table></figure></p>
+<p>POST:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">http://somewebsite.com:10332</div><div class="line">&#123;</div><div class="line">  &quot;jsonrpc&quot;: &quot;2.0&quot;,</div><div class="line">  &quot;method&quot;: &quot;getblockcount&quot;,</div><div class="line">  &quot;params&quot;: [],</div><div class="line">  &quot;id&quot;: 1</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><hr>
+
+<p>接下来就是neo-gui的操作了，转到自己的账号上啦巴拉巴拉，有了测试链才能开始学习啊喂。</p>
+<p>OKOK，收工</p>
+<hr>
+
+<h1 id="补充cli-rpc-开启–log选项说明"><a href="#补充cli-rpc-开启–log选项说明" class="headerlink" title="补充cli rpc 开启–log选项说明"></a>补充cli rpc 开启–log选项说明</h1><p><hr><br>使用cli rpc 只要有能发包的工具就行，但是理所当然的没有找到很好的浏览器插件，就用burpsuite了<br>通常的api都是可以调用的，<a href="http://docs.neo.org/zh-cn/node/cli/2.7.6/api.html" target="_blank" rel="external">api查看</a></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqrjzd4j30rc09x755.jpg" alt="11.png"></p>
+<p>好吧，但是我调用这个就是为了查看notify输出信息。<br>之后调用 cli rpc 查看智能合约notify的时候发现，getapplicationlog api是不行的</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqwbhktj30ra09vjt3.jpg" alt="22.png"></p>
+<p>感觉应该是两步起来的私有链里面的cli并没有开<code>--log</code>功能。（之后尝试修改的时候发现确实是这样）<br>那么接下来就去私链里面开–log,操作就是——<strong>进入docker-关掉neo cli-修改-重开</strong><br>进入docker：</p>
 <ul>
-<li>在<strong>COOKIE注入</strong>中，可以用自己建立的网站来转化GET参数为COOKIE，构造访问请求发送给目标网站,之后只在自己建立的网站中修改get参数即可</li>
-<li>在<strong>伪静态注入</strong>中，可以用自己建立的网站来转变URL把对方静态页面的参数再转变为<strong>?参数=值</strong>的形式，之后只在自己建立的网站中输入get参数即可。</li>
+<li><code>docker exec -it neo-privatenet /bin/bash</code></li>
 </ul>
-<p>接下来就只要访问自己建立的网站就可以进行下一步攻击。另外有ASP的注入中转生成器可以利用。</p>
+<p><strong>关掉</strong>：</p>
+<ul>
+<li><code>screen -ls</code>：查看4个命令行正在运行四个共识节点neo-cli</li>
+<li><code>screen -d -r node1</code>：进入这个命令行</li>
+<li><code>ctrl + c</code>：终止这个进程</li>
+<li>相同的重复四次 终止 node1 到 node4 每一个终止完需要等一会，会自动回到原来命令行</li>
+</ul>
+<p><strong>修改</strong>：</p>
+<ul>
+<li><code>vi /opt/start_consensus_node.sh</code>:修改已有的脚本</li>
+<li><code>spawn dotnet neo-cli.dll --rpc</code> -&gt; <code>spawn dotnet neo-cli.dll --rpc --log</code></li>
+<li><code>:wq</code>保存</li>
+</ul>
+<p><strong>重开</strong>：</p>
+<ul>
+<li><code>cd /opt</code>：移动目录</li>
+<li><code>./run.sh</code>：执行已有的脚本，这个脚本调用了我们刚才改的脚本</li>
+<li>一段时间之后ctrl+c终止脚本，另外四个进程其实已经在后台运行了</li>
+</ul>
+<p><strong>检查</strong>：看自己gui会不会更新，或者前文提到的检查docker内部</p>
+<p><strong>提醒</strong>：记得等上链之后再调用rpc，不然还是会一样的不行</p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fubnqzkg7yj30qn081my9.jpg" alt="33.png"></p>
+<h1 id="补充加上neonscan"><a href="#补充加上neonscan" class="headerlink" title="补充加上neonscan"></a>补充加上neonscan</h1><p>因为要使用neon.js，需要有数据库层面对外的接口按照教程重新加了下。<br><a href="https://github.com/slipo/neo-scan-docker" target="_blank" rel="external">教程</a></p>
+<p>需要停掉之前的<code>cityofzion/neo-privatenet</code>镜像<br><code>docker stop 对应的容器id</code></p>
+<p>自动起环境<br><code>git clone git@github.com:slipo/neo-scan-docker.git</code><br><code>cd neo-scan-docker</code><br><code>docker-compose up</code>：这个地方会自动进入neon-scan的页面，等到同步速度变慢，就是在正常出块了，然后放着不管就好了</p>
+<p>修改host文件<br><code>vi /etc/host</code>：我的是在这里<br><code>127.0.0.1 neo-privnet</code>：添加这一行，必须修改，neonscan到neon私有链是通过这个<code>neo-privnet</code>域名链接的，具体可以看dockerfile</p>
+<p>其实直接用这个这个还更方便更全面emm<br>如果是从一开始私有链过来的，私有链的所有块都可以直接继承，账号也是，之前设置的 neo-gui 可以直接用</p>
+<p>但是需要cli rpc 开启–log选项的话，需要按照之前的操作重复一次，并且之前的log也都会不见</p>
+<blockquote>
+<p>私有链搭建在另一台服务器中时，把 <code>服务器ip neo-privnet</code> 写到自己本机的host中 可以避免使用neon.js的一个坑</p>
+</blockquote>
 
       
     </div>
@@ -379,13 +414,13 @@ http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></p>
+        <p><span>本文标题:</span><a href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-02-26, 15:07:12</p>
-        <p><span>最后更新:</span>2018-03-06, 14:48:36</p>
+        <p><span>发布时间:</span>2018-08-15, 17:05:28</p>
+        <p><span>最后更新:</span>2018-09-02, 10:20:59</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/02/26/WEB-Cookie注入与伪静态注入/" title="WEB-Cookie注入与伪静态注入">http://lalajun.com/2018/02/26/WEB-Cookie注入与伪静态注入/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/02/26/WEB-Cookie注入与伪静态注入/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/08/15/NEO-搭建私有链/" title="NEO-搭建私有链">http://lalajun.com/2018/08/15/NEO-搭建私有链/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/08/15/NEO-搭建私有链/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -398,15 +433,15 @@ http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/03/06/WEB-PHP核心配置/">
-                    WEB-PHP核心配置
+                <a href="/2018/08/25/浏览器渲染原理与编码解码/">
+                    浏览器渲染原理与编码解码
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/01/30/WEB-HTTP基础/">
-                    WEB-HTTP基础
+                <a href="/2018/08/13/NEO-JAVA环境/">
+                    NEO-智能合约JAVA c#环境
                 </a>
             </div>
         
@@ -418,7 +453,7 @@ http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cookie注入"><span class="toc-text">Cookie注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用条件"><span class="toc-text">使用条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用方法"><span class="toc-text">使用方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#伪静态注入"><span class="toc-text">伪静态注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#伪静态技术"><span class="toc-text">伪静态技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪静态实现方法"><span class="toc-text">伪静态实现方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪静态的apache实现"><span class="toc-text">伪静态的apache实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪静态注入-1"><span class="toc-text">伪静态注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#中转注入"><span class="toc-text">中转注入</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#两步搭建"><span class="toc-text">两步搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#两步配置neo-gui"><span class="toc-text">两步配置neo-gui</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#两步确认运行"><span class="toc-text">两步确认运行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一步有钱"><span class="toc-text">一步有钱</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#远程调用rpc"><span class="toc-text">远程调用rpc</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#补充cli-rpc-开启–log选项说明"><span class="toc-text">补充cli rpc 开启–log选项说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#补充加上neonscan"><span class="toc-text">补充加上neonscan</span></a></li></ol>
         
     </div>
     <style>
@@ -449,7 +484,7 @@ http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/03/06/WEB-PHP核心配置/" title="上一篇: WEB-PHP核心配置">
+            <a href="/2018/08/25/浏览器渲染原理与编码解码/" title="上一篇: 浏览器渲染原理与编码解码">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -457,7 +492,7 @@ http://www.xxx.com/page/html/56&apos;/**/and/**/1=2/*.html 出错
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/01/30/WEB-HTTP基础/" title="下一篇: WEB-HTTP基础">
+            <a href="/2018/08/13/NEO-JAVA环境/" title="下一篇: NEO-智能合约JAVA c#环境">
                 <i class="fa fa-angle-right"></i>
             </a>
         
