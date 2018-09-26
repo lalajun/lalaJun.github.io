@@ -145,13 +145,13 @@
                 <div class="tips-box hide">
                     <div class="tips-arrow"></div>
                     <ul class="tips-inner">
-                        <li>Menu</li>
-                        <li>Tags</li>
+                        <li>菜单</li>
+                        <li>标签</li>
                         
-                        <li>Friends</li>
+                        <li>友情链接</li>
                         
                         
-                        <li>About Me</li>
+                        <li>关于我</li>
                         
                     </ul>
                 </div>
@@ -275,7 +275,7 @@
             </nav>
         </header>                
     </div>
-    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-Vue组件" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -319,7 +319,7 @@
           
         <p>— 点点开发技能树  —<br>— Vue组件 及 通讯 —<br><a id="more"></a></p>
 <h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>　　<strong>组件</strong>可以把大的框架按照HTML拆分成小块功能实现，并实现内容复用。<br>　　同时组件之间还要传递数据或参数。当然组件也有很多缺点，最后介绍模块开发的单文件组件</p>
-<h2 id="组件注册和使用"><a href="#组件注册和使用" class="headerlink" title="组件注册和使用"></a>组件注册和使用</h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--全局注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">//my-compenent 组件名</span></div><div class="line"><span class="undefined">Vue.component('my-component',&#123;</span></div><div class="line"><span class="undefined">    //选项</span></div><div class="line"><span class="xml">    template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!--局部注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">var Child = &#123;</span></div><div class="line"><span class="xml">    template : '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">var app = new Vue(&#123;</span></div><div class="line"><span class="undefined">    el: 'app',</span></div><div class="line"><span class="undefined">    components: &#123;</span></div><div class="line"><span class="undefined">        //my-compenent 组件名</span></div><div class="line"><span class="undefined">        'my-component': Child</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="组件注册和使用"><a href="#组件注册和使用" class="headerlink" title="组件注册和使用"></a>组件注册和使用</h2><h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--全局注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="comment">//my-compenent 组件名</span></span></div><div class="line"><span class="javascript">Vue.component(<span class="string">'my-component'</span>,&#123;</span></div><div class="line"><span class="javascript">    <span class="comment">//选项</span></span></div><div class="line"><span class="xml">    template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!--局部注册组件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="keyword">var</span> Child = &#123;</span></div><div class="line"><span class="xml">    template : '<span class="tag">&lt;<span class="name">div</span>&gt;</span>局部注册组件的内容<span class="tag">&lt;/<span class="name">div</span>&gt;</span>'</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript"><span class="keyword">var</span> app = <span class="keyword">new</span> Vue(&#123;</span></div><div class="line"><span class="javascript">    el: <span class="string">'app'</span>,</span></div><div class="line"><span class="undefined">    components: &#123;</span></div><div class="line"><span class="javascript">        <span class="comment">//my-compenent 组件名</span></span></div><div class="line"><span class="javascript">        <span class="string">'my-component'</span>: Child</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;)</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <blockquote>
 <p>注意局部注册的组件在其子组件中不可用,如果需要使用，需要在子组件中声明</p>
 </blockquote>
@@ -335,7 +335,7 @@
 <li>如果Vue实例在实例化时没有收到<code>el</code>选项，他也处于“未挂载”状态</li>
 <li><code>$mount</code>手动挂载一个未挂载的实例</li>
 </ul>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span> = <span class="string">"mount-div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">    //创建未挂载实例</span></div><div class="line"><span class="undefined">    var MyComponent = Vue.extend(&#123;</span></div><div class="line"><span class="xml">        template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello: &#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>',</span></div><div class="line"><span class="undefined">        data: function()&#123;</span></div><div class="line"><span class="undefined">            return &#123;</span></div><div class="line"><span class="undefined">                name: 'Aresn'</span></div><div class="line"><span class="undefined">            &#125;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">    //挂载实例</span></div><div class="line"><span class="undefined">    newMyComponent().$mount('#mount-div');</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span> = <span class="string">"mount-div"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript">    <span class="comment">//创建未挂载实例</span></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> MyComponent = Vue.extend(&#123;</span></div><div class="line"><span class="xml">        template: '<span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello: &#123;&#123; name &#125;&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>',</span></div><div class="line"><span class="javascript">        data: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></div><div class="line"><span class="javascript">            <span class="keyword">return</span> &#123;</span></div><div class="line"><span class="javascript">                name: <span class="string">'Aresn'</span></span></div><div class="line"><span class="undefined">            &#125;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="javascript">    <span class="comment">//挂载实例</span></span></div><div class="line"><span class="javascript">    newMyComponent().$mount(<span class="string">'#mount-div'</span>);</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="模块化中使用组件"><a href="#模块化中使用组件" class="headerlink" title="模块化中使用组件"></a>模块化中使用组件</h3><p>　　在模块化中使用其他组件，需要在局部注册之前导入每个你想使用的组件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//ComponentB.vue</span></div><div class="line"><span class="keyword">import</span> ComponentA <span class="keyword">from</span> <span class="string">'./ComponentA'</span></div><div class="line"><span class="keyword">import</span> ComponentC <span class="keyword">from</span> <span class="string">'./ComponentC'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</div><div class="line">  components: &#123;</div><div class="line">    ComponentA,</div><div class="line">    ComponentC</div><div class="line">  &#125;,</div><div class="line">  <span class="comment">// ...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>　　现在<code>ComponentA</code>和<code>ComponentC</code>都可以在<code>ComponentB</code>的模板中使用了。</p>
 <p>　　另外可以实现一些基础模块的全局化使用：<a href="https://cn.vuejs.org/v2/guide/components-registration.html#%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C" target="_blank" rel="external">戳这里</a></p>
@@ -453,17 +453,17 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2018/07/11/Vue组件/">Vue-组件</a></p>
-        <p><span>Author:</span><a href="/" title="Back to Homepage">LaLa</a></p>
-        <p><span>Created:</span>2018-07-11, 14:05:28</p>
-        <p><span>Updated:</span>2018-07-22, 14:22:51</p>
+        <p><span>本文标题:</span><a href="/2018/07/11/Vue组件/">Vue-组件</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
+        <p><span>发布时间:</span>2018-07-11, 14:05:28</p>
+        <p><span>最后更新:</span>2018-07-22, 14:22:51</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2018/07/11/Vue组件/" title="Vue-组件">http://lalajun.com/2018/07/11/Vue组件/</a>
-            <span class="copy-path" data-clipboard-text="From http://lalajun.com/2018/07/11/Vue组件/　　By LaLa" title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/07/11/Vue组件/" title="Vue-组件">http://lalajun.com/2018/07/11/Vue组件/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/07/11/Vue组件/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
-            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
         </p>
     </div>
 
@@ -490,7 +490,7 @@
 </article>
 
     <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
+        <strong class="toc-title">文章目录</strong>
         
             <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#组件"><span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#组件注册和使用"><span class="toc-text">组件注册和使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注册"><span class="toc-text">注册</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用-挂载组件"><span class="toc-text">使用-挂载组件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#动态挂载组件"><span class="toc-text">动态挂载组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动挂载实例"><span class="toc-text">手动挂载实例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模块化中使用组件"><span class="toc-text">模块化中使用组件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组件选项"><span class="toc-text">组件选项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组件通讯"><span class="toc-text">组件通讯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#父-gt-子-props"><span class="toc-text">父->子 props</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数组使用"><span class="toc-text">数组使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#对象使用——数据验证"><span class="toc-text">对象使用——数据验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#动态参数传入"><span class="toc-text">动态参数传入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#应用-单向数据流"><span class="toc-text">应用-单向数据流</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#子-gt-父-emit-on"><span class="toc-text">子->父 $emit $on</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#组件使用-v-model"><span class="toc-text">组件使用 v-model</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#v-model-双向数据绑定"><span class="toc-text">v-model 双向数据绑定</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非父子组件通讯"><span class="toc-text">非父子组件通讯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BUS数据总线"><span class="toc-text">BUS数据总线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#父链-子链-根"><span class="toc-text">父链 子链 根</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#子组件索引"><span class="toc-text">子组件索引</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#依赖注入"><span class="toc-text">依赖注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slot（插槽）"><span class="toc-text">slot（插槽）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#具名-slot"><span class="toc-text">具名 slot</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#nextTick"><span class="toc-text">$nextTick</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在动态组件上使用-keep-alive"><span class="toc-text">在动态组件上使用 keep-alive</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单文件组件"><span class="toc-text">单文件组件</span></a></li></ol>
         
@@ -506,10 +506,10 @@
         }
     </style>
 
-    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
     <script>
-        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
     </script>
 
 
@@ -523,21 +523,21 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/08/07/truffle/" title="Pre: Truffle框架">
+            <a href="/2018/08/07/truffle/" title="上一篇: Truffle框架">
                 <i class="fa fa-angle-left"></i>
             </a>
         
 
-        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/07/11/Vue/" title="Next: Vue-基础">
+            <a href="/2018/07/11/Vue/" title="下一篇: Vue-基础">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
 
 
 
@@ -554,14 +554,14 @@
                 2017-2018 LaLa
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
             <div class="visit">
                 
                     <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
                         </span>
                     </span>
                 
@@ -570,7 +570,7 @@
                 
                 
                     <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
                         </span>
                     </span>
                 
@@ -603,9 +603,9 @@
 
 
 <div class="scroll" id="scroll">
-    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
 <script>
     // Open in New Window
