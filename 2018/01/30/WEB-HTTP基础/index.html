@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="LaLa" />
-
-
-
-<meta name="description" content="— 从零开始的笔记 —— HTTP基础知识 —">
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="— 从零开始的笔记 —— HTTP基础知识 —">
 <meta name="keywords" content="web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WEB-HTTP基础">
@@ -25,308 +16,157 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg">
-<meta property="og:updated_time" content="2018-04-02T08:26:56.314Z">
+<meta property="og:updated_time" content="2019-05-13T06:50:27.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WEB-HTTP基础">
 <meta name="twitter:description" content="— 从零开始的笔记 —— HTTP基础知识 —">
 <meta name="twitter:image" content="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>WEB-HTTP基础 | 啦啦菌NODE</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">LaLa</a></h1>
-        </hgroup>
-
-        
-
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/0day漏洞/">0day漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NEO/">NEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solidity/">solidity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://stella9527.github.io/">9527</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-WEB-HTTP基础" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/01/30/WEB-HTTP基础/" class="article-date">
-      <time datetime="2018-01-30T08:29:33.000Z" itemprop="datePublished">2018-01-30</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
         
-  
-    <h1 class="article-title" itemprop="name">
-      WEB-HTTP基础
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
           
-        <p>— 从零开始的笔记 —<br>— HTTP基础知识 —<br><a id="more"></a></p>
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>WEB-HTTP基础</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/02/26/WEB-Cookie注入与伪静态注入/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/25/python笔记/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/01/30/WEB-HTTP基础/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&text=WEB-HTTP基础"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&is_video=false&description=WEB-HTTP基础"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-HTTP基础&body=Check out this article: http://lalajun.com/2018/01/30/WEB-HTTP基础/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&name=WEB-HTTP基础&description=&lt;p&gt;— 从零开始的笔记 —&lt;br&gt;— HTTP基础知识 —&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-number">2.</span> <span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#http全路径与相对路径地址"><span class="toc-number">3.</span> <span class="toc-text">http全路径与相对路径地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-number">4.</span> <span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-number">5.</span> <span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-number">5.1.</span> <span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-number">5.2.</span> <span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-number">6.</span> <span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的常用四种形式"><span class="toc-number">6.1.</span> <span class="toc-text">POST方法的Content-Type的常用四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-number">6.1.1.</span> <span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-number">6.1.2.</span> <span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-number">6.1.3.</span> <span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-number">6.1.4.</span> <span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-number">7.</span> <span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应返回状态码"><span class="toc-number">8.</span> <span class="toc-text">HTTP响应返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-number">9.</span> <span class="toc-text">HTTP身份验证</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WEB-HTTP基础
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-01-30T08:29:33.000Z" itemprop="datePublished">2018-01-30</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/web/">web</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>— 从零开始的笔记 —<br>— HTTP基础知识 —<br><a id="more"></a></p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>emmm…终于系统地整理了一下经常看到但是没有去好好了解的HTTP的东西，那么开始。</p>
-<h2 id="HTTP结构"><a href="#HTTP结构" class="headerlink" title="HTTP结构"></a>HTTP结构</h2><p><strong>请求结构</strong>：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg" alt=""><br>HTTP版本有两种：1.0 和 1.1<br>我们需要注意到的差异是 1.1版本请求必须使用HOST请求消息头</p>
-<p><strong>响应结构</strong>：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg" alt=""></p>
-<h2 id="常用HTTP消息头部"><a href="#常用HTTP消息头部" class="headerlink" title="常用HTTP消息头部"></a>常用HTTP消息头部</h2><p>先给出一些通用的消息头<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Connection：HTTP传输后是关闭TCP链接，还是保持链接开放</div><div class="line">Content-Length：消息主体字节长度</div><div class="line">Content-Type：消息主体内容类型；HTML文档内容类型为text/html</div><div class="line">Content-Encoding：为消息主体内容指定编码形式（如gzip）；一些应用使用它来压缩主体，以加快传输速度</div><div class="line">Transfer-Encoding：为方便通过HTTP传输而对消息主体使用的任何编码。使用这个消息头，通常用它指定块编码</div></pre></td></tr></table></figure></p>
-<h2 id="HTTP请求消息头部"><a href="#HTTP请求消息头部" class="headerlink" title="HTTP请求消息头部"></a>HTTP请求消息头部</h2><p>下面开始说明HTTP请求消息部分，先从消息头部开始：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">User-Agent:UA,用户代理，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</div><div class="line">Referer：表示发出请求的原始URL，跳转</div><div class="line">Host：想访问的WEB服务器的域名/IP 地址和端口号</div><div class="line">Accept：客户端可以处理的媒体类型，按优先级排序；在一个以逗号为分隔的列表中，可以定义多种类型和使用通配符。</div><div class="line">Accept-Charset：客户端接收的字符集</div><div class="line">Accept-Encoding: 客户端愿意接受哪些内容编码</div><div class="line">Authorization：用于为一种内置HTTP身份验证向服务器提交证书</div><div class="line">Cookie：提交服务器向客户端发布的其他参数</div><div class="line">If-Modified-Since:用于说明浏览器最后一收到所请求的资源的时间。如果服务器判断资源没有发生变化，就会发送状态码304响应，是客户端使用缓存的资源副本</div><div class="line">If-None-Match：指定一个实体标签——消息主体内容的标识符；服务器可以使用实体标签确定浏览器是否使用资源的缓冲副本</div></pre></td></tr></table></figure></p>
-<h3 id="User-Agent延伸"><a href="#User-Agent延伸" class="headerlink" title="User-Agent延伸"></a>User-Agent延伸</h3><p><a href="http://blog.csdn.net/u012175089/article/details/61199238" target="_blank" rel="external">补充参考1</a> <a href="http://blog.csdn.net/bone_ace/article/details/52476016" target="_blank" rel="external">补充参考2</a><br>IOS6系统格式：<br><code>User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25</code><br>safari5.1–Windows格式：<br><code>User-Agent: Mozilla/5.0(Windows;U;WindowsNT6.1;en-us)AppleWebKit/534.50(KHTML,likeGecko)Version/5.1Safari/534.50</code></p>
+<h2 id="HTTP结构"><a href="#HTTP结构" class="headerlink" title="HTTP结构"></a>HTTP结构</h2><p><strong>请求结构</strong>：<br><img src="http://ww4.sinaimg.cn/large/006iKNp3ly1fnyr3e08oej30hs0a0t9n.jpg" alt><br>HTTP版本有两种：1.0 和 1.1<br>我们需要注意到的差异是 1.1版本请求必须使用HOST请求消息头</p>
+<p><strong>响应结构</strong>：<br><img src="http://ww3.sinaimg.cn/large/006iKNp3ly1fnyr3vkg2ej30hs0b2wfo.jpg" alt></p>
+<h2 id="http全路径与相对路径地址"><a href="#http全路径与相对路径地址" class="headerlink" title="http全路径与相对路径地址"></a>http全路径与相对路径地址</h2><p>常用的相对路径访问形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /tokens/data HTTP/1.1</span><br><span class="line">Host: mhbtest.zsins.com</span><br></pre></td></tr></table></figure></p>
+<p>同样可以使用的绝对路径访问形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET https://core.zsins.com:443/cas/images HTTP/1.1</span><br><span class="line">Host: baidu.com</span><br><span class="line">X-Forwarded-Host: baidu.com</span><br></pre></td></tr></table></figure></p>
+<p>以上两种地址形式的区别是：</p>
+<ul>
+<li>前者的host头修改后，服务器解析会报错；</li>
+<li>后者的host头修改后，服务器会正常解析；</li>
+</ul>
+<p>可用于host绕过。但是这个结论不是一定的，自己是在nginx中发现上面规律，实际情况跟web服务器、版本均有关。</p>
+<h2 id="常用HTTP消息头部"><a href="#常用HTTP消息头部" class="headerlink" title="常用HTTP消息头部"></a>常用HTTP消息头部</h2><p>先给出一些通用的消息头<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Connection：HTTP传输后是关闭TCP链接，还是保持链接开放</span><br><span class="line">Content-Length：消息主体字节长度</span><br><span class="line">Content-Type：消息主体内容类型；HTML文档内容类型为text/html</span><br><span class="line">Content-Encoding：为消息主体内容指定编码形式（如gzip）；一些应用使用它来压缩主体，以加快传输速度</span><br><span class="line">Transfer-Encoding：为方便通过HTTP传输而对消息主体使用的任何编码。使用这个消息头，通常用它指定块编码</span><br></pre></td></tr></table></figure></p>
+<h2 id="HTTP请求消息头部"><a href="#HTTP请求消息头部" class="headerlink" title="HTTP请求消息头部"></a>HTTP请求消息头部</h2><p>下面开始说明HTTP请求消息部分，先从消息头部开始：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">User-Agent:UA,用户代理，使得服务器能够识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。</span><br><span class="line">Referer：表示发出请求的原始URL，跳转</span><br><span class="line">Host：想访问的WEB服务器的域名/IP 地址和端口号</span><br><span class="line">Accept：客户端可以处理的媒体类型，按优先级排序；在一个以逗号为分隔的列表中，可以定义多种类型和使用通配符。</span><br><span class="line">Accept-Charset：客户端接收的字符集</span><br><span class="line">Accept-Encoding: 客户端愿意接受哪些内容编码</span><br><span class="line">Authorization：用于为一种内置HTTP身份验证向服务器提交证书</span><br><span class="line">Cookie：提交服务器向客户端发布的其他参数</span><br><span class="line">If-Modified-Since:用于说明浏览器最后一收到所请求的资源的时间。如果服务器判断资源没有发生变化，就会发送状态码304响应，是客户端使用缓存的资源副本</span><br><span class="line">If-None-Match：指定一个实体标签——消息主体内容的标识符；服务器可以使用实体标签确定浏览器是否使用资源的缓冲副本</span><br></pre></td></tr></table></figure></p>
+<h3 id="User-Agent延伸"><a href="#User-Agent延伸" class="headerlink" title="User-Agent延伸"></a>User-Agent延伸</h3><p><a href="http://blog.csdn.net/u012175089/article/details/61199238" target="_blank" rel="noopener">补充参考1</a> <a href="http://blog.csdn.net/bone_ace/article/details/52476016" target="_blank" rel="noopener">补充参考2</a><br>IOS6系统格式：<br><code>User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25</code><br>safari5.1–Windows格式：<br><code>User-Agent: Mozilla/5.0(Windows;U;WindowsNT6.1;en-us)AppleWebKit/534.50(KHTML,likeGecko)Version/5.1Safari/534.50</code></p>
 <h3 id="伪造IP的HTTP请求头："><a href="#伪造IP的HTTP请求头：" class="headerlink" title="伪造IP的HTTP请求头："></a>伪造IP的HTTP请求头：</h3><p>X-Forwarded-For<br>Client-IP<br>x-remote-IP<br>x-originating-IP<br>x-remote-addr</p>
 <h2 id="HTTP请求头方法"><a href="#HTTP请求头方法" class="headerlink" title="HTTP请求头方法"></a>HTTP请求头方法</h2><pre><code>GET：获取资源，
 POST：传输实体内容，之后细说
@@ -376,7 +216,7 @@ Content-Type: text/xml
 
     &lt;/params&gt;
 &lt;/methodcall&gt; 
-</code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Server：指明WEB服务器软件</div><div class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</div><div class="line">	可选属性：</div><div class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</div><div class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</div><div class="line">	path：用于指定cookie的有效url路径</div><div class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</div><div class="line">	HttpOnly：无法通过客户端JS直接访问cookie</div><div class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</div><div class="line">Cache-Control：设置是否要缓存，及缓存的设置</div><div class="line">Expired：WEB服务器表明该实体将在什么时候过期</div><div class="line">ETag：指定一个实体标签，标志为实体的版本</div><div class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</div></pre></td></tr></table></figure>
+</code></pre><h2 id="HTTP响应消息头部"><a href="#HTTP响应消息头部" class="headerlink" title="HTTP响应消息头部"></a>HTTP响应消息头部</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Server：指明WEB服务器软件</span><br><span class="line">Set-Cookie：发送一个cookie，分号分割，它将在随后向服务器发送的请求汇总由Cookie消息头返回</span><br><span class="line">	可选属性：</span><br><span class="line">	expires：设定cookie有效时间。使浏览器将cookie保存在永久性的存储器中，在随后的的浏览器会话中重复利用，直到到期。</span><br><span class="line">	domain：用于指定cookie有效域。这个域必须和收到cookie的域相同或者是它的父域</span><br><span class="line">	path：用于指定cookie的有效url路径</span><br><span class="line">	secure：设置，仅仅只在HTTPS请求中提交cookie</span><br><span class="line">	HttpOnly：无法通过客户端JS直接访问cookie</span><br><span class="line">Pragma：主要用于no-cache，浏览器不要将响应保存在缓存中</span><br><span class="line">Cache-Control：设置是否要缓存，及缓存的设置</span><br><span class="line">Expired：WEB服务器表明该实体将在什么时候过期</span><br><span class="line">ETag：指定一个实体标签，标志为实体的版本</span><br><span class="line">Location：服务器告诉浏览器，试图访问的对象已经被移到别的位置了，到该头部指定的位置去取。</span><br></pre></td></tr></table></figure>
 <h2 id="HTTP响应返回状态码"><a href="#HTTP响应返回状态码" class="headerlink" title="HTTP响应返回状态码"></a>HTTP响应返回状态码</h2><ul>
 <li>1XX——提供信息</li>
 <li>2XX——请求被成功提交</li>
@@ -410,208 +250,143 @@ Content-Type: text/xml
 <li><strong>Digest</strong>： 质询-响应式机制，随同用户证书一起使用一个随机值MD5校验和。</li>
 </ul>
 
-      
-    </div>
-    
   </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-01-30, 16:29:33</p>
-        <p><span>最后更新:</span>2018-04-02, 16:26:56</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/30/WEB-HTTP基础/" title="WEB-HTTP基础">http://lalajun.com/2018/01/30/WEB-HTTP基础/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/01/30/WEB-HTTP基础/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/">
-                    WEB-Cookie注入与伪静态注入
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/01/25/python笔记/">
-                    python2.7笔记
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的常用四种形式"><span class="toc-text">POST方法的Content-Type的常用四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应返回状态码"><span class="toc-text">HTTP响应返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-text">HTTP身份验证</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/" title="上一篇: WEB-Cookie注入与伪静态注入">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2018/01/25/python笔记/" title="下一篇: python2.7笔记">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2017-2018 LaLa
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
     </div>
-</footer>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP结构"><span class="toc-number">2.</span> <span class="toc-text">HTTP结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#http全路径与相对路径地址"><span class="toc-number">3.</span> <span class="toc-text">http全路径与相对路径地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用HTTP消息头部"><span class="toc-number">4.</span> <span class="toc-text">常用HTTP消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求消息头部"><span class="toc-number">5.</span> <span class="toc-text">HTTP请求消息头部</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#User-Agent延伸"><span class="toc-number">5.1.</span> <span class="toc-text">User-Agent延伸</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#伪造IP的HTTP请求头："><span class="toc-number">5.2.</span> <span class="toc-text">伪造IP的HTTP请求头：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP请求头方法"><span class="toc-number">6.</span> <span class="toc-text">HTTP请求头方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#POST方法的Content-Type的常用四种形式"><span class="toc-number">6.1.</span> <span class="toc-text">POST方法的Content-Type的常用四种形式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#application-x-www-form-urlencoded-："><span class="toc-number">6.1.1.</span> <span class="toc-text">application/x-www-form-urlencoded ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#multipart-form-data-："><span class="toc-number">6.1.2.</span> <span class="toc-text">multipart/form-data ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#application-json-："><span class="toc-number">6.1.3.</span> <span class="toc-text">application/json ：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#text-xml-："><span class="toc-number">6.1.4.</span> <span class="toc-text">text/xml ：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应消息头部"><span class="toc-number">7.</span> <span class="toc-text">HTTP响应消息头部</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP响应返回状态码"><span class="toc-number">8.</span> <span class="toc-text">HTTP响应返回状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP身份验证"><span class="toc-number">9.</span> <span class="toc-text">HTTP身份验证</span></a></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/01/30/WEB-HTTP基础/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&text=WEB-HTTP基础"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&is_video=false&description=WEB-HTTP基础"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-HTTP基础&body=Check out this article: http://lalajun.com/2018/01/30/WEB-HTTP基础/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&title=WEB-HTTP基础"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/01/30/WEB-HTTP基础/&name=WEB-HTTP基础&description=&lt;p&gt;— 从零开始的笔记 —&lt;br&gt;— HTTP基础知识 —&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
 
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-             post: ".article-entry a[href], .copyright a[href]", 
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-    <script>
-        var originTitle = document.title;
-        var titleTime;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-                clearTimeout(titleTime);
-            }
-            else {
-                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-                titleTime = setTimeout(function() {
-                    document.title = originTitle;
-                }, 2000);
-            }
-        })
-    </script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
 </body>
 </html>

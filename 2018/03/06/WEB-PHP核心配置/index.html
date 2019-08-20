@@ -1,21 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-
-    <!--[if lt IE 9]>
-        <style>body {display: none; background: none !important} </style>
-        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
-    <![endif]-->
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="format-detection" content="telephone=no" />
-<meta name="author" content="LaLa" />
-
-
-
-<meta name="description" content="— 从零开始的笔记 ——PHP5核心配置及测试—">
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="— 从零开始的笔记 ——PHP5核心配置及测试—">
 <meta name="keywords" content="web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WEB-PHP核心配置">
@@ -35,297 +26,138 @@
 <meta name="twitter:title" content="WEB-PHP核心配置">
 <meta name="twitter:description" content="— 从零开始的笔记 ——PHP5核心配置及测试—">
 <meta name="twitter:image" content="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb9n9b4h8j30cj04cjr9.jpg">
-
-<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
-
-
-    <link rel="alternate" href="/atom.xml" title="啦啦菌NODE" type="application/atom+xml">
-
-
-
-    <link rel="shortcut icon" href="/favicon.png">
-
-
-
-    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
-
-
-
-    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
-
-
-
-    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-
-
-<link rel="stylesheet" href="/css/style.css">
-
-
-
-<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-
-
-<title>WEB-PHP核心配置 | 啦啦菌NODE</title>
-
-<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-
-<script>
-    var yiliaConfig = {
-        fancybox: true,
-        animate: true,
-        isHome: false,
-        isPost: true,
-        isArchive: false,
-        isTag: false,
-        isCategory: false,
-        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
-        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
-        search: true
-    }
-</script>
-
-
-    <script> yiliaConfig.jquery_ui = [false]; </script>
-
-
-
-    <script> yiliaConfig.rootUrl = "\/";</script>
-
-
-
-
-
-
-</head>
-<body>
-  <div id="container">
-    <div class="left-col">
-    <div class="overlay"></div>
-<div class="intrude-less">
-    <header id="header" class="inner">
-        <a href="/" class="profilepic">
-            <img src="/img/avatar.png" class="animated zoomIn">
-        </a>
-        <hgroup>
-          <h1 class="header-author"><a href="/">LaLa</a></h1>
-        </hgroup>
-
-        
-
-        
-            <form id="search-form">
-            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
-            <i class="fa fa-times" onclick="resetSearch()"></i>
-            </form>
-            <div id="local-search-result"></div>
-            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
-        
-
-
-        
-            <div id="switch-btn" class="switch-btn">
-                <div class="icon">
-                    <div class="icon-ctn">
-                        <div class="icon-wrap icon-house" data-idx="0">
-                            <div class="birdhouse"></div>
-                            <div class="birdhouse_holes"></div>
-                        </div>
-                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
-                            <div class="ribbon"></div>
-                        </div>
-                        
-                        <div class="icon-wrap icon-link hide" data-idx="2">
-                            <div class="loopback_l"></div>
-                            <div class="loopback_r"></div>
-                        </div>
-                        
-                        
-                        <div class="icon-wrap icon-me hide" data-idx="3">
-                            <div class="user"></div>
-                            <div class="shoulder"></div>
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                <div class="tips-box hide">
-                    <div class="tips-arrow"></div>
-                    <ul class="tips-inner">
-                        <li>菜单</li>
-                        <li>标签</li>
-                        
-                        <li>友情链接</li>
-                        
-                        
-                        <li>关于我</li>
-                        
-                    </ul>
-                </div>
-            </div>
-        
-
-        <div id="switch-area" class="switch-area">
-            <div class="switch-wrap">
-                <section class="switch-part switch-part1">
-                    <nav class="header-menu">
-                        <ul>
-                        
-                            <li><a href="/">主页</a></li>
-                        
-                            <li><a href="/archives/">所有文章</a></li>
-                        
-                        </ul>
-                    </nav>
-                    <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-                    </nav>
-                </section>
-                
-                
-                <section class="switch-part switch-part2">
-                    <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/0day漏洞/">0day漏洞</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DAPP/">DAPP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NEO/">NEO</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue/">Vue</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/solidity/">solidity</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tools/">tools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web/">web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/writeup/">writeup</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xss/">xss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/区块链/">区块链</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/安全/">安全</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/智能合约/">智能合约</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/比特币/">比特币</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/浏览器/">浏览器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/血泪教训/">血泪教训</a></li></ul>
-                    </div>
-                </section>
-                
-                
-                
-                <section class="switch-part switch-part3">
-                    <div id="js-friends">
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://stella9527.github.io/">9527</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://blog.betamao.me/">betamao_now</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://betamaois.github.io">betamao</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://err0rzz.github.io">壮壮</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://qianfei11.github.io/">feifan</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://esebanana.github.io">ESE</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://hhddj.github.io/">hhd</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://blog.0kami.cn/">0kami</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://b3t4m3ee.github.io/">b3t4m3ee</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://www.leavesongs.com/">leavesong</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://iamstudy.cnblogs.com/">l3m0n</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="https://myblackmanba.github.io/">MyBlackManba</a>
-                    
-                      <a class="main-nav-link switch-friends-link" href="http://moxfive.xyz/">MOxFIVE</a>
-                    
-                    </div>
-                </section>
-                
-
-                
-                
-                <section class="switch-part switch-part4">
-                
-                    <div id="js-aboutme">biubiubiubiu～&lt;br&gt;动感光波！&lt;br&gt;&lt;br&gt;晚安～</div>
-                </section>
-                
-            </div>
-        </div>
-    </header>                
-</div>
-    </div>
-    <div class="mid-col">
-      <nav id="mobile-nav">
-      <div class="overlay">
-          <div class="slider-trigger"></div>
-          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LaLa</a></h1>
-      </div>
-    <div class="intrude-less">
-        <header id="header" class="inner">
-            <a href="/" class="profilepic">
-                <img src="/img/avatar.png" class="animated zoomIn">
-            </a>
-            <hgroup>
-              <h1 class="header-author"><a href="/" title="回到主页">LaLa</a></h1>
-            </hgroup>
-            
-            <nav class="header-menu">
-                <ul>
-                
-                    <li><a href="/">主页</a></li>
-                
-                    <li><a href="/archives/">所有文章</a></li>
-                
-                <div class="clearfix"></div>
-                </ul>
-            </nav>
-            <nav class="header-nav">
-                        <ul class="social">
-                            
-                                <a class="fa Email" target="_blank" href="/827177488@qq.com" title="Email"></a>
-                            
-                                <a class="fa bilibili" target="_blank" href="https://space.bilibili.com/1664263/#!/" title="bilibili"></a>
-                            
-                                <a class="fa QQ" target="_blank" href="/827177488" title="QQ"></a>
-                            
-                        </ul>
-            </nav>
-        </header>                
-    </div>
-    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
-</nav>
-      <div class="body-wrap"><article id="post-WEB-PHP核心配置" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2018/03/06/WEB-PHP核心配置/" class="article-date">
-      <time datetime="2018-03-06T06:07:12.000Z" itemprop="datePublished">2018-03-06</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
     
     
-      <header class="article-header">
         
-  
-    <h1 class="article-title" itemprop="name">
-      WEB-PHP核心配置
-    </h1>
-  
-
-      </header>
-      
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web/">web</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
           
-        <p>— 从零开始的笔记 —<br>—PHP5核心配置及测试—<br><a id="more"></a></p>
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>WEB-PHP核心配置</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/03/19/WEB-LFI与RFI利用/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/02/26/WEB-Cookie注入与伪静态注入/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/03/06/WEB-PHP核心配置/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&text=WEB-PHP核心配置"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&is_video=false&description=WEB-PHP核心配置"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-PHP核心配置&body=Check out this article: http://lalajun.com/2018/03/06/WEB-PHP核心配置/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&name=WEB-PHP核心配置&description=&lt;p&gt;— 从零开始的笔记 —&lt;br&gt;—PHP5核心配置及测试—&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wamp-lamp"><span class="toc-number">2.</span> <span class="toc-text">wamp/lamp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP指令设定的范围"><span class="toc-number">3.</span> <span class="toc-text">PHP指令设定的范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-指令配置修改"><span class="toc-number">4.</span> <span class="toc-text">PHP 指令配置修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess修改"><span class="toc-number">4.1.</span> <span class="toc-text">.htaccess修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ini-set-修改"><span class="toc-number">4.2.</span> <span class="toc-text">ini_set()修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#register-globals-全局变量注册开关"><span class="toc-number">5.</span> <span class="toc-text">register_globals(全局变量注册开关)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">5.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#allow-url-include-是否允许包含远程文件"><span class="toc-number">6.</span> <span class="toc-text">allow_url_include(是否允许包含远程文件)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allow-url-fopen-是否允许打开远程文件"><span class="toc-number">6.1.</span> <span class="toc-text">allow_url_fopen(是否允许打开远程文件)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-1"><span class="toc-number">6.2.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-gpc-魔术引号自动过滤"><span class="toc-number">7.</span> <span class="toc-text">magic_quotes_gpc(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-2"><span class="toc-number">7.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-runtime-魔术引号自动过滤"><span class="toc-number">8.</span> <span class="toc-text">magic_quotes_runtime(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-3"><span class="toc-number">8.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quptes-sybase（魔术引号自动过滤）"><span class="toc-number">9.</span> <span class="toc-text">magic_quptes_sybase（魔术引号自动过滤）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-4"><span class="toc-number">9.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#safe-mode-安全模式"><span class="toc-number">10.</span> <span class="toc-text">safe_mode(安全模式)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#影响函数"><span class="toc-number">10.1.</span> <span class="toc-text">影响函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#open-basedir-PHP可访问目录"><span class="toc-number">11.</span> <span class="toc-text">open_basedir PHP可访问目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#display-errors-和-error-reporting"><span class="toc-number">12.</span> <span class="toc-text">display_errors 和 error_reporting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#error-reporting"><span class="toc-number">12.1.</span> <span class="toc-text">error_reporting</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他安全常用指令"><span class="toc-number">13.</span> <span class="toc-text">其他安全常用指令</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WEB-PHP核心配置
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-03-06T06:07:12.000Z" itemprop="datePublished">2018-03-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/web/">web</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>— 从零开始的笔记 —<br>—PHP5核心配置及测试—<br><a id="more"></a></p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习《代码审计》这本书，按照书上大致理一遍重要的PHP配置，并做了测试。<br>还提及了allow_url_include及allow_url_fopen的相应延伸知识。</p>
 <h2 id="wamp-lamp"><a href="#wamp-lamp" class="headerlink" title="wamp/lamp"></a>wamp/lamp</h2><p>解释两个名词：</p>
 <ul>
@@ -359,20 +191,20 @@
 </tr>
 </tbody>
 </table>
-<h2 id="PHP-指令配置修改"><a href="#PHP-指令配置修改" class="headerlink" title="PHP 指令配置修改"></a>PHP 指令配置修改</h2><p><strong>php.ini</strong>修改 打开文件修改。<br><strong>Windows注册表和httpd.conf修改</strong> 戳<a href="http://php.net/manual/zh/configuration.changes.php" target="_blank" rel="external">官方说明</a><br>具体说 .htaccess 和 ini_set</p>
-<h3 id="htaccess修改"><a href="#htaccess修改" class="headerlink" title=".htaccess修改"></a>.htaccess修改</h3><p><strong>.htaccess</strong>是apache在网站目录下的的配置文件，作用域有限，可以实现：网页301重定向、自定义404错误页面、改变文件扩展名、允许/阻止特定的用户或者目录的访问、禁止目录列表等功能。<br>其他具体功能不细说，有兴趣点这里<a href="https://www.cnblogs.com/flyxiangshang/p/5336318.html" target="_blank" rel="external">=w=</a>和<a href="http://www.jb51.net/article/80656.htm" target="_blank" rel="external">QAQ</a><br>此处说明如何在.htaccess中修改php配置</p>
+<h2 id="PHP-指令配置修改"><a href="#PHP-指令配置修改" class="headerlink" title="PHP 指令配置修改"></a>PHP 指令配置修改</h2><p><strong>php.ini</strong>修改 打开文件修改。<br><strong>Windows注册表和httpd.conf修改</strong> 戳<a href="http://php.net/manual/zh/configuration.changes.php" target="_blank" rel="noopener">官方说明</a><br>具体说 .htaccess 和 ini_set</p>
+<h3 id="htaccess修改"><a href="#htaccess修改" class="headerlink" title=".htaccess修改"></a>.htaccess修改</h3><p><strong>.htaccess</strong>是apache在网站目录下的的配置文件，作用域有限，可以实现：网页301重定向、自定义404错误页面、改变文件扩展名、允许/阻止特定的用户或者目录的访问、禁止目录列表等功能。<br>其他具体功能不细说，有兴趣点这里<a href="https://www.cnblogs.com/flyxiangshang/p/5336318.html" target="_blank" rel="noopener">=w=</a>和<a href="http://www.jb51.net/article/80656.htm" target="_blank" rel="noopener">QAQ</a><br>此处说明如何在.htaccess中修改php配置</p>
 <ul>
 <li>配置httpd.conf中的<em>AllowOverride</em>，使.htaccess能用</li>
 <li>创建.htaccess文件(windows需要在命令行下创建)</li>
 <li>写入配置内容</li>
 </ul>
-<p><strong>配置内容格式</strong>：<code>php_value 配置名称 值</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">php_value register_globals On</div></pre></td></tr></table></figure></p>
-<h3 id="ini-set-修改"><a href="#ini-set-修改" class="headerlink" title="ini_set()修改"></a>ini_set()修改</h3><p><strong>ini_set</strong> — 为一个配置选项设置值<br><code>string ini_set ( string $varname , string $newvalue )</code><br>设置指定配置选项的值。这个选项会在脚本运行时保持新的值，并在脚本结束时恢复。<br>成功时返回旧的值，失败时返回 FALSE。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">if</span>(ini_set(<span class="string">'display_errors'</span>,<span class="string">'1'</span>)!=<span class="keyword">FALSE</span>) <span class="keyword">echo</span> <span class="string">'success'</span>;</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p><strong>配置内容格式</strong>：<code>php_value 配置名称 值</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php_value register_globals On</span><br></pre></td></tr></table></figure></p>
+<h3 id="ini-set-修改"><a href="#ini-set-修改" class="headerlink" title="ini_set()修改"></a>ini_set()修改</h3><p><strong>ini_set</strong> — 为一个配置选项设置值<br><code>string ini_set ( string $varname , string $newvalue )</code><br>设置指定配置选项的值。这个选项会在脚本运行时保持新的值，并在脚本结束时恢复。<br>成功时返回旧的值，失败时返回 FALSE。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</span><br><span class="line"><span class="keyword">if</span>(ini_set(<span class="string">'display_errors'</span>,<span class="string">'1'</span>)!=<span class="keyword">FALSE</span>) <span class="keyword">echo</span> <span class="string">'success'</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> ini_get(<span class="string">'display_errors'</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb9n9b4h8j30cj04cjr9.jpg" alt="9.png"><br></div>
 
 <h2 id="register-globals-全局变量注册开关"><a href="#register-globals-全局变量注册开关" class="headerlink" title="register_globals(全局变量注册开关)"></a>register_globals(全局变量注册开关)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>。之后版本是 <strong>PHP_INI_PERDIR</strong><br>在 php &lt; 5.3.0 时是 默认为On<br>在 php &gt;= 5.3.0 时是 默认为Off<br>在 php 5.4.0 版本移除该选项，即永久为Off<br><strong>作用</strong>：设置为On时，会直接把用户GET、POST等方式提交上来的参数注册成<strong>全局变量</strong>并初始化只为参数对应的值，使得提交参数可以直接在脚本中使用</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成(PHP_INI_PERDIR,默认为On)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
-<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8ypp9gtj30i002v0sm.jpg" alt="1.png"><br>当代码中已经<strong>初始化</strong>则无效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$user=<span class="string">'user'</span>;</div><div class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">else</span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成(PHP_INI_PERDIR,默认为On)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8ypp9gtj30i002v0sm.jpg" alt="1.png"><br>当代码中已经<strong>初始化</strong>则无效：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$user=<span class="string">'user'</span>;</span><br><span class="line"><span class="keyword">if</span>($user==<span class="string">'admin'</span>)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'admin'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'user'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww4.sinaimg.cn/large/006iKNp3gy1fpb8z17jc2j30gp027746.jpg" alt="2.png"><br></div>
 
 <h2 id="allow-url-include-是否允许包含远程文件"><a href="#allow-url-include-是否允许包含远程文件" class="headerlink" title="allow_url_include(是否允许包含远程文件)"></a>allow_url_include(是否允许包含远程文件)</h2><p>具体范围的版本 在书中与官网不全一致。以下为官网的说明<br>在 PHP 5 时是 <strong>PHP_INI_SYSTEM</strong>，默认为Off，从 PHP 5.2.0 起可用。<br>现在为 <strong>PHP_INI_ALL</strong>。</p>
@@ -381,9 +213,9 @@
 </blockquote>
 <p><strong>作用</strong>：设置为On时，可以直接包含远程文件(http:// 与ftp:// )，比如include包含。<code>include($var)</code> 当$var可控时，可以执行PHP代码<br>讲<strong>allow_url_include</strong>的同时就会提到<strong>allow_url_fopen</strong>。因为在官方文档中使用<em>allow_url_include</em>的前提是<em>allow_url_fopen</em>为On</p>
 <h3 id="allow-url-fopen-是否允许打开远程文件"><a href="#allow-url-fopen-是否允许打开远程文件" class="headerlink" title="allow_url_fopen(是否允许打开远程文件)"></a>allow_url_fopen(是否允许打开远程文件)</h3><p>在 PHP &lt;= 4.3.4 时是 PHP_INI_ALL。之后版本是 PHP_INI_SYSTEM,默认为On<br><strong>作用</strong>：设置为On时，允许打开远程文件，比如fopen打开。</p>
-<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="external">戳这里</a> </p>
+<h3 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h3><p>其实这两个选项形成的就是<strong>远程文件包含漏洞RFI</strong><br>查看另一篇博客吧<a href="https://lalajun.github.io/2018/03/19/WEB-LFI%E4%B8%8ERFI%E5%88%A9%E7%94%A8/" target="_blank" rel="noopener">戳这里</a> </p>
 <h2 id="magic-quotes-gpc-魔术引号自动过滤"><a href="#magic-quotes-gpc-魔术引号自动过滤" class="headerlink" title="magic_quotes_gpc(魔术引号自动过滤)"></a>magic_quotes_gpc(魔术引号自动过滤)</h2><p>在 PHP &lt;= 4.2.3 时是 <strong>PHP_INI_ALL</strong>，之后是 <strong>PHP_INI_PERDIR</strong>， 默认为On。<br>从 PHP 5.3.0 起不推荐使用。 在 PHP 5.4.0 中移除该选项。（避免了magic_quotes_gpc未设置，用户依赖这个设置而带来了安全隐患）<br><strong>作用</strong>：为 GPC (Get/Post/Cookie) 操作设置 magic_quotes 状态。当 magic_quotes 为 on，自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠()。不会过滤<strong>$_SERVER</strong>变量，可以利用client-ip、referer一类的漏洞。<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_gpc</p>
-<h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="测试-2"><a href="#测试-2" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">print_r($_GET);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90lzewyj30go040glk.jpg" alt="10.png"><br></div>
 
 <h2 id="magic-quotes-runtime-魔术引号自动过滤"><a href="#magic-quotes-runtime-魔术引号自动过滤" class="headerlink" title="magic_quotes_runtime(魔术引号自动过滤)"></a>magic_quotes_runtime(魔术引号自动过滤)</h2><p>范围是 <strong>PHP_INI_ALL</strong>，默认为 Off<br>本特性已自 PHP 5.3.0 起废弃并将自 PHP 5.4.0 起移除。<br><strong>作用</strong>：对于从<strong>数据库或者文件</strong>中获取的数据自动在单引号(‘)、双引号(“)、反斜杠()及空字符(NULL)前面加上反斜杠() （测试后貌似对空字符无效）<br>如果 magic_quotes_sybase 也是 ON，它会完全覆盖 magic_quotes_runtime<br>覆盖函数列表:</p>
@@ -431,25 +263,27 @@ sybase_fetch_assoc()
 SplFileObject::fgets()
 SplFileObject::fgetcsv()
 SplFileObject::fwrite()
-</code></pre><h3 id="测试-3"><a href="#测试-3" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_runtime 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">//1.txt '"\</span></div><div class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+</code></pre><h3 id="测试-3"><a href="#测试-3" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_runtime 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//1.txt '"\</span></span><br><span class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb90u3ty4j30em02jq2t.jpg" alt="11.png"><br></div>
 
 <h2 id="magic-quptes-sybase（魔术引号自动过滤）"><a href="#magic-quptes-sybase（魔术引号自动过滤）" class="headerlink" title="magic_quptes_sybase（魔术引号自动过滤）"></a>magic_quptes_sybase（魔术引号自动过滤）</h2><p>范围是 <strong>PHP_INI_ALL</strong> 。默认为Off<br>在 PHP 5.4.0 中移除该选项。<br><strong>作用</strong>：当设置为On时，会覆盖掉magic_quotes_gpc=On。仅仅 转义空字符 以及 单引号(‘)前再加一个单引号(‘)。会覆盖掉magic_quotes_runtime=On,仅仅把单引号(‘)前再加一个单引号(‘)</p>
-<h3 id="测试-4"><a href="#测试-4" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br>magic_quotes_runtime 为 On<br>magic_quotes_sybase 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">//1.txt 1'2"3\</span></div><div class="line">print_r($_GET);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</div><div class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<h3 id="测试-4"><a href="#测试-4" class="headerlink" title="测试"></a>测试</h3><p>以下测试是在php5.2中完成。<br>magic_quotes_gpc 为 On<br>magic_quotes_runtime 为 On<br>magic_quotes_sybase 为 On<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//1.txt 1'2"3\</span></span><br><span class="line">print_r($_GET);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'&lt;br&gt;'</span>;</span><br><span class="line"><span class="keyword">echo</span> file_get_contents(<span class="string">"1.txt"</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb91002yij30hh03n0sp.jpg" alt="12.png"><br></div>
 
-<h2 id="safe-mode-安全模式"><a href="#safe-mode-安全模式" class="headerlink" title="safe_mode(安全模式)"></a>safe_mode(安全模式)</h2><p>范围是 <strong>PHP_INI_SYSTEM</strong> ，默认为 Off。<br>在 PHP 5.4.0 中移除该选项。<br><a href="http://php.net/manual/zh/ini.sect.safe-mode.php#ini.safe-mode-gid" target="_blank" rel="external">官方文档</a><br><strong>作用</strong>：<br>1.PHP 所有文件操作函数 会受到限制。会检查当前脚本的拥有者是否和将被操作的文件的拥有者相匹配，即你不能操作不属于你的文件。如果需要用 include等函数 加载一些放在非WEB服务启动用户所有的目录下的脚本文件，使用<strong>safe_mode_include_dir</strong>指令来配置可以包含的路径。<br>2.PHP 函数执行命令或程序会提示错误。当使用外部脚本时，集中在一个目录下，使用<strong>safe_mode_exec_dir</strong>指令指向目录。<br>当safe_mode为On时，下面选项开启<br>下列选项范围都为<strong>PHP_INI_SYSTEM</strong></p>
+<h2 id="safe-mode-安全模式"><a href="#safe-mode-安全模式" class="headerlink" title="safe_mode(安全模式)"></a>safe_mode(安全模式)</h2><p>范围是 <strong>PHP_INI_SYSTEM</strong> ，默认为 Off。<br>在 PHP 5.4.0 中移除该选项。<br><a href="http://php.net/manual/zh/ini.sect.safe-mode.php#ini.safe-mode-gid" target="_blank" rel="noopener">官方文档</a><br><strong>作用</strong>：<br>1.PHP 所有文件操作函数 会受到限制。会检查当前脚本的拥有者是否和将被操作的文件的拥有者相匹配，即你不能操作不属于你的文件。如果需要用 include等函数 加载一些放在非WEB服务启动用户所有的目录下的脚本文件，使用<strong>safe_mode_include_dir</strong>指令来配置可以包含的路径。<br>2.PHP 函数执行命令或程序会提示错误。当使用外部脚本时，集中在一个目录下，使用<strong>safe_mode_exec_dir</strong>指令指向目录。<br>当safe_mode为On时，下面选项开启<br>下列选项范围都为<strong>PHP_INI_SYSTEM</strong></p>
 <ul>
 <li><strong>safe_mode_gid</strong>：默认”0”。安全模式在打开文件时会做 UID 比较检查。如果想将其放宽到 GID 比较，则打开 safe_mode_gid。</li>
 <li><strong>safe_mode_include_dir</strong>：默认为NULL。当从此目录及其子目录（目录<strong>必须</strong>在 include_path 中 或者 用完整路径来包含）包含文件时越过 UID/GID 检查。 </li>
 </ul>
 <blockquote>
 <p>从 PHP 4.2.0 开始，本指令可以接受和 include_path 指令类似的风格用冒号（Windows 中是分号）隔开的路径，而不只是一个目录。 指定的限制实际上是一个前缀，而非一个目录名，目录名需要以/结尾。<br>“safe_mode_include_dir = /dir/incl” 将允许访问 “/dir/include”和“/dir/incls”等文件<br>“safe_mode_include_dir = /dir/incl/” 将允许访问 “/dir/incl/”目录下的文件<br>如果本指令的值为空，在 PHP 4.2.3 中以及 PHP 4.3.3 起具有不同 UID/GID 的文件将不能被包含。在较早版本中，所有文件都能被包含。 </p>
+</blockquote>
+<blockquote>
 <p><strong>include_path</strong> :范围是 PHP_INI_ALL。 默认”.;/path/to/php/pear”<br>作用：指定一个目录列表，让require、include、fopen（）、file（）、readfile（）和file_get_contents（）函数从中查找文件。该格式类似于系统的PATH环境变量：在Unix中使用冒号(:)分隔的目录列表或在Windows中使用分号(;)。<br>修改： set_include_path()</p>
 </blockquote>
 <ul>
 <li><strong>safe_mode_exec_dir</strong>：默认””。如果 PHP 使用了安全模式，system() 和其它程序执行函数（见文末）将拒绝启动不在此目录中的程序。必须使用 / 作为目录分隔符，包括 Windows 中。 </li>
-<li><strong>safe_mode_allowed_env_vars</strong>：默认为”PHP<em>“。设置某些环境变量可能是潜在的安全缺口。本指令包含有一个逗号分隔的前缀列表。在安全模式下，用户只能改变那些名字具有在这里提供的前缀的环境变量。默认情况下，用户只能设置以 PHP</em> 开头的环境变量（例如 PHP_FOO = BAR）。</li>
+<li><strong>safe_mode_allowed_env_vars</strong>：默认为”PHP_”。设置某些环境变量可能是潜在的安全缺口。本指令包含有一个逗号分隔的前缀列表。在安全模式下，用户只能改变那些名字具有在这里提供的前缀的环境变量。默认情况下，用户只能设置以 PHP_ 开头的环境变量（例如 PHP_FOO = BAR）。</li>
 </ul>
 <blockquote>
 <p>如果本指令为空，PHP 将使用户可以修改任何环境变量！ </p>
@@ -501,11 +335,11 @@ system — 执行外部程序，并且显示输出
 <li>可以在httpd.conf中修改来关闭</li>
 <li>在 Windows 中，用分号分隔目录。在任何其它系统中用冒号分隔目录</li>
 </ul>
-<h2 id="display-errors-和-error-reporting"><a href="#display-errors-和-error-reporting" class="headerlink" title="display_errors 和 error_reporting"></a>display_errors 和 error_reporting</h2><p><a href="http://php.net/manual/zh/errorfunc.configuration.php#ini.error-reporting" target="_blank" rel="external">官网详情</a><br>两者范围都是 <strong>PHP_INI_ALL</strong><br>display_errors 默认为 On 。 error_reporting 默认为 NULL<br><strong>display_errors作用</strong>：该选项设置是否将错误信息作为输出的一部分显示到屏幕，或者对用户隐藏而不显示。<br>还可以设置 “display=stderr” 表示发送到 stderr 而不是 stdout。(只影响CGI/CLI的二进制文件)<br>“stderr”从 PHP 5.2.4 开始可用。在以前的版本中，该配置值的类型为 boolean. </p>
+<h2 id="display-errors-和-error-reporting"><a href="#display-errors-和-error-reporting" class="headerlink" title="display_errors 和 error_reporting"></a>display_errors 和 error_reporting</h2><p><a href="http://php.net/manual/zh/errorfunc.configuration.php#ini.error-reporting" target="_blank" rel="noopener">官网详情</a><br>两者范围都是 <strong>PHP_INI_ALL</strong><br>display_errors 默认为 On 。 error_reporting 默认为 NULL<br><strong>display_errors作用</strong>：该选项设置是否将错误信息作为输出的一部分显示到屏幕，或者对用户隐藏而不显示。<br>还可以设置 “display=stderr” 表示发送到 stderr 而不是 stdout。(只影响CGI/CLI的二进制文件)<br>“stderr”从 PHP 5.2.4 开始可用。在以前的版本中，该配置值的类型为 boolean. </p>
 <div align="center"><br><img src="http://ww2.sinaimg.cn/large/006iKNp3gy1fpb9178typj30fu05t74j.jpg" alt="13.png"><br></div>
 
 <p>当 display_errors=On 时，可以设置error_reporting</p>
-<h3 id="error-reporting"><a href="#error-reporting" class="headerlink" title="error_reporting"></a>error_reporting</h3><p><strong>error_reporting的作用</strong>: 设置错误报告的级别。<br>该参数可以是一个任意的表示二进制位字段的整数，或者<a href="http://php.net/manual/zh/errorfunc.constants.php" target="_blank" rel="external">内置常量</a>配置。<br>在PHP 4和PHP 5之中，其默认值为 <code>E_ALL &amp; ~E_NOTICE</code>。 该设置表示除了 E_NOTICE 其他都显示的错误级别。</p>
+<h3 id="error-reporting"><a href="#error-reporting" class="headerlink" title="error_reporting"></a>error_reporting</h3><p><strong>error_reporting的作用</strong>: 设置错误报告的级别。<br>该参数可以是一个任意的表示二进制位字段的整数，或者<a href="http://php.net/manual/zh/errorfunc.constants.php" target="_blank" rel="noopener">内置常量</a>配置。<br>在PHP 4和PHP 5之中，其默认值为 <code>E_ALL &amp; ~E_NOTICE</code>。 该设置表示除了 E_NOTICE 其他都显示的错误级别。</p>
 <h2 id="其他安全常用指令"><a href="#其他安全常用指令" class="headerlink" title="其他安全常用指令"></a>其他安全常用指令</h2><table>
 <thead>
 <tr>
@@ -583,208 +417,143 @@ system — 执行外部程序，并且显示输出
 </tbody>
 </table>
 
-      
-    </div>
-    
   </div>
-  
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></p>
-        <p><span>文章作者:</span><a href="/" title="回到主页">LaLa</a></p>
-        <p><span>发布时间:</span>2018-03-06, 14:07:12</p>
-        <p><span>最后更新:</span>2018-04-25, 08:39:11</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/03/06/WEB-PHP核心配置/" title="WEB-PHP核心配置">http://lalajun.com/2018/03/06/WEB-PHP核心配置/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://lalajun.com/2018/03/06/WEB-PHP核心配置/　　作者: LaLa" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script> var clipboard = new Clipboard('.copy-path'); </script>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-    <nav id="article-nav">
-        
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/03/19/WEB-LFI与RFI利用/">
-                    WEB-LFI与RFI利用
-                </a>
-            </div>
-        
-        
-            <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/">
-                    WEB-Cookie注入与伪静态注入
-                </a>
-            </div>
-        
-    </nav>
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-        <strong class="toc-title">文章目录</strong>
-        
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wamp-lamp"><span class="toc-text">wamp/lamp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP指令设定的范围"><span class="toc-text">PHP指令设定的范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-指令配置修改"><span class="toc-text">PHP 指令配置修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess修改"><span class="toc-text">.htaccess修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ini-set-修改"><span class="toc-text">ini_set()修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#register-globals-全局变量注册开关"><span class="toc-text">register_globals(全局变量注册开关)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#allow-url-include-是否允许包含远程文件"><span class="toc-text">allow_url_include(是否允许包含远程文件)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allow-url-fopen-是否允许打开远程文件"><span class="toc-text">allow_url_fopen(是否允许打开远程文件)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-1"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-gpc-魔术引号自动过滤"><span class="toc-text">magic_quotes_gpc(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-2"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-runtime-魔术引号自动过滤"><span class="toc-text">magic_quotes_runtime(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-3"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quptes-sybase（魔术引号自动过滤）"><span class="toc-text">magic_quptes_sybase（魔术引号自动过滤）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-4"><span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#safe-mode-安全模式"><span class="toc-text">safe_mode(安全模式)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#影响函数"><span class="toc-text">影响函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#open-basedir-PHP可访问目录"><span class="toc-text">open_basedir PHP可访问目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#display-errors-和-error-reporting"><span class="toc-text">display_errors 和 error_reporting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#error-reporting"><span class="toc-text">error_reporting</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他安全常用指令"><span class="toc-text">其他安全常用指令</span></a></li></ol>
-        
-    </div>
-    <style>
-        .left-col .switch-btn,
-        .left-col .switch-area {
-            display: none;
-        }
-        .toc-level-3 i,
-        .toc-level-3 ol {
-            display: none !important;
-        }
-    </style>
-
-    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-    <script>
-        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
-    </script>
-
-
-
-
-
-    
-
-
-
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a href="/2018/03/19/WEB-LFI与RFI利用/" title="上一篇: WEB-LFI与RFI利用">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-
-        
-            <a href="/2018/02/26/WEB-Cookie注入与伪静态注入/" title="下一篇: WEB-Cookie注入与伪静态注入">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/09/26/Tools-nmap/">Tools-nmap使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/15/0day-NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞/">0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/29/智能合约安全-重入攻击/">智能合约安全-重入攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/25/浏览器渲染原理与编码解码/">浏览器渲染原理与编码解码</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/15/NEO-搭建私有链/">NEO-搭建私有链</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/13/NEO-JAVA环境/">NEO-智能合约JAVA c#环境</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/DAPP开发中趟过的坑/">DAPP开发中趟过的坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle_contact/">Truffle-Contract中间件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/07/truffle/">Truffle框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue组件/">Vue-组件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/11/Vue/">Vue-基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/11/mysql-字符集漏洞/">Mysql-字符集漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/06/ZJGSCTF-2018-writeup/">ZJGSCTF-2018-web writup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/27/WEB-RPO攻击/">WEB-RPO攻击</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/23/Ubuntu下Apache2、Mysql、php7搭建/">Ubuntu下Apache2、Mysql、php7搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/21/docker/">Docker使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/09/WEB-SQL报错注入/">WEB-SQL报错注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/03/web-phpinfo包含临时文件/">WEB-基于phpinfo的包含临时文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/WEB-网强杯 WEB writeup/">WEB-网强杯-WEB-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/19/WEB-LFI与RFI利用/">WEB-LFI与RFI利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/06/WEB-PHP核心配置/">WEB-PHP核心配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/26/WEB-Cookie注入与伪静态注入/">WEB-Cookie注入与伪静态注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/30/WEB-HTTP基础/">WEB-HTTP基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/25/python笔记/">python2.7笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与交易/">比特币&区块链与交易</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/比特币&区块链与挖矿/">比特币&区块链与挖矿</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/05/WEB-CTF中的SQL文件操作/">WEB-CTF中的SQL文件操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/19/WEB-CTF中的绕过/">WEB-CTF中的绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/24/WEB-CTF中的sql盲注/">WEB-CTF中的sql盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/18/ZJGSCTF_writeup/">ZJGSCTF-writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/WEB-CTF中的SQL注入/">WEB-CTF中的SQL注入</a></li></ul>
-
-
-
-
-    <script>
-        
-    </script>
-</div>
-      <footer id="footer">
-    <div class="outer">
-        <div id="footer-info">
-            <div class="footer-left">
-                <i class="fa fa-copyright"></i> 
-                2017-2018 LaLa
-            </div>
-            <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
-            </div>
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
         </div>
-        
-            <div class="visit">
-                
-                    <span id="busuanzi_container_site_pv" style='display:none'>
-                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
-                        </span>
-                    </span>
-                
-                
-                    <span>| </span>
-                
-                
-                    <span id="busuanzi_container_page_pv" style='display:none'>
-                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
-                        </span>
-                    </span>
-                
-            </div>
-        
     </div>
-</footer>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
     </div>
-    
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var iPad = window.navigator.userAgent.indexOf('iPad');
-            if (iPad > -1 || $(".left-col").css("display") === "none") {
-                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
-                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
-                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
-            }
-            else {
-                var backgroundnum = 5;
-                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
-                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
-            }
-        })
-    </script>
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wamp-lamp"><span class="toc-number">2.</span> <span class="toc-text">wamp/lamp</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP指令设定的范围"><span class="toc-number">3.</span> <span class="toc-text">PHP指令设定的范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-指令配置修改"><span class="toc-number">4.</span> <span class="toc-text">PHP 指令配置修改</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#htaccess修改"><span class="toc-number">4.1.</span> <span class="toc-text">.htaccess修改</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ini-set-修改"><span class="toc-number">4.2.</span> <span class="toc-text">ini_set()修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#register-globals-全局变量注册开关"><span class="toc-number">5.</span> <span class="toc-text">register_globals(全局变量注册开关)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-number">5.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#allow-url-include-是否允许包含远程文件"><span class="toc-number">6.</span> <span class="toc-text">allow_url_include(是否允许包含远程文件)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allow-url-fopen-是否允许打开远程文件"><span class="toc-number">6.1.</span> <span class="toc-text">allow_url_fopen(是否允许打开远程文件)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-1"><span class="toc-number">6.2.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-gpc-魔术引号自动过滤"><span class="toc-number">7.</span> <span class="toc-text">magic_quotes_gpc(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-2"><span class="toc-number">7.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quotes-runtime-魔术引号自动过滤"><span class="toc-number">8.</span> <span class="toc-text">magic_quotes_runtime(魔术引号自动过滤)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-3"><span class="toc-number">8.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#magic-quptes-sybase（魔术引号自动过滤）"><span class="toc-number">9.</span> <span class="toc-text">magic_quptes_sybase（魔术引号自动过滤）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#测试-4"><span class="toc-number">9.1.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#safe-mode-安全模式"><span class="toc-number">10.</span> <span class="toc-text">safe_mode(安全模式)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#影响函数"><span class="toc-number">10.1.</span> <span class="toc-text">影响函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#open-basedir-PHP可访问目录"><span class="toc-number">11.</span> <span class="toc-text">open_basedir PHP可访问目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#display-errors-和-error-reporting"><span class="toc-number">12.</span> <span class="toc-text">display_errors 和 error_reporting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#error-reporting"><span class="toc-number">12.1.</span> <span class="toc-text">error_reporting</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他安全常用指令"><span class="toc-number">13.</span> <span class="toc-text">其他安全常用指令</span></a></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2018/03/06/WEB-PHP核心配置/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&text=WEB-PHP核心配置"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&is_video=false&description=WEB-PHP核心配置"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-PHP核心配置&body=Check out this article: http://lalajun.com/2018/03/06/WEB-PHP核心配置/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&title=WEB-PHP核心配置"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2018/03/06/WEB-PHP核心配置/&name=WEB-PHP核心配置&description=&lt;p&gt;— 从零开始的笔记 —&lt;br&gt;—PHP5核心配置及测试—&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
 
-
-<div class="scroll" id="scroll">
-    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
-    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
-</div>
-<script>
-    // Open in New Window
-    
-        var oOpenInNew = {
-            
-            
-             post: ".article-entry a[href], .copyright a[href]", 
-            
-            
-            
-             archives: ".archive-article-title", 
-             miniArchives: "a.post-list-link", 
-            
-             friends: "#js-friends a", 
-             socail: ".social a" 
-        }
-        for (var x in oOpenInNew) {
-            $(oOpenInNew[x]).attr("target", "_blank");
-        }
-    
-</script>
-
-    <script>
-        var originTitle = document.title;
-        var titleTime;
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-                clearTimeout(titleTime);
-            }
-            else {
-                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-                titleTime = setTimeout(function() {
-                    document.title = originTitle;
-                }, 2000);
-            }
-        })
-    </script>
-
-<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
   </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
 </body>
 </html>
