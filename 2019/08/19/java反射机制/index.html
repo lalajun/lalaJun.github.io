@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7btt38lc2j314u0nk0tx.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7btt9pcpvj31lq0bqabr.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7bttfgc0dj31v20j40vy.jpg">
-<meta property="og:updated_time" content="2019-10-20T14:30:16.180Z">
+<meta property="og:updated_time" content="2019-10-28T11:57:35.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java反射机制">
 <meta name="twitter:description" content="java反射机制真正反序列化漏洞的利用，还需要了解java反射原理。因为java反序列化的payload都是通过反射机制构建的。 在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法；并且对于任意一个对象，都能够调用它的任意一个方法；这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。让java可以在运行时，根据传入的类名字符串，去执行这个类存在">
@@ -191,8 +191,8 @@
 <h4 id="forName"><a href="#forName" class="headerlink" title="forName"></a>forName</h4><p>获得一个class对象(<strong>java.lang.Class</strong>)有三种方法：</p>
 <ol>
 <li><code>obj.getClass()</code>:如果上下文中存在某个类的实例obj，那么我们可以直接通过<code>obj.getClass()</code>来获取它的类。<ol>
-<li>假如obj是实例：获取该实例的class（如Runtime.getRuntime().getClass()结果就是class java.lang.Runtime）</li>
-<li>假如obj是类：获取到java.lang.Class类</li>
+<li>假如obj是实例：获取该实例的class（如Runtime.getRuntime().getClass()结果就是class java.lang.Runtime类）（此处类的意思实际上时class这个类的对象）</li>
+<li>假如obj是类：获取到java.lang.Class类（class这个类的对象）</li>
 </ol>
 </li>
 <li><code>Test.class</code>:Test是一个已经加载的类，想获取它的java.lang.Class对象，直接拿取class参数即可。（这不是反射机制）</li>
@@ -212,7 +212,7 @@
 <h4 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h4><p>invoke方法位于Method类下，其的作用是传入参数，执行方法，<br><code>public Object invoke(Object obj, Object... args)</code><br>它的第一个参数是执行method的对象：</p>
 <ul>
 <li>如果这个方法是一个普通方法，那么第一个参数是类对象 </li>
-<li>如果这个方法是一个静态方法，那么第一个参数是类<br>它接下来的参数才是需要传入的参数。</li>
+<li>如果这个方法是一个静态方法，那么第一个参数是类（之后会提到，这里其实不用那么死板，这个）<br>它接下来的参数才是需要传入的参数。</li>
 </ul>
 <p>由于我们的exec函数是一个普通方法，需要传入类对象，即<code>invoke(类对象，exec方法传入的参数)</code><br>之前说到Runtime的类对象不能通过newInstance()来获取对象（class.newInstance等于new class）,是因为Runtime的类构造函数是一个private构造函数，只能通过getRuntime方法返回一个对象。<br>获取类对象：<code>Class.forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;getRuntime&quot;).invoke(Class.forName(&quot;java.lang.Runtime&quot;))</code> (由于getRuntime是一个静态方法，invoke传入Runtime类，进行调用)<br><code>invoke(Class.forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;getRuntime&quot;).invoke(Class.forName(&quot;java.lang.Runtime&quot;))，&quot;calc.exe&quot;)</code></p>
 <p>那么合成以上的操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"exec"</span>, String.class).invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>).invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>))，<span class="string">"calc.exe"</span>)</span><br></pre></td></tr></table></figure></p>
@@ -284,6 +284,9 @@
 <p>那么我们在调用getMethod的时候可不可以皮一下呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Method method = (Method) Class.forName(<span class="string">"java.lang.Class"</span>)</span><br><span class="line">    .getMethod(<span class="string">"getMethod"</span>, <span class="keyword">new</span> Class[] &#123;String.class, Class[].class &#125;)<span class="comment">//得到getMethod方法</span></span><br><span class="line">    .invoke(<span class="keyword">null</span>,<span class="string">"getRuntime"</span>,<span class="keyword">new</span> Class[<span class="number">0</span>]);<span class="comment">//这里invoke传入null</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7btt9pcpvj31lq0bqabr.jpg" alt="getMethod_null.png"></p>
 <p>报错自然是因为getMethod并不是static方法,所以不能为null了。<br>但是为什么getMethod不是static方法，但是invoke中却传入类而不是类实例呢……..<br>我是没有搞懂这个问题….但是感觉是因为是反射机制的函数的问题。由于已经花了太多时间，就不在这里继续纠结了。</p>
+<blockquote>
+<p>感谢潘大佬，点醒了；其实是看p牛的反射篇产生的误解，上文中所说的类，其实也是一个实例。类实例是其他类的实例，类实际上是class这个类的实例。<br>这边之前的疑问是，getMethod不是静态方法而invoke中传入的是类而不是类实例。<br>实际上因为getMethod本来就是class类中的方法，而<code>Class.forName(&quot;java.lang.Runtime&quot;)</code>获取到的class类的实例<br>我们调用getMethod传入的不是之前的模糊类的概念，而是class类的实例（类实例），所以这里是没毛病的调用class类下的非静态方法，传入class类实例。</p>
+</blockquote>
 <p>但是Runtime.getRuntime就不一样了：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Object object0 = Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>).invoke(Class.forName(<span class="string">"java.lang.String"</span>));</span><br><span class="line">Object object1 = Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>).invoke(<span class="keyword">null</span>);</span><br><span class="line">Object object2 = Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>).invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>));</span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7bttfgc0dj31v20j40vy.jpg" alt="getRuntime_null.png"></p>
 <p>突出一个随便，随性。</p>

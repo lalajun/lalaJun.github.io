@@ -21,7 +21,7 @@
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fv96cv6vy6j311y0k81kb.jpg">
 <meta property="og:image" content="http://ww3.sinaimg.cn/large/006iKNp3gy1fv98b8qv3ij30ef09vt9c.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1fv97ec5hi5j30o80g6t9q.jpg">
-<meta property="og:updated_time" content="2019-08-20T07:12:32.333Z">
+<meta property="og:updated_time" content="2019-11-06T02:41:43.313Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="0day-NEO智能合约平台Runtime.Notify调用拒绝服务漏洞">
 <meta name="twitter:description" content="— 发现的第一个0day —">
@@ -161,7 +161,7 @@
 <a id="more"></a>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><hr>
 
-<p>在实验室改以太坊的智能合约到neo。<br>改着改着发现一个拒绝服务攻击漏洞，利用攻击的话危害还挺大的，emmm，发现基本全靠运气，在此记录第一个0day。</p>
+<p>在实验室改以太坊的智能合约到neo。<br>改着改着发现一个拒绝服务攻击漏洞，利用攻击的话整个链会全部崩掉，没法出块，危害还挺大的，emmm，在此记录第一个0day。</p>
 <h1 id="漏洞"><a href="#漏洞" class="headerlink" title="漏洞"></a>漏洞</h1><hr>
 
 <p><strong>漏洞名称</strong>：NEO智能合约平台Runtime.Notify()调用拒绝服务漏洞<br><strong>漏洞影响</strong>：导致Neo链上所有开启<code>log模式</code>的全节点崩溃（包括共识节点）。<br><strong>漏洞细节</strong>：出现在neo全节点虚拟机中执行智能合约语句Runtime.Notify()时发生崩溃</p>
