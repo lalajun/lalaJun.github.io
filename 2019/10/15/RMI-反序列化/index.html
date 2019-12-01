@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4q4ug8j31n00oc0v8.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve49vrpxj3287100464.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7y6plwx8hj31h218wwq0.jpg">
-<meta property="og:updated_time" content="2019-10-24T07:57:21.714Z">
+<meta property="og:updated_time" content="2019-11-30T06:08:13.072Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RMI-反序列化">
 <meta name="twitter:description" content="前言在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。 但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。 原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。 此篇，我们以RMI服务入手，从基础使用开始再到反序列化利用。 RMIRMI（Remote Met">
@@ -312,7 +312,7 @@
 <li>在可控RMI服务器上绑定Reference对象，Reference对象指定远程恶意类</li>
 <li>远程恶意类文件的构造方法、静态代码块、getObjectInstance()方法等处写入恶意代码</li>
 </ol>
-<p>就可以达到RCE的效果。fasjson组件漏洞rmi、ldap的利用形式正是使用lndi注入，而不是有关RMI反序列化。</p>
+<p>就可以达到RCE的效果。fasjson组件漏洞rmi、ldap的利用形式正是使用jndi注入，而不是有关RMI反序列化。</p>
 <p>有关JNDI注入，以及其fastjson反序列化的例子相关知识太多。这篇只是引出，暂不表述。</p>
 <blockquote>
 <p>主要原理是JNDI Reference远程加载Object Factory类的特性。会导致客户端命令执行。<br>不受java.rmi.server.useCodebaseOnly 系统属性的限制，相对于前者来说更为通用</p>
