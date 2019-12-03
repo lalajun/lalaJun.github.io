@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内网：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
+    <meta name="description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内容：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
 <meta name="keywords" content="java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JDK反序列化Gadgets 7u21">
 <meta property="og:url" content="http://lalajun.com/2019/11/30/JDK反序列化Gadgets 7u21/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内网：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
+<meta property="og:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内容：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9wr99ulj30yp075aat.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9x8pbn7j31pt0n040u.jpg">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9u9k0lzj31x70z579a.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9uqejl8j31440akmy1.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9w99brtj321119ok7c.jpg">
-<meta property="og:updated_time" content="2019-12-01T07:55:26.939Z">
+<meta property="og:updated_time" content="2019-12-02T01:44:07.464Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK反序列化Gadgets 7u21">
-<meta name="twitter:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内网：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
+<meta name="twitter:description" content="JDK反序列化Gadgets 7u21预计阅读时间：30-60分钟内容：具详细无比 前言从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。 但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g9h9wr99ulj30yp075aat.jpg">
     
     
@@ -86,6 +86,8 @@
     <br/>
     <span id="actions">
       <ul>
+        
+        <li><a class="icon" href="/2019/12/03/WEB-XXE/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/2019/10/23/JNDI注入/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -159,7 +161,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="JDK反序列化Gadgets-7u21"><a href="#JDK反序列化Gadgets-7u21" class="headerlink" title="JDK反序列化Gadgets 7u21"></a>JDK反序列化Gadgets 7u21</h2><p>预计阅读时间：30-60分钟<br>内网：具详细无比</p>
+    <h2 id="JDK反序列化Gadgets-7u21"><a href="#JDK反序列化Gadgets-7u21" class="headerlink" title="JDK反序列化Gadgets 7u21"></a>JDK反序列化Gadgets 7u21</h2><p>预计阅读时间：30-60分钟<br>内容：具详细无比</p>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>从fastjson1.24版本的反序列化利用方式知道有使用jdk7u21的版本利用链，ysoserial利用工具中也有7u21利用链。现在都是7u80版本了，这个漏洞真正直接利用，估计已经很难找到了。</p>
 <p>但是这个利用链的构造有很多之前没接触过的java特性，就此好好学习一下，也算是fastjson的前置知识吧。</p>
 <h2 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h2><p>先去Oracle官网下载<a href="https://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase7-521261.html" target="_blank" rel="noopener">漏洞jdk版本7u21</a>，漏洞影响7u25之前的版本，整条链poc貌似只适用于7u21以前。</p>
