@@ -26,7 +26,8 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve4q4ug8j31n00oc0v8.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7ve49vrpxj3287100464.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7y6plwx8hj31h218wwq0.jpg">
-<meta property="og:updated_time" content="2019-11-30T06:08:13.072Z">
+<meta property="og:image" content="c:/Users/lala/Desktop/博客/截图/rmi/idea-调试.png">
+<meta property="og:updated_time" content="2020-01-12T02:00:27.561Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RMI-反序列化">
 <meta name="twitter:description" content="前言在复现fastjson的过程中看到rmi、LDAP等机制的使用，但一直模模糊糊搞不懂，想来搞清楚这些东西。 但是发现RMI在fastjson中的利用，只是JNDI注入的其中一种利用手段；与RMI本身的反序列化并不是很有关系。 原本想在一篇中整理清楚，由于JNDI注入知识点太过杂糅，将新起一篇说明。 此篇，我们以RMI服务入手，从基础使用开始再到反序列化利用。 RMIRMI（Remote Met">
@@ -118,7 +119,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用工具攻击RMI服务器（同样是CC链）"><span class="toc-number">3.</span> <span class="toc-text">利用工具攻击RMI服务器（同样是CC链）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在IDEA中调试jar工具"><span class="toc-number">3.1.</span> <span class="toc-text">在IDEA中调试jar工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -331,6 +332,25 @@
 <p>亲测可弹计算机，完成任意命令执行。</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g7y6plwx8hj31h218wwq0.jpg" alt="计算器.png"></p>
 <p>其实把RMI服务器当作一个readObject复写点去利用。</p>
+<h2 id="利用工具攻击RMI服务器（同样是CC链）"><a href="#利用工具攻击RMI服务器（同样是CC链）" class="headerlink" title="利用工具攻击RMI服务器（同样是CC链）"></a>利用工具攻击RMI服务器（同样是CC链）</h2><p>在学习了一整子之后回过头来看之前对于RMI服务的理解还是有些片面</p>
+<p>Y</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="在IDEA中调试jar工具"><a href="#在IDEA中调试jar工具" class="headerlink" title="在IDEA中调试jar工具"></a>在IDEA中调试jar工具</h3><ol>
+<li>调试运行jar</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -jar attackRMI.jar</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>idea随便一个项目引入这个jar包</li>
+<li>配置远程监听配置</li>
+</ol>
+<p><img src="C:\Users\lala\Desktop\博客\截图\rmi\idea-调试.png" alt="idea-调试"></p>
+<ol start="4">
+<li>下断点，开始调试</li>
+</ol>
+<p><a href="https://www.jianshu.com/p/7fc96a551ad1" target="_blank" rel="noopener">https://www.jianshu.com/p/7fc96a551ad1</a></p>
+<p><a href="https://blog.csdn.net/leehdsniper/article/details/71599504" target="_blank" rel="noopener">https://blog.csdn.net/leehdsniper/article/details/71599504</a></p>
+<p><a href="http://www.hayasec.me/2018/03/21/java-rmi反序列闲谈/" target="_blank" rel="noopener">http://www.hayasec.me/2018/03/21/java-rmi%E5%8F%8D%E5%BA%8F%E5%88%97%E9%97%B2%E8%B0%88/</a></p>
+<p><a href="https://www.anquanke.com/post/id/85681" target="_blank" rel="noopener">https://www.anquanke.com/post/id/85681</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://stuff.mit.edu/afs/athena/software/java/java_v1.2.2/distrib/sun4x_56/docs/guide/rmi/getstart.doc.html#7738" target="_blank" rel="noopener">RMI官方文档</a></p>
 <p><a href="https://xz.aliyun.com/t/4711#toc-3" target="_blank" rel="noopener">https://xz.aliyun.com/t/4711#toc-3</a></p>
 <p>java安全漫谈-04.RMI篇(1)</p>
@@ -368,7 +388,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RMI"><span class="toc-number">2.</span> <span class="toc-text">RMI</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI远程对象部署-调用流程"><span class="toc-number">2.1.</span> <span class="toc-text">RMI远程对象部署-调用流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI服务端与客户端实现"><span class="toc-number">2.2.</span> <span class="toc-text">RMI服务端与客户端实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通讯细节-反序列化"><span class="toc-number">2.3.</span> <span class="toc-text">通讯细节-反序列化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMI利用点"><span class="toc-number">2.4.</span> <span class="toc-text">RMI利用点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#直接攻击RMI服务器-Commons-collections3-1"><span class="toc-number">2.5.</span> <span class="toc-text">直接攻击RMI服务器 Commons-collections3.1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用工具攻击RMI服务器（同样是CC链）"><span class="toc-number">3.</span> <span class="toc-text">利用工具攻击RMI服务器（同样是CC链）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在IDEA中调试jar工具"><span class="toc-number">3.1.</span> <span class="toc-text">在IDEA中调试jar工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">4.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
@@ -400,7 +420,7 @@
         
         <footer id="footer">
   <div class="footer-left">
-    Copyright &copy; 2019 LaLa
+    Copyright &copy; 2020 LaLa
   </div>
   <div class="footer-right">
     <nav>
