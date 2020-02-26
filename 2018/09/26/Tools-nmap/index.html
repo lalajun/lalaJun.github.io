@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="— 总归是要补的…. —— 终于补了一波自动化工具的使用 —">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-14T06:18:08.528Z">
+<meta property="og:updated_time" content="2020-02-26T02:24:55.642Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tools-nmap使用">
 <meta name="twitter:description" content="— 总归是要补的…. —— 终于补了一波自动化工具的使用 —">
@@ -153,7 +153,13 @@
 <a id="more"></a>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>入职回头好好学习大把工具。<br>nmap基础学习笔记，感觉复习了计算机网络一样…<br>笔记笔记，常回来看看。<br>关于到script功能，和一些觉得不常用的功能，就没有记录了。</p>
 <h2 id="官网中文文档"><a href="#官网中文文档" class="headerlink" title="官网中文文档"></a>官网中文文档</h2><p><a href="http://www.nmap.com.cn/doc/manual.shtm" target="_blank" rel="noopener">官网中文文档</a><br><a href="https://nmap.org/book/toc.html" target="_blank" rel="noopener">官网教程书籍</a></p>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>1.扫描网段在线主机：<br><code>nmap -sP 192.168.0.0/24</code><br>2.扫描主机端口：<br><code>nmap -sS -P0 -sV -O 192.168.0.1</code> <code>nmap –PN –sT –sV –p1-65535 www.xxx.com</code><br>3.简单粗暴全扫(默认-sT)：<br><code>nmap -A -sV -T4 192.168.0.1</code><br>4.隐蔽扫描：<br><code>nmap --spoof-mac Cisco --data-length 24 -T paranoid -max-hostgroup 1 --max-parallelism 10 -Pn -f -D 10.1.20.5,RND:5,ME -v -n -sS -sV -p T:1-1024 -oA ./out 10.1.1.15</code></p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ol>
+<li>扫描网段在线主机：<br><code>nmap -sP 192.168.0.0/24</code></li>
+<li>扫描主机端口：<br><code>nmap -sS -P0 -sV -O 192.168.0.1</code> <code>nmap –PN –sT –sV –p1-65535 www.xxx.com</code></li>
+<li>默认验证端口+默认脚本执行<br><code>nmap –sVC –p 1099 www.xxx.com</code><br>（扫描RMI服务细节）</li>
+<li>简单粗暴全扫(默认-sT)：<br><code>nmap -A -sV -T4 192.168.0.1</code></li>
+<li>隐蔽扫描：<br><code>nmap --spoof-mac Cisco --data-length 24 -T paranoid -max-hostgroup 1 --max-parallelism 10 -Pn -f -D 10.1.20.5,RND:5,ME -v -n -sS -sV -p T:1-1024 -oA ./out 10.1.1.15</code></li>
+</ol>
 <h2 id="脚本使用"><a href="#脚本使用" class="headerlink" title="脚本使用"></a>脚本使用</h2><h3 id="脚本类别扫描"><a href="#脚本类别扫描" class="headerlink" title="脚本类别扫描"></a>脚本类别扫描</h3><p>nmap脚本可以进行分类扫描<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">auth: 负责处理鉴权证书（绕开鉴权）的脚本  </span><br><span class="line">broadcast: 在局域网内探查更多服务开启状况，如dhcp/dns/sqlserver等服务  </span><br><span class="line">brute: 提供暴力破解方式，针对常见的应用如http/snmp等  </span><br><span class="line"><span class="keyword">default</span>: 使用-sC或-A选项扫描时候默认的脚本，提供基本脚本扫描能力  </span><br><span class="line">discovery: 对网络进行更多的信息，如SMB枚举、SNMP查询等  </span><br><span class="line">dos: 用于进行拒绝服务攻击  </span><br><span class="line">exploit: 利用已知的漏洞入侵系统  </span><br><span class="line">external: 利用第三方的数据库或资源，例如进行whois解析  </span><br><span class="line">fuzzer: 模糊测试的脚本，发送异常的包到目标机，探测出潜在漏洞 intrusive: 入侵性的脚本，此类脚本可能引发对方的IDS/IPS的记录或屏蔽  </span><br><span class="line">malware: 探测目标机是否感染了病毒、开启了后门等信息  </span><br><span class="line">safe: 此类与intrusive相反，属于安全性脚本  </span><br><span class="line">version: 负责增强服务与版本扫描（Version Detection）功能的脚本  </span><br><span class="line">vuln: 负责检查目标机是否有常见的漏洞（Vulnerability），如是否有MS08_067</span><br></pre></td></tr></table></figure></p>
 <p>扫描常见弱口令：<br><code>nmap --script=auth 192.168.137.*</code><br>对于各种端口进行简单爆破：<br><code>nmap --script=brute 192.168.137.*</code><br>扫描常见漏洞<br><code>nmap --script=vuln 10.71.144.3</code><br>局域网嗅探<br><code>nmap -n -p445 --script=broadcast 192.168.137.4</code><br>512端口开启rexecd Service服务的进行爆破<br><code>nmap -p 512 --script rexec-brute 10.71.144.3</code></p>
 <blockquote>
