@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="啦啦菌NODE">
 <meta property="og:description" content="字数：1w6 推荐阅读时间：&amp;gt;2h 前言其实起因听老哥讲“shiro-721可以用JRMP的payload，短很多，1分钟就可以跑出来”，啊！JRMP，RMI学过，我会的我会的…….实际上我会个锤子，YSO-JRMP的模块根本没用过。  但实际上本文只是顺道解决了这个问题，如果只是想知道这个原理，可以到下篇的 JRMP服务端打JRMP客户端(ysoserial.exploit.JRMPLis">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16pu5w4wj31ut184wra.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg378mdwp2j31ut18015j.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16qg4vw0j31h215qdja.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16rfprkrj30zq0btmzf.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16rqsevuj30x603daan.jpg">
@@ -50,11 +50,11 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg171ak79qj30qe0y1aes.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg171jcemgj32bc1jkatw.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg171s50s1j31s306x3z0.jpg">
-<meta property="og:updated_time" content="2020-06-22T09:30:13.169Z">
+<meta property="og:updated_time" content="2020-06-24T03:05:18.834Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RMI-反序列化-深入-上">
 <meta name="twitter:description" content="字数：1w6 推荐阅读时间：&amp;gt;2h 前言其实起因听老哥讲“shiro-721可以用JRMP的payload，短很多，1分钟就可以跑出来”，啊！JRMP，RMI学过，我会的我会的…….实际上我会个锤子，YSO-JRMP的模块根本没用过。  但实际上本文只是顺道解决了这个问题，如果只是想知道这个原理，可以到下篇的 JRMP服务端打JRMP客户端(ysoserial.exploit.JRMPLis">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16pu5w4wj31ut184wra.jpg">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg378mdwp2j31ut18015j.jpg">
     
     
         
@@ -194,7 +194,7 @@
 </blockquote>
 <p>然后有一天看了一波别人攻击RMI服务的工具，瞬间三观崩坏，打脸piapia响！</p>
 <p>于是…..花了按照月为单位的很长时间洋洋洒洒写了3w字的文整理了针对RMI服务的9种攻击方式，长文少有人能看下去，先丢上最终的研究的结果吧。</p>
-<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16pu5w4wj31ut184wra.jpg" alt="总结图.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gg378mdwp2j31ut18015j.jpg" alt="总结图.png"></p>
 <p>如果觉得有什么出入，喷就完事了；<br>同时觉得本文对你有帮助，<del>也请留言、评论、关注、一键三连支持你喜欢的up主！你的点赞是我更新的动力！如果这期点赞超过20w，下篇文章直播吃…..</del></p>
 <p>咳。同时由于文章实在过长，图片多达74张，将全文分为上、下两篇。</p>
 <p>在上篇中将讲述<strong>针对已知RMI接口的三种攻击方式</strong>与<strong>针对RMI层（RMI注册端、RMI服务端）/DGC层</strong>，是对已有常见利用方式的总结。</p>
