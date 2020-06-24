@@ -53,8 +53,8 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg17jj8ahcj31tt0spqih.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg17jqcprij32bc0j377m.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg17jwlsnjj31hi11agqx.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16pu5w4wj31ut184wra.jpg">
-<meta property="og:updated_time" content="2020-06-24T03:05:38.646Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gg378mdwp2j31ut18015j.jpg">
+<meta property="og:updated_time" content="2020-06-24T03:28:43.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RMI-反序列化-深入-下">
 <meta name="twitter:description" content="字数：1w5 推荐阅读时间：&amp;gt;2h 前言再看下RMI反序列化攻击的总结图：  如果觉得有什么出入，喷就完事了；同时觉得本文对你有帮助，也请留言、评论、关注、一键三连支持你喜欢的up主！你的点赞是我更新的动力！如果这期点赞超过20w，下篇文章直播吃….. 咳…在上篇中已经讲述针对已知RMI接口的三种攻击方式与针对RMI层（RMI注册端、RMI服务端）/DGC层，得出了部分结论。 而在下篇中将重">
@@ -646,7 +646,7 @@
 <h3 id="8u241的修复第一处"><a href="#8u241的修复第一处" class="headerlink" title="8u241的修复第一处"></a>8u241的修复第一处</h3><p>在8u241版本，针对这个绕过链进行了修复：修复说明在<a href="https://www.oracle.com/technetwork/java/javase/8u241-relnotes-5813177.html#JDK-8230967" target="_blank" rel="noopener">Oracle官网也有说明</a></p>
 <p>重点就是把应该是String的地方从本来的<code>(String)var9.readobject()</code>改成了<br><code>SharedSecrets.getJavaObjectInputStreamReadString().readString(var9);</code>前者是可以反序列化Object的，但是后者就完全不接受反序列化Object。</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gg17j29sk8j317m0d6wfk.jpg" alt="另一种绕过JEP290-8U241修复.png"></p>
-<p>为什么荃湾不接受反序列化Object呢，调试跟进看readString里面：</p>
+<p>为什么不接受反序列化Object呢，调试跟进看readString里面：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> String <span class="title">readString</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">    	<span class="keyword">return</span> (String) readObject(String.class);<span class="comment">//进入此处</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException cnf) &#123;</span><br><span class="line">    	<span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(cnf);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>调用了<code>java.io.ObjectInputStream#readObject(java.lang.Class&lt;?&gt;)</code>，这个readString进来的接口跟我们平时调用readObject不一样：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//平时调用的</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Object <span class="title">readObject</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> readObject(Object.class);<span class="comment">//我们平常会进入此处</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -669,6 +669,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Remote <span class="title">bind</span><span class="params">(Registry registry,String name, Object obj)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//..一致</span></span><br><span class="line">        java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) registry, operations, <span class="number">0</span>, interfaceHash);<span class="comment">//修改为0，bind接口编号</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                java.io.ObjectOutput out = call.getOutputStream();</span><br><span class="line">                <span class="comment">//反射修改enableReplace，处理覆盖问题</span></span><br><span class="line">                ReflectionHelper.setFieldValue(out, <span class="string">"enableReplace"</span>, <span class="keyword">false</span>);</span><br><span class="line">                out.writeObject(name);<span class="comment">//随便写</span></span><br><span class="line">                out.writeObject(obj); <span class="comment">// payload</span></span><br><span class="line">            <span class="comment">//..</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>然后修改<code>ysomap.core.exploit.rmi.RMIRegistryExploit</code>里面<code>Naming.lookup(registry, remote);</code>为<code>Naming.bind(registry, name,remote);</code></p>
 <p>尝试攻击8u241</p>
+<p>(失败的图找不到了，反正就是没有命令执行啦)</p>
 <p>华丽失败</p>
 <h3 id="8u241的修复第二处"><a href="#8u241的修复第二处" class="headerlink" title="8u241的修复第二处"></a>8u241的修复第二处</h3><p>好吧，肯定是哪里有问题，0day就这样没了（狗头）。</p>
 <p>问题在于8u241还修复了调用栈中的<code>java.rmi.server.RemoteObjectInvocationHandler#invokeRemoteMethod</code>方法。（复用调用栈的图，第三行）</p>
@@ -700,8 +701,8 @@
 <ol>
 <li>利用RemoteObjectInvocationHandler完全不同的触发点，绕过了8u231的修复，被8u241阻止了为所欲为。</li>
 </ol>
-<p>最后总结：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gg16pu5w4wj31ut184wra.jpg" alt="总结图.png"></p>
+<p><strong>最后总结</strong>：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gg378mdwp2j31ut18015j.jpg" alt="总结图.png"></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>认真看了很多老哥的博客，先给全员点个赞：</p>
 <p>写到一半的时候发现总体文章框架是跟<a href="https://mogwailabs.de/blog/2019/03/attacking-java-rmi-services-after-jep-290/" target="_blank" rel="noopener">attacking-java-rmi-services-after-jep-290</a>雷同的，原来我想写的已经有人做过了，想想当作这篇文章详细版本好了，但是到后面发现还是发现了一些别人没有记录下来或没有细说的东西，比如自定义类，lookup绕过等。</p>
 <p>在文章后半部分还大量参考了<a href="https://blog.0kami.cn/2020/02/06/rmi-registry-security-problem/" target="_blank" rel="noopener">0kami的研究结果</a>和<a href="https://mogwailabs.de/blog/2020/02/an-trinhs-rmi-registry-bypass/" target="_blank" rel="noopener">An Trinh的绕过方式</a>，膜拜。</p>
