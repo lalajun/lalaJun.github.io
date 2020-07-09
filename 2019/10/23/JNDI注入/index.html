@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g89d6g04jvj317r0h70ua.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g897c3ew1cj31bq10pqhr.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g897cf4q73j31yi0vp430.jpg">
-<meta property="og:updated_time" content="2019-10-29T09:18:24.092Z">
+<meta property="og:updated_time" content="2020-07-06T05:08:01.498Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JNDI注入">
 <meta name="twitter:description" content="前言本篇讲述了RMI-JNDI注入的利用原理，分析了利用流程；使用了marshalsec反序列化工具去简单的起一个RMI/LDAP服务端对于导致JNDI注入的漏洞代码扩展至com.sun.rowset.JdbcRowSetImpl函数，为fastjson反序列化起一个引子，准备新起一文。分析了java版本变化对于JNDI注入的影响引出了1.8u191之后的版本该如何利用JNDI注入，准备新起一文。">
@@ -257,6 +257,7 @@
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1g897cf4q73j31yi0vp430.jpg" alt="1.8u161-rmi.png"></p>
 <p>结果没毛病</p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>分析一通，小结就是以后渗透测试要用ldap-JNDI注入，命中率更高。</p>
+<p>另外如果只有rmi流量和ldap流量，但是没有http请求，说明对方jdk版本过高导致攻击失败。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.freebuf.com/vuls/115849.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/115849.html</a><br><a href="https://www.veracode.com/blog/research/exploiting-jndi-injections-java" target="_blank" rel="noopener">https://www.veracode.com/blog/research/exploiting-jndi-injections-java</a><br><a href="https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html" target="_blank" rel="noopener">https://kingx.me/Restrictions-and-Bypass-of-JNDI-Manipulations-RCE.html</a><br>RPC<br><a href="https://www.jianshu.com/p/2accc2840a1b" target="_blank" rel="noopener">https://www.jianshu.com/p/2accc2840a1b</a><br><a href="https://www.freebuf.com/column/189835.html" target="_blank" rel="noopener">https://www.freebuf.com/column/189835.html</a><br>ldap<br><a href="https://www.cnblogs.com/wilburxu/p/9174353.html" target="_blank" rel="noopener">https://www.cnblogs.com/wilburxu/p/9174353.html</a><br><a href="https://www.jianshu.com/p/7e4d99f6baaf" target="_blank" rel="noopener">https://www.jianshu.com/p/7e4d99f6baaf</a><br><a href="https://blog.csdn.net/caoyujiao520/article/details/82762097" target="_blank" rel="noopener">https://blog.csdn.net/caoyujiao520/article/details/82762097</a></p>
 
   </div>
