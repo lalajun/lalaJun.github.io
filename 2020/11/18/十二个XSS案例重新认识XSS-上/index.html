@@ -6,14 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可以">
+    <meta name="description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k7字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可">
 <meta name="keywords" content="web,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="十二个XSS案例重新认识XSS-上">
 <meta property="og:url" content="http://lalajun.com/2020/11/18/十二个XSS案例重新认识XSS-上/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可以">
+<meta property="og:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k7字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui4s4ripj32240y7dpp.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui54tandj31xj0r6ahz.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui5ck27wj30o809uq41.jpg">
@@ -25,11 +26,11 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7c833dj31gv0ic0t0.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7i4tp4j31w00vrwma.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7p9683j30tc0o276k.jpg">
-<meta property="og:updated_time" content="2020-11-19T08:47:35.328Z">
+<meta property="og:updated_time" content="2020-11-23T06:14:21.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二个XSS案例重新认识XSS-上">
-<meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可以">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui4s4ripj32240y7dpp.jpg">
+<meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k7字），知识点大概包括：  JS中 a[b] 等同于 a.b  JQuery的$(&amp;quot;&amp;lt;img src=x onerror=alert(1)&amp;gt;&amp;quot;)可">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
     
     
         
@@ -87,10 +88,8 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-下/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        
-        <li><a class="icon" href="/2020/06/28/windows下打造顺手的搬砖环境—PentestBox/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-下/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -117,7 +116,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一题"><span class="toc-number">2.</span> <span class="toc-text">第一题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二题"><span class="toc-number">3.</span> <span class="toc-text">第二题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#constructor的触发原理"><span class="toc-number">3.1.</span> <span class="toc-text">constructor的触发原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话：利用constructor构造弹框"><span class="toc-number">3.2.</span> <span class="toc-text">题外话：利用constructor构造弹框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三题"><span class="toc-number">4.</span> <span class="toc-text">第三题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注释"><span class="toc-number">4.1.</span> <span class="toc-text">使用注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用运算符（官方解法）"><span class="toc-number">4.2.</span> <span class="toc-text">使用运算符（官方解法）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四题"><span class="toc-number">5.</span> <span class="toc-text">第四题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注释进阶：使用模板字符串"><span class="toc-number">5.1.</span> <span class="toc-text">注释进阶：使用模板字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符进阶：更多的运算符"><span class="toc-number">5.2.</span> <span class="toc-text">运算符进阶：更多的运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第五题"><span class="toc-number">6.</span> <span class="toc-text">第五题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第六题"><span class="toc-number">7.</span> <span class="toc-text">第六题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正则-不匹配的字符到底有啥"><span class="toc-number">7.1.</span> <span class="toc-text">正则 . 不匹配的字符到底有啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test6作为触发器"><span class="toc-number">7.2.</span> <span class="toc-text">test6作为触发器-$()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iframe的window-name跨域传输"><span class="toc-number">7.2.1.</span> <span class="toc-text">iframe的window.name跨域传输</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一题"><span class="toc-number">2.</span> <span class="toc-text">第一题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二题"><span class="toc-number">3.</span> <span class="toc-text">第二题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#constructor的触发原理"><span class="toc-number">3.1.</span> <span class="toc-text">constructor的触发原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话：利用constructor构造弹框"><span class="toc-number">3.2.</span> <span class="toc-text">题外话：利用constructor构造弹框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三题"><span class="toc-number">4.</span> <span class="toc-text">第三题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注释"><span class="toc-number">4.1.</span> <span class="toc-text">使用注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用运算符（官方解法）"><span class="toc-number">4.2.</span> <span class="toc-text">使用运算符（官方解法）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四题"><span class="toc-number">5.</span> <span class="toc-text">第四题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注释进阶：使用模板字符串"><span class="toc-number">5.1.</span> <span class="toc-text">注释进阶：使用模板字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符进阶：更多的运算符"><span class="toc-number">5.2.</span> <span class="toc-text">运算符进阶：更多的运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第五题"><span class="toc-number">6.</span> <span class="toc-text">第五题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第六题"><span class="toc-number">7.</span> <span class="toc-text">第六题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正则-不匹配的字符到底有啥"><span class="toc-number">7.1.</span> <span class="toc-text">正则 . 不匹配的字符到底有啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test6作为触发器"><span class="toc-number">7.2.</span> <span class="toc-text">test6作为触发器-$()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iframe的window-name跨域传输"><span class="toc-number">7.2.1.</span> <span class="toc-text">iframe的window.name跨域传输</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#px1642的拷问"><span class="toc-number">7.2.2.</span> <span class="toc-text">px1642的拷问</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -162,18 +161,18 @@
 
   <div class="content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题)</p>
-<p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k字），知识点大概包括：</p>
+<p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共9k7字），知识点大概包括：</p>
 <ul>
 <li>JS中 a[b] 等同于 a.b </li>
 <li>JQuery的<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>可以弹框</li>
 <li>利用constructor的原理，衍生了题外话弹框替换：<code>&quot;&quot;[&quot;constructor&quot;][&quot;constructor&quot;](&quot;alert(1)&quot;)()</code></li>
-<li>模板字符串作为注释符使用</li>
+<li>模板字符串具有类似跨行注释的特性</li>
 <li>在字符串中使用运算符拼接执行js语句</li>
 <li>正则匹配的规则、<code>.</code>的绕过</li>
 </ul>
 <p>对于以上列出知识点如果只有个别不清楚的，可以直接在各题知识点中找到它，然后看那一题就行了。</p>
 <blockquote>
-<p>此外还提出了第三题在官方WP中没有提到的使用注释的解法。</p>
+<p>此外还提出了第三题在官方WP中由于篇幅没有提到的使用注释的解法。在第七题也可以使用类似的思路</p>
 </blockquote>
 <p>实际上px1624有出官方WP，写的很好。但是以菜鸡的角度去看题目总会讲述到一些默认被跳过的但是又有点东西的细节，也做了一点衍生。写文章一向往细了写，结合了看可能也会有所帮助吧？</p>
 <p>有错误喷就完事了。</p>
@@ -183,7 +182,7 @@
 </blockquote>
 <h2 id="第一题"><a href="#第一题" class="headerlink" title="第一题"></a>第一题</h2><p>题目：<a href="http://px1624.sinaapp.com/test/xsstest1/" target="_blank" rel="noopener">http://px1624.sinaapp.com/test/xsstest1/</a></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> x=location.hash;</span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x</span>)</span>&#123;&#125;;</span></span><br><span class="line"><span class="javascript">setTimeout(<span class="string">"aa('"</span>+x+<span class="string">"')"</span>,<span class="number">100</span>);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">Give me xss bypass 1~</span><br></pre></td></tr></table></figure>
-<p>知识点：</p>
+<p><strong>知识点</strong>：</p>
 <ul>
 <li>location.hash</li>
 <li>setTimeout</li>
@@ -196,20 +195,26 @@
 <ol start="2">
 <li><strong>setTimeout</strong></li>
 </ol>
-<p>延迟执行JS代码：<code>setTimeout(JavaScript 函数, 等待的毫秒数)</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//执行js代码：弹框1</span></span><br><span class="line">setTimeout(<span class="string">"alert('1')"</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//执行js代码段：弹框1弹框2</span></span><br><span class="line">setTimeout(<span class="string">"alert('1');alert('2')"</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//可以调用当前上下文函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x</span>)</span>&#123;&#125;;</span><br><span class="line">setTimeout(<span class="string">"aa('');alert('1')"</span>,<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
-<p>那么现在再回头去看题目代码，就可以很显而易见的发现就是<strong>把location.hash的值拼接进入要执行的js代码段</strong>中，可以利用闭合执行我们指定的js代码来进行弹框。</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout" target="_blank" rel="noopener">setTimeout函数</a>分为2种使用方式</p>
+<ul>
+<li><code>setTimeout(JS函数名, 等待的毫秒数，参数1，参数2)</code>：延时后执行指定JS函数</li>
+<li><code>setTimeout(JS代码(字符串格式), 等待的毫秒数)</code>：延时后执行指定字符串中的JS代码，与EVAL类似</li>
+</ul>
+<p>延迟执行JS代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//执行JS函数aa</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x</span>)</span>&#123;alert(x)&#125;;</span><br><span class="line">setTimeout(aa,<span class="number">100</span>,<span class="number">1</span>);</span><br><span class="line"><span class="comment">//执行js代码：弹框1</span></span><br><span class="line">setTimeout(<span class="string">"alert('1')"</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//执行js代码段：弹框1弹框2</span></span><br><span class="line">setTimeout(<span class="string">"alert('1');alert('2')"</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//js代码段可以调用当前上下文函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x</span>)</span>&#123;&#125;;</span><br><span class="line">setTimeout(<span class="string">"aa('#');alert('1')"</span>,<span class="number">100</span>);</span><br><span class="line"><span class="comment">//因为是字符串，也可以拼接后执行</span></span><br><span class="line">setTimeout(<span class="string">"aa('"</span>+<span class="string">"#');alert('1"</span>+<span class="string">"')"</span>,<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>那么现在再回头去看题目代码，就可以很显而易见的发现就是<strong>把location.hash的值拼接进入setTimeout的第一个参数中</strong>（即JS代码段），而由于setTimeout的特性，第一个参数的字符串会被当作JS解析执行。</p>
+<p>那么我们只需要闭合前面的，然后执行我们指定的JS代码来进行弹框。</p>
 <p>Writeup：</p>
 <p><code>http://px1624.sinaapp.com/test/xsstest1/#&#39;);alert(&#39;1</code></p>
 <h2 id="第二题"><a href="#第二题" class="headerlink" title="第二题"></a>第二题</h2><p>题目：<a href="http://px1624.sinaapp.com/test/xsstest2/" target="_blank" rel="noopener">http://px1624.sinaapp.com/test/xsstest2/</a></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://code.jquery.com/jquery-3.4.1.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">Give me xss bypass <span class="number">2</span>~</span><br><span class="line">&lt;div style=<span class="string">'display:none'</span> id=<span class="string">'xx'</span>&gt;&amp;lt;img src=x onerror=alert(<span class="number">1</span>)&amp;gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;input type=<span class="string">'button'</span> value=<span class="string">'test'</span> onclick=<span class="string">'alert("鍝堝搱锛岀偣杩欑帺鎰忔病鍟ョ敤鐨勶紒")'</span>&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">   <span class="keyword">var</span> query = <span class="built_in">window</span>.location.search.substring(<span class="number">1</span>);</span><br><span class="line">   <span class="keyword">var</span> vars = query.split(<span class="string">"&amp;"</span>);</span><br><span class="line">   <span class="keyword">if</span>(vars)&#123;</span><br><span class="line">		aa(vars[<span class="number">0</span>],vars[<span class="number">1</span>])</span><br><span class="line">   &#125;</span><br><span class="line">   	<span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">		$(<span class="string">"#xx"</span>)[x]($(<span class="string">"#xx"</span>)[y]());</span><br><span class="line">	&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
-<p>知识点：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://code.jquery.com/jquery-3.4.1.js"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br><span class="line">Give me xss bypass <span class="number">2</span>~</span><br><span class="line">&lt;div style=<span class="string">'display:none'</span> id=<span class="string">'xx'</span>&gt;&amp;lt;img src=x onerror=alert(<span class="number">1</span>)&amp;gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;input type=<span class="string">'button'</span> value=<span class="string">'test'</span> onclick=<span class="string">'alert("鍝堝搱锛岀偣杩欑帺鎰忔病鍟ョ敤鐨勶紒")'</span>&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">   <span class="keyword">var</span> query = <span class="built_in">window</span>.location.search.substring(<span class="number">1</span>);</span><br><span class="line">   <span class="keyword">var</span> vars = query.split(<span class="string">"&amp;"</span>);</span><br><span class="line">   <span class="keyword">if</span>(vars)&#123;</span><br><span class="line">		aa(vars[<span class="number">0</span>],vars[<span class="number">1</span>])</span><br><span class="line">   &#125;</span><br><span class="line">   	<span class="function"><span class="keyword">function</span> <span class="title">aa</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">		$(<span class="string">"#xx"</span>)[x]($(<span class="string">"#xx"</span>)[y]());</span><br><span class="line">	&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>body&gt;</span><br><span class="line">&lt;<span class="regexp">/html&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>知识点</strong>：</p>
 <ul>
 <li>window.location.search</li>
 <li>字符串操作：substring、split</li>
 <li>JQuery的DOM对象操作</li>
 <li>a[b] 等同于 a.b </li>
-<li>元素的text属性会解析html编码</li>
+<li>JQuery元素的text属性会解析html编码</li>
 </ul>
 <ol>
 <li><strong>window.location.search</strong>与<strong>字符串操作</strong></li>
@@ -217,10 +222,10 @@
 <p>为URL中的参数部分（？开始的部分，包括？），GET参数。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">URL: <span class="string">"http://px1624.sinaapp.com/test/xsstest1/?a1&amp;b1"</span></span><br><span class="line"><span class="built_in">window</span>.location.search: <span class="string">"?a1&amp;b1"</span></span><br><span class="line"><span class="comment">//substring(1)从第一位开始截取到最后一位</span></span><br><span class="line"><span class="built_in">window</span>.location.search.substring(<span class="number">1</span>): <span class="string">"a1&amp;b1"</span> </span><br><span class="line"><span class="comment">//query.split("&amp;")根据&amp;分割成数组</span></span><br><span class="line">query.split(<span class="string">"&amp;"</span>): [<span class="string">"a1"</span>,<span class="string">"b1"</span>]</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li><strong>JQuery的DOM对象操作</strong> &amp; <strong>a[b] 等同于 a.b</strong></li>
+<li><strong>JQuery的DOM对象操作</strong>  与 <strong>a[b] 等同于 a.b</strong></li>
 </ol>
 <p><code>$(&#39;#xx&#39;)</code> 等同于<code>document.getElementById(&#39;xx&#39;);</code>，就是JQuery语法里面的DOM元素选择器，这里选中了id=xx 的div标签。</p>
-<p><strong>利用a[b] 等同于 a.b的JS特性</strong>，来进行转换，a1,b1为&amp;分割的两个字符串：</p>
+<p><strong>利用a[b] 等同于 a.b的JS特性</strong>，来进行转换，a1,b1为之前我们&amp;分割的两个字符串：</p>
 <p><code>$(&quot;#xx&quot;)[a1]($(&quot;#xx&quot;)[b1]());</code>-&gt;<code>$(&quot;#xx&quot;).a1($(&quot;#xx&quot;).b1());</code></p>
 <blockquote>
 <p>但是a[b]不完全等价于a.b，前者b可以是一个动态的输入的字符串，但是后者就不可以，比如：</p>
@@ -230,18 +235,23 @@
 </blockquote>
 <p>这边显而易见，我们可控输入<strong>a1</strong>、<strong>b1</strong>最后控制id为xx的DOM节点的<strong>方法</strong> 和 <strong>值</strong>。</p>
 <ol start="3">
-<li><strong>JQuery的DOM对象操作、元素的text属性会解析html编码</strong></li>
+<li><strong>JQuery的DOM对象操作、JQuery元素的的text属性会解析html编码</strong></li>
 </ol>
 <p>在这里触发XSS自然是要<strong>修改DOM树，写入payload语句进行渲染</strong>，所以a1是一个可以修改DOM树的动作操作：</p>
 <p>这里我们可以直接去查看<a href="https://jquery.cuishifeng.cn/" target="_blank" rel="noopener">JQuery官方文档</a>找到其中关于文档处理的部分，列出部分函数：</p>
-<p>html、append、after、before等等，我们选取<a href="https://jquery.cuishifeng.cn/html.html" target="_blank" rel="noopener">html</a>。</p>
+<p>html、append、after、before等等，我们先选取<a href="https://jquery.cuishifeng.cn/html.html" target="_blank" rel="noopener">html</a>来修改DOM树。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#xx"</span>).html(<span class="number">123</span>)</span><br><span class="line"><span class="comment">//修改id=xx的标签的内容为123</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>此处在官方WP中还提出此处可以使用<strong>constructor</strong>，并且一笔带过。</p>
 <p>事实是，此处确实可以使用constructor来进行弹框，但是其理论基础却不是通过修改DOM树，写入payload语句使页面进行重新渲染导致的。而是直接临时渲染单个节点，具体之后再进行解释。</p>
 </blockquote>
-<p><code>$(&quot;#xx&quot;).html($(&quot;#xx&quot;).b1());</code>，还有一处b1。我们现在需要修改内容为一个payload，而xx标签的内容本身就是一个payload，只不过是一个html编码后的内容。</p>
-<p>我们可以利用<a href="https://jquery.cuishifeng.cn/text.html" target="_blank" rel="noopener">text属性</a>会解析html编码的特性得到我们想要的未编码的payload：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#xx"</span>).html()</span><br><span class="line"><span class="string">"&amp;lt;img src=x onerror=alert(1)&amp;gt;"</span></span><br><span class="line">$(<span class="string">"#xx"</span>).text()</span><br><span class="line"><span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span></span><br><span class="line"><span class="comment">//于是</span></span><br><span class="line">$(<span class="string">"#xx"</span>).html(<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span>)</span><br><span class="line">$(<span class="string">"#xx"</span>).html($(<span class="string">"#xx"</span>).text())</span><br></pre></td></tr></table></figure>
+<p><code>$(&quot;#xx&quot;).html($(&quot;#xx&quot;).b1());</code>，还有一处b1。我们现在需要html括号里面的<code>$(&quot;#xx&quot;).b1()</code>返回的内容为一个payload，而xx标签的内容本身就是一个payload，只不过是一个html编码后的payload。</p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg" alt="2-1.png"></p>
+<p>直接<code>$(&quot;#xx&quot;).html($(&quot;#xx&quot;).html())</code>这样获取到编码后的payload可以么？当然不可以，你会发现这只不过是把原来的东西取出来再放回去，怎么可能有用。</p>
+<p>我们可以<strong>利用<a href="https://jquery.cuishifeng.cn/text.html" target="_blank" rel="noopener">text属性</a>会解析html编码的特性</strong>得到我们想要的未编码的payload，测试<code>$(&quot;#xx&quot;).b1()</code>b1的取值html与text：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#xx"</span>).html()</span><br><span class="line"><span class="string">"&amp;lt;img src=x onerror=alert(1)&amp;gt;"</span></span><br><span class="line">$(<span class="string">"#xx"</span>).text()</span><br><span class="line"><span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span></span><br></pre></td></tr></table></figure>
+<p><strong>text属性返回被解析后的HTML标签</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#xx"</span>).html(<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span>)</span><br><span class="line"><span class="comment">//直接弹框，最后再替换回去就行了</span></span><br><span class="line">$(<span class="string">"#xx"</span>).html($(<span class="string">"#xx"</span>).text())</span><br></pre></td></tr></table></figure>
 <p>回退回去得到writeup1：</p>
 <p><code>http://px1624.sinaapp.com/test/xsstest2/?html&amp;text</code></p>
 <h3 id="constructor的触发原理"><a href="#constructor的触发原理" class="headerlink" title="constructor的触发原理"></a>constructor的触发原理</h3><p>之前说到payload使用constructor也是可以的，writeup2：</p>
@@ -257,10 +267,15 @@
 <p>虽然没有从源码中或者文档中找到它的渲染原理，但是经过测试，并不是所有标签或者JS都会被执行：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span>)</span><br><span class="line"><span class="comment">//执行弹框</span></span><br><span class="line">$(<span class="string">"&lt;audio src=dns地址 onerror=alert`1`&gt;"</span>)</span><br><span class="line"><span class="comment">//dnslog收到请求，执行弹框</span></span><br><span class="line">$(<span class="string">"&lt;video src=x onerror=\"javascript:alert(12)\"&gt;&lt;/video&gt;"</span>)</span><br><span class="line"><span class="comment">//执行弹框</span></span><br><span class="line">$(<span class="string">"&lt;svg onload=alert`1`&gt;"</span>)</span><br><span class="line"><span class="comment">//不执行弹框</span></span><br><span class="line">$(<span class="string">"&lt;script&gt;alert(2)&lt;/script&gt;"</span>)</span><br><span class="line"><span class="comment">//不执行弹框</span></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p><code>$(console.log(1))</code>、<code>$(alert(1))</code>等表达式传参进入都是可以正常执行的。</p>
+<p><code>$(console.log(1))</code>、<code>$(alert(1))</code>等表达式传参进入都是可以正常执行的。但是执行不是因为DOM操作的执行</p>
 <p>因为会先执行alert(1)语句，然后再进入$()进行逻辑处理，我们传入的值不符合其预期，但是没有语法错误也是可以正常执行的。</p>
+<p>但是$(“console.log(1)”)、$(“alert(1)”) 跟标签一样作为字符串传入，就不会弹框啦</p>
 </blockquote>
 <p>大致上只有单个标签<code>src=x 加上onerror</code>事件，会执行里面的JS代码，其他均不渲染执行。（如果有老哥知道原理的 可以跟我交流下，非常感谢）</p>
+<blockquote>
+<p>这种这种执行规则被px1642老哥在WP种写作JQuery的DOM XSS，但是个人理解的这不算在漏洞范畴，而是特性范畴。</p>
+<p>最大的问题就是引入最新的3.5.1版本JQuery，在命令行中输入<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>仍然会弹框。看以往JQuery 漏洞 都是过滤器过滤location.hash这类外部数据输入点（会存在#，编码等情况），从而完成修复的。$()直接引入字符串变量的，应该不算是漏洞？？？</p>
+</blockquote>
 <p>至此就对两类触发原理进行了区分，前者html等是直接修改页面的DOM树导致重新渲染执行，后者constructor是建立JQuery对象时进行有条件的渲染执行。</p>
 <h3 id="题外话：利用constructor构造弹框"><a href="#题外话：利用constructor构造弹框" class="headerlink" title="题外话：利用constructor构造弹框"></a>题外话：利用constructor构造弹框</h3><p>上面提到constructor是获取前一对象的构造函数，我们可以利用这一特性来构造一个弹框函数：</p>
 <p>其根本原理是使用Function来构造匿名函数，然后在其中写入任意的js代码进行执行：</p>
@@ -338,7 +353,7 @@
 <p><code>http://px1624.sinaapp.com/test/xsstest3/?px=*/if(true){alert(1);%27;/*%27;//</code></p>
 <p>还可以精简一下<code>if(true):</code>语句，神奇的大括号闭合同样不会报错：</p>
 <p><code>http://px1624.sinaapp.com/test/xsstest3/?px=*/{alert(1);%27;/*%27;//</code></p>
-<p>再偷工减料，废物利用下，得到最后12个字符的writeup：</p>
+<p>再偷工减料，废物利用下，得到最后12个字符的writeup，（这样就不弹1了）：</p>
 <p><code>http://px1624.sinaapp.com/test/xsstest3/?px=*/{alert(%27/*</code></p>
 <h3 id="使用运算符（官方解法）"><a href="#使用运算符（官方解法）" class="headerlink" title="使用运算符（官方解法）"></a>使用运算符（官方解法）</h3><p><code>&#39;-alert(1)-&#39;</code>一开始是没有想到有这种解法的，但是再看完writeup之后，发现这就是XRAY常见的js中的xss payload。</p>
 <p>知识点：</p>
@@ -357,7 +372,7 @@
 <p>知识点：</p>
 <ul>
 <li>多点同步输出的注释使用</li>
-<li>跨行注释的另一种方法：模板字符串</li>
+<li>模板字符串具有类似跨行注释的特性</li>
 <li>不被注意到的更多的运算符</li>
 </ul>
 <p>其实代码还是一模一样，但是服务端过滤规则变化了，不再是对输出字符转义了，而是针对特定字符直接黑名单。</p>
@@ -433,7 +448,7 @@
 <p>简单瞅一下自实现的js加密<code>Tjs_HtmlEncode</code>:正常的html编码</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Tjs_HtmlEncode:<span class="function"><span class="keyword">function</span> (<span class="params">sStr</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    sStr = sStr.replace(<span class="regexp">/&amp;/g</span>,<span class="string">"&amp;amp;"</span>);</span><br><span class="line">    sStr = sStr.replace(<span class="regexp">/&gt;/g</span>,<span class="string">"&amp;gt;"</span>);</span><br><span class="line">    sStr = sStr.replace(<span class="regexp">/&lt;/g</span>,<span class="string">"&amp;lt;"</span>);</span><br><span class="line">    sStr = sStr.replace(<span class="regexp">/"/g</span>,<span class="string">"&amp;quot;"</span>);</span><br><span class="line">    sStr = sStr.replace(<span class="regexp">/'/g</span>,<span class="string">"&amp;#39;"</span>);</span><br><span class="line">    <span class="keyword">return</span> sStr;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <p>看完之后我们大致就可以清楚为什么我们直接访问会进行跳转：我们没有传入uin参数，那么获取到的orguin就是<code>&quot;&quot;</code>，在js中<code>&quot;&quot;==0</code>成立，满足<code>&quot;&quot;&lt;=0</code>，于是跳转。</p>
-<p>那么第一步我们需要让他不跳转，来进行js调试，根据原理访问<code>http://px1624.sinaapp.com/test/xsstest5/?uin=123</code>即可。<code>http://px1624.sinaapp.com/test/xsstest5/?uin=123#</code>就不行，他会去截取#之后的字符去解析。</p>
+<p>那么第一步我们需要让他不跳转，来进行js调试，根据原理访问<code>http://px1624.sinaapp.com/test/xsstest5/?uin=123</code>即可。而<code>http://px1624.sinaapp.com/test/xsstest5/?uin=123#</code>就不行，他会去截取#之后的字符去解析。</p>
 <p>回归payload触发，我们要在script标签中引入一个带有js的页面，我第一反应是直接引入之前成功弹框的页面，比如test4：<code>http://px1624.sinaapp.com/test/xsstest4/?px=%27;反引号;{alert(%27</code></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.write(<span class="string">'&lt;script type="text/javascript" 	src="http://px1624.sinaapp.com/'</span>+orguin+<span class="string">'?'</span>+pagenum+<span class="string">'"&gt;&lt;\/script&gt;'</span>);</span><br></pre></td></tr></table></figure>
 <p>按照对应的拼接规则来构造payload：<code>http://px1624.sinaapp.com/test/xsstest5/?uin=test/xsstest4/&amp;pn=px=%27;反引号;{alert(%27*</code>。然后就发现不行，原因有二：</p>
@@ -456,6 +471,7 @@
 <li>浏览器处理字符集的情况</li>
 <li>JS正则匹配的匹配逻辑</li>
 <li>window.name跨域传输参数</li>
+<li>延续第二题分析的JQuery DOM XSS的特性</li>
 </ul>
 <p>跟第五题看上去区别不大，index.js中的内容也没有变化，其他有三处变化：</p>
 <ul>
@@ -477,7 +493,7 @@
 <li>仍然使用user.php?callback的payload触发页面，然后想办法硬肛WAF来绕过</li>
 <li>使用一个没有？的payload触发页面</li>
 </ol>
-<p>由于域名的限定，当前域名没有符合第二个思路的条件：于是使用一个没有？的payload触发页面，就PASS。</p>
+<p>由于域名的限定，当前域名没有符合第二个思路的条件：于是使用一个没有？的payload触发页面的思路，就PASS。</p>
 <p>还是来硬肛WAF，两个WAF都是由正则匹配的：</p>
 <ul>
 <li><code>str.replace(/%/g,&quot;&quot;);</code></li>
@@ -535,7 +551,7 @@
 <p>使用<code>&quot;123?\u2028456?&quot;.replace(/.*\?/,&quot;&quot;)</code>进行一个个测试：</p>
 <p>发现<code>\n、\r、\u2028、\u2029</code>可以拦截<code>.</code>的匹配（ps.空白字符串没有给到惊喜….）</p>
 <p>那么\r、\n不行，试试<strong>\u2028</strong>和<strong>\u2029</strong></p>
-<p>取IE为例（因为要是浏览器有问题肯定是IE有问题，Edge也可），地址栏中直接<code>http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)</code>理所应当还是会被作为字符串。</p>
+<p>取IE为例（因为要是浏览器有问题一般肯定是IE有问题，Edge也可），地址栏中直接<code>http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)</code>理所应当还是会被作为字符串。</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui6bv6gzj321i0t2djw.jpg" alt="IE-地址栏-2028.png"></p>
 <p>控制台执行location呢：<code>location=&quot;http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)&quot;</code></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui78qkc6j31rt0loq74.jpg" alt="IE-location-2028.png"></p>
@@ -564,11 +580,11 @@
 <p>比如之前的payload，可以形成这样一个123.html：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    location=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??uin=\u2028/../../test/xsstest5/user.php?callback=alert(1)"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>然后用Edge打开页面（模拟访问服务器页面）就可以自动跳转触发。</p>
-<p>回到使用xsstest6：其实利用原理在第二题中已经详细的分析了，就是<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>可以作为alert(1)的弹框替代，我们只要把img标签设置成一个变量就可以达到缩短长度的目的。</p>
+<p>回到使用xsstest6：其实利用原理<strong>JQuery $() DOM XSS特性</strong>在第二题中已经详细的分析了，就是<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>可以作为alert(1)的弹框替代，我们只要把img标签设置成一个变量就可以达到缩短长度的目的。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span></span><br><span class="line">$(a)</span><br></pre></td></tr></table></figure>
 <p>想构建一个payload：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">	var a="<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">alert(1)</span>&gt;</span>"</span></span><br><span class="line"><span class="javascript">    location=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??uin=\u2028/../../test/xsstest5/user.php?callback=$(a)"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>不用试就知道显而易见不可以，因为location会进行跳转，我们的a参数直接就没了。</p>
+<p>不用试就知道显而易见不可以，因为location会进行跳转，跳转过去的页面，在处理时，我们的a参数直接就没了。</p>
 <p>然后还需要重申一个点：我们的callback参数的内容是一段会在px1624.sinaapp.com域下进行执行的js代码。</p>
 <p>而px1624.sinaapp.com/test/xsstest6/这个页面下的js环境中又没有我们要的payload：<code>&quot;&lt;img src=x onerror=alert(1)&gt;&quot;</code></p>
 <p>这就明确了目标：</p>
@@ -598,6 +614,21 @@
 <p>当然在callback值中由于长度问题，不能使用<code>$(window.name)</code>，使用<code>$(name)</code>长度刚好，writeup：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"px"</span> <span class="attr">name</span>=<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span> <span class="attr">src</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"px"</span>).src=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest6/user.php?callback=$(name)"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>使用Edge、或者IE打开均可。</p>
+<h4 id="px1642的拷问"><a href="#px1642的拷问" class="headerlink" title="px1642的拷问"></a>px1642的拷问</h4><p>在和大哥提到题目的时候，被指着文章进行无情的鞭挞QAQ，由于做了挺久了，问了几个问题一个都回答不好，害。</p>
+<ol>
+<li>为什么如上payload中，iframe标签的name属性由<code>&lt;img src=x onerror=alert(1)&gt;</code>修改为<code>alert(1)</code>不可以弹框呢？</li>
+</ol>
+<p>其实题目的最终是将callback后面的参数值作为JS解析执行。修改了name，最终执行的JS就为：<code>$(&quot;alert(1)&quot;)</code></p>
+<p>在第二题中详细分析过JQuery的DOM XSS特性，是由于DOM操作插入标签引起的。但是当时一开始迷惑于，测试<code>$(alert(1))</code>是可以弹框的，那为什么通过name拆开了alert(1)就不可以弹框了呢，死活想不通。</p>
+<p>实际上<code>$(alert(1))</code>和<code>$(&quot;alert(1)&quot;)</code>完全不是一回事情，前者弹框是由于先进行表达式计算，后进入$()，才弹框的。后者这种形式本来就不能执行。</p>
+<ol start="2">
+<li>为什么如下payload，不可以弹框呢</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"px"</span> <span class="attr">name</span>=<span class="string">"javascript:alert(1)"</span> <span class="attr">src</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"px"</span>).src=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest6/user.php?callback=name"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其实这里就是把各种东西杂揉了进来，看起来好像很有道理，但是根本不沾边。</p>
+<p>回归题目最终是将callback后面的参数值作为JS解析执行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">name=<span class="string">"javascript:alert(1)"</span>;</span><br><span class="line">name;</span><br></pre></td></tr></table></figure>
+<p>只不过区区变量而已，当然不弹框。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg</a><br><a href="https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A</a><br><a href="https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw</a><br><a href="https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g</a><br><a href="https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g</a></p>
 
   </div>
@@ -632,7 +663,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一题"><span class="toc-number">2.</span> <span class="toc-text">第一题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二题"><span class="toc-number">3.</span> <span class="toc-text">第二题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#constructor的触发原理"><span class="toc-number">3.1.</span> <span class="toc-text">constructor的触发原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话：利用constructor构造弹框"><span class="toc-number">3.2.</span> <span class="toc-text">题外话：利用constructor构造弹框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三题"><span class="toc-number">4.</span> <span class="toc-text">第三题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注释"><span class="toc-number">4.1.</span> <span class="toc-text">使用注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用运算符（官方解法）"><span class="toc-number">4.2.</span> <span class="toc-text">使用运算符（官方解法）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四题"><span class="toc-number">5.</span> <span class="toc-text">第四题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注释进阶：使用模板字符串"><span class="toc-number">5.1.</span> <span class="toc-text">注释进阶：使用模板字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符进阶：更多的运算符"><span class="toc-number">5.2.</span> <span class="toc-text">运算符进阶：更多的运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第五题"><span class="toc-number">6.</span> <span class="toc-text">第五题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第六题"><span class="toc-number">7.</span> <span class="toc-text">第六题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正则-不匹配的字符到底有啥"><span class="toc-number">7.1.</span> <span class="toc-text">正则 . 不匹配的字符到底有啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test6作为触发器"><span class="toc-number">7.2.</span> <span class="toc-text">test6作为触发器-$()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iframe的window-name跨域传输"><span class="toc-number">7.2.1.</span> <span class="toc-text">iframe的window.name跨域传输</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一题"><span class="toc-number">2.</span> <span class="toc-text">第一题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第二题"><span class="toc-number">3.</span> <span class="toc-text">第二题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#constructor的触发原理"><span class="toc-number">3.1.</span> <span class="toc-text">constructor的触发原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#题外话：利用constructor构造弹框"><span class="toc-number">3.2.</span> <span class="toc-text">题外话：利用constructor构造弹框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第三题"><span class="toc-number">4.</span> <span class="toc-text">第三题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#使用注释"><span class="toc-number">4.1.</span> <span class="toc-text">使用注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用运算符（官方解法）"><span class="toc-number">4.2.</span> <span class="toc-text">使用运算符（官方解法）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第四题"><span class="toc-number">5.</span> <span class="toc-text">第四题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注释进阶：使用模板字符串"><span class="toc-number">5.1.</span> <span class="toc-text">注释进阶：使用模板字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运算符进阶：更多的运算符"><span class="toc-number">5.2.</span> <span class="toc-text">运算符进阶：更多的运算符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第五题"><span class="toc-number">6.</span> <span class="toc-text">第五题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第六题"><span class="toc-number">7.</span> <span class="toc-text">第六题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#正则-不匹配的字符到底有啥"><span class="toc-number">7.1.</span> <span class="toc-text">正则 . 不匹配的字符到底有啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test6作为触发器"><span class="toc-number">7.2.</span> <span class="toc-text">test6作为触发器-$()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#iframe的window-name跨域传输"><span class="toc-number">7.2.1.</span> <span class="toc-text">iframe的window.name跨域传输</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#px1642的拷问"><span class="toc-number">7.2.2.</span> <span class="toc-text">px1642的拷问</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">8.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">
