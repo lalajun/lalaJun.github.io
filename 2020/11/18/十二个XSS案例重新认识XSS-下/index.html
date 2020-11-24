@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k6字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
+    <meta name="description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k3字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
 <meta name="keywords" content="web,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="十二个XSS案例重新认识XSS-下">
 <meta property="og:url" content="http://lalajun.com/2020/11/18/十二个XSS案例重新认识XSS-下/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k6字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
+<meta property="og:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k3字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui8diry8j30qn06kt8y.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui8ir3a5j30sv07j3yr.jpg">
@@ -56,10 +56,10 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuiha9qhij30xp0s6ae5.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuih3retqj31h309kgm7.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuihgz8klj31hv09ejry.jpg">
-<meta property="og:updated_time" content="2020-11-23T08:48:09.620Z">
+<meta property="og:updated_time" content="2020-11-24T05:46:34.769Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二个XSS案例重新认识XSS-下">
-<meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k6字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
+<meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k3字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui8diry8j30qn06kt8y.jpg">
     
     
@@ -118,10 +118,8 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-上/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        
-        <li><a class="icon" href="/2020/06/28/windows下打造顺手的搬砖环境—PentestBox/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-上/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -193,7 +191,7 @@
 
   <div class="content" itemprop="articleBody">
     <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了）</p>
-<p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k6字)，知识点大概包括：</p>
+<p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k3字)，知识点大概包括：</p>
 <ul>
 <li>当在字符串过滤中使用<code>\</code>的绕过方式</li>
 <li><code>&lt;!-- &lt;script&gt;</code>可以突破<code>&lt;/script&gt;</code>标签的限制</li>
@@ -207,11 +205,12 @@
 <li>JS语言声明变量时<strong>变量提升</strong>的特性</li>
 <li>var的另一种赋值方式：<strong>解构赋值</strong></li>
 </ul>
-<p>对于以上列出知识点如果只有个别不清楚的，可以直接在各题知识点中找到它，然后看那一题就行了。但是后6题跟前6题有点不一样，前六题可能是你看了知识点，就会恍然大悟：“原来是这样！我会了！”，但是后六题可能就是看了知识点：“原来是这样！”，但是还是做不来。</p>
+<p>对于以上列出知识点如果只有个别不清楚的，可以直接在各题知识点中找到它，然后看那一题就行了。</p>
+<p>后6题跟前6题有点不一样，前六题可能是你看了知识点，就会恍然大悟：“原来是这样！我会了！”，但是后六题可能就是看了知识点：“原来是这样！”，但是还是做不来。</p>
 <blockquote>
 <p>此外还提出了第十题比已有解法更短的payload，以及官方WP暂未发布的第十一题、第十二题的WP。</p>
 </blockquote>
-<p>px1624的官方WP，写的很好。但是以菜鸡的角度去看题目总会讲述到一些默认被跳过的但是又有点东西的细节，也做了一点衍生。写文章一向往细了写，结合了看可能也会有所帮助吧？</p>
+<p>px1624的官方WP，写的很好。但是以菜鸡的角度去看题目总会讲述到一些默认被跳过的但是又有点东西的细节。写文章一向往细了写，结合了看可能也会有所帮助吧？</p>
 <p>有错误喷就完事了。</p>
 <blockquote>
 <p>感谢px1624老哥的案例分享，十一题十二题原作者renwax23的案例分享</p>
@@ -228,7 +227,7 @@
 </ul>
 <p>题目的尿性，提示px，肯定是输入px参数，也就直接加上啦，就会发现有两个回显点：script标签中一个，div标签中一个。</p>
 <p>老样子使用一个字符集去看看两个地方是怎么处理的：<code>123&quot;&#39;/\&lt;&gt;()&#39;%3b+%2b-*/%26|~^%25!%3f%3d%60%3b</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">var px=&apos;123px_xss\&apos;\/\\&lt;\&gt;()\&apos;\;  -*\/&amp;|~^%!?=`\;&apos;;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">give me xss by pass~7</span><br><span class="line">&lt;div style=&quot;display:none&quot;&gt;123&amp;quot;&apos;/\&amp;lt;&amp;gt;()&apos;; +-*/&amp;amp;|~^%!?=`;&lt;/div&gt;</span><br><span class="line">&lt;!--px--&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">&apos;px&apos;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> px=<span class="string">'123px_xss\'\/\\&lt;\&gt;()\'\;  -*\/&amp;|~^%!?=`\;'</span>;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">give me xss by pass~7</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display:none"</span>&gt;</span>123&amp;quot;'/\&amp;lt;&amp;gt;()'; +-*/&amp;amp;|~^%!?=`;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--px--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="string">'px'</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>第一处插入点，在script标签中：对于<code>&#39; / &lt; &gt; ;</code>做了<code>\</code>转义，使用转义可以防止<code>&#39;</code>作为符号解析闭合字符串</li>
 <li>第二处插入点，在div标签中：对于<code>&#39; &lt; &gt; &amp;</code>做了html转义，防止插入标签。</li>
@@ -236,10 +235,10 @@
 <p>看似挺好的防护，第二处<code>&lt; &gt;</code>被转义插入不了标签是完全没有机会的，直接掠过，看第一处插入点</p>
 <h3 id="字符串中的-转义绕过"><a href="#字符串中的-转义绕过" class="headerlink" title="字符串中的\转义绕过"></a>字符串中的<code>\</code>转义绕过</h3><p>如果我们简单的插入一个单引号确实是会被转义从而闭合无效：<code>var px=&#39;123\&#39;&#39;</code></p>
 <p>但是我们知道字符串中的<code>\</code>一个使用的使用是对后面的字符做转义处理，即作为字符串的一部分解析，同样我们想要在字符串中使用<code>\</code>符号的时候需要<code>\\</code>这样书写即为一个<code>\</code></p>
-<p>回顾转义列表，并没有对我们输入的<code>\</code>添加<code>\</code>进行转义，于是我们就可以输入一个<code>\</code>来反过来转义掉服务端添加的用于转义<code>&#39;</code>的<code>\</code> </p>
+<p>回顾转义列表，并没有对我们输入的<code>\</code>进行转义，于是我们就可以输入一个<code>\</code>来反过来转义掉服务端添加的用于转义<code>&#39;</code>的<code>\</code> </p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//http://px1624.sinaapp.com/test/xsstest7/?px=123\'</span></span><br><span class="line"><span class="comment">//第一个\用于转义服务端添加的\</span></span><br><span class="line"><span class="comment">//'作为结构进行闭合</span></span><br><span class="line"><span class="keyword">var</span> px=<span class="string">'123\\'</span><span class="string">'</span></span><br></pre></td></tr></table></figure>
 <p>于是完成闭合，接下来可以尝试拼接js，引入可以执行的js代码。</p>
-<h3 id="5种方法尝试闭合"><a href="#5种方法尝试闭合" class="headerlink" title="5种方法尝试闭合"></a>5种方法尝试闭合</h3><p>给出后面单引号的五条闭合思路：</p>
+<h3 id="5种方法尝试闭合"><a href="#5种方法尝试闭合" class="headerlink" title="5种方法尝试闭合"></a>5种方法尝试闭合</h3><p>根据已有知识，给出后面单引号的五条闭合思路：</p>
 <ol>
 <li>正儿八经闭合，构造正确的JS语法，<strong>可以尝试</strong></li>
 <li><code>//</code>：JS单行注释，注释掉后面需要闭合的东西，<strong>可以尝试</strong>。</li>
@@ -287,7 +286,7 @@
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui8sb55kj313n0oiabg.jpg" alt="7-弹框.png"></p>
 <p>但是直接访问，让谷歌浏览器解析，仍然无法跨越script标签，同时其他浏览器也不行。</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui8y3emyj30rh0gbjsb.jpg" alt="7-5-谷歌解析.png"></p>
-<p>看来模板字符串也被封死了，陷入僵局。</p>
+<p>看来模板字符串也被封死了，<strong>关键是无法突破<code>&lt;/script&gt;</code>标签</strong>，陷入僵局。</p>
 <h3 id="lt-–-标签突破script标签"><a href="#lt-–-标签突破script标签" class="headerlink" title="&lt;!– 标签突破script标签"></a>&lt;!– 标签突破script标签</h3><p>参考<a href="https://www.dazhuanlan.com/2019/10/25/5db1e6beea817/" target="_blank" rel="noopener">此篇文章</a>得知<code>&lt;!--</code>标签会改变script标签配对规则，即：在<code>&lt;!--</code>之后的<code>&lt;script&gt;</code>会优先匹配一个<code>&lt;/script&gt;</code></p>
 <p>我们可以引入一个script去闭合掉原生的<code>&lt;/script&gt;</code>，这样就可以突破script把后面也作为JS解析。</p>
 <p>但是这个特性在测试中，并不是那么万能，具有局限性。</p>
@@ -296,7 +295,7 @@
 <p>但是实际并不可以，会报错。</p>
 <p>我们先通过以下例子来证明在<code>&lt;!--</code>之后的<code>&lt;script&gt;</code>的确会抢先匹配，影响标签解析：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">  </span></span><br><span class="line"><span class="undefined">    alert(1);</span></span><br><span class="line"><span class="javascript">    &lt;!-- <span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"> <span class="comment">//删这行</span></span></span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span>(<span class="number">1</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>/)&#123;</span><br><span class="line">        alert(1)</span><br><span class="line">    &#125;</span><br><span class="line">    --&gt;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>单行的<code>&lt;!--</code>在JS中具有单行注释的作用，所以理论上第三行加了和没加应该是一样的，但是实际结果却不是</p>
+<p>单行的<code>&lt;!--</code>在JS中具有单行注释的作用，所以按照正常的理解，理论上第三行加了和没加应该是一样的，但是实际结果却不是</p>
 <ul>
 <li>不删第三行：会弹框1（说明JS正常执行）</li>
 <li>删第三行：之后的alert(1)会被当作html解析，即script标签结束了（说明script标签被<code>1&lt;/script&gt;/</code>这边的script标签提前闭合了）</li>
@@ -325,21 +324,21 @@
 <li>突破script标签后，这部分give me xss什么的会作为JS的一部分解析，我们需要引入一个<strong>跨行字符串或注释</strong>一类的包括住他们，确保其语法正确。（可以选用模板字符串或者<code>/* */</code>JS多行注释(之后测试由于环境，单独使用JS多行注释无法完成)）</li>
 <li>由于第一个script标签会跟最后一个script后标签闭合，<code>&lt;/div&gt;&lt;!--px</code>之后都会被认为是JS语句，还需要处理这边的JS语法错误问题。</li>
 </ul>
-<p>选择加入到前方字符串中，选择模板字符串，先暂时使用//注释掉明显不对劲的<code>&lt;/div&gt;</code>，给出一个初步的payload：</p>
+<p>选择加入到前方字符串中，选择模板字符串，先暂时使用<code>//</code>注释掉明显不对劲的<code>&lt;/div&gt;</code>，给出一个初步的payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test/xsstest7/?px=123%3C!--%3Cscript%3E\%27-alert(1)-`//</span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui9ap3tzj30u20d5wfe.jpg" alt="7-0-script标签绕过.png"></p>
-<p>会发现闭合失败了，<code>&lt;/script&gt;</code>还是没有被我们吃掉，因为<code>&lt;script&gt;</code>被转义成<code>&lt;script/&gt;</code></p>
+<p>会发现闭合失败了，<code>&lt;/script&gt;</code>还是没有被我们吃掉，因为<code>&lt;script&gt;</code>被转义成<code>&lt;script/&gt;</code>(前面的\不影响)</p>
 <p>实验，利用浏览器的特性，加个空格%20：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script\</span>&gt;</span>(解析失败)</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> \&gt;</span><span class="undefined">(解析成功)</span></span><br><span class="line"><span class="undefined">    alert(1)</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>成功弹框Writeup:</p>
+<p>前标签加个空格，也可以正常解析，成功弹框Writeup:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test/xsstest7/?px=123%3C!--%3Cscript%20%3E\%27-alert(1)-`//</span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui9l68dnj30w00950th.jpg" alt="7-0-成功.png"></p>
-<p>但是回想到刚才其实我们没有明确解决，我们只是想先简单暂时解决下<code>&lt;/div&gt;</code>但是后面的<code>&lt;script&gt;&#39;px&#39;</code>都没有处理为啥就可以成功了？这关乎到JS的换行</p>
-<p>JS其实也是一个比较随便的语言，他的换行会根据当前运算环境分析是要结束当前语句或者是延续下一行拼接，看一个例子：</p>
+<p>但是回想到刚才其实我们没有明确解决的后面尾巴的问题：我们只是想先简单暂时解决下<code>&lt;/div&gt;</code>，但是后面的<code>&lt;script&gt;&#39;px&#39;</code>都没有处理为啥就可以成功了？这关乎到<strong>JS的换行逻辑</strong></p>
+<p>JS其实也是一个比较随便的语言，他的<strong>换行会根据当前运算环境分析是要结束当前语句或者是延续下一行拼接</strong>，看一个例子：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> px=<span class="number">1</span> - <span class="number">0</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">// 4&gt;1</span></span></span><br><span class="line"><span class="xml">    <span class="tag">&lt;<span class="name">4</span>&gt;</span>1</span></span><br><span class="line"><span class="javascript">    &lt;<span class="string">'px'</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.log(px)</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>如果我们使用注释这一行，那么px的值为1，说明赋值语句已经结束了，之后的运算会作为一个新的运算语句解析；</li>
-<li>如果我们不使用注释的这行，结果就会为false，浏览器会把之后的运算认为和赋值语句是一个语句，从而进行比较运算。</li>
+<li>如果我们不注释第三行，那么px的值为1，说明赋值语句已经结束了，之后的运算会作为一个新的运算语句解析；</li>
+<li>如果我们注释的第三行，结果就会为false，浏览器会把之后的运算认为和赋值语句是一个语句，从而进行比较运算。</li>
 </ul>
 <p>我们把答案的环境简化再合成一行：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> px=<span class="string">'1'</span> - alert(<span class="number">2</span>) - <span class="string">`3`</span> &lt; <span class="number">4</span> &gt; <span class="string">'px'</span></span></span><br><span class="line"><span class="javascript"><span class="comment">//var px='1' - alert(2) - `3` &lt; a &gt; 'px'</span></span></span><br><span class="line"><span class="javascript"><span class="built_in">console</span>.log(px)</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -566,15 +565,16 @@
 <p>JS语法把里头的路径当作JS解析了，由于<code>/</code>开头，被当作正则表示式。在构造payload时，我们就需要同时考虑JS语法正确跟URL路径正确。</p>
 <p>根据前面几题的经验，这边就可以处理成<strong>一个正则表达式的表达式运算</strong>，添加一个<code>/</code>，然后再路由回来：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://px1624.sinaapp.com/test//xsstest11/alert(1)/../</span></span><br><span class="line">/test<span class="comment">//xsstest11/alert(1)/../</span></span><br><span class="line">一个正则表达式，除以xsstest11这个变量,除以alert方法，然后由于多了一个alert路径，添加../路由回来</span><br></pre></td></tr></table></figure>
-<p>但看这个思路的话会存在一个<strong>变量问题</strong>(xsstest11未赋值)，然后拉去浏览器一访问，会发现另一个更严重的问题：我们写入的<code>alert(1)/../</code>没了。</p>
+<p>但看这个思路的话会存在一个<strong>变量问题</strong>(xsstest11未赋值)，然后拉去浏览器一访问，会发现另一个更严重的问题：<strong>我们写入的<code>alert(1)/../</code>没了。</strong></p>
 <p>再抓包看，会发现我们的<code>alert(1)/../</code>直接被浏览器吃了，压根没出现在数据包里。我们首先要解决之后的payload不会被浏览器吃的问题，不然我们根本没法往后加东西。</p>
-<h3 id="2f突破浏览器作妖"><a href="#2f突破浏览器作妖" class="headerlink" title="%2f突破浏览器作妖"></a>%2f突破浏览器作妖</h3><p>根据浏览器不URL解码的特性，只需要把<code>/</code>编码成<code>%2f</code>即可绕过（第一次做的时候，直接这个地方就趴下死了）</p>
+<h3 id="2f突破浏览器作妖"><a href="#2f突破浏览器作妖" class="headerlink" title="%2f突破浏览器作妖"></a>%2f突破浏览器作妖</h3><p>根据浏览器不URL解码的特性，而服务器会把URL编码<code>%2f</code>解码为<code>/</code>的特性差来进行绕过。</p>
+<p>只需要把<code>/</code>编码成<code>%2f</code>即可绕过（第一次做的时候，直接这个地方就趴下死了）</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuifz3bhmj311p0ksdhi.jpg" alt="11-1.png"></p>
 <p>然后根据报错慢慢修改，这里<code>..%2f</code>语法报错了，注释掉，再修改payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test//xsstest11/alert(1)//..%2f..%2f</span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvrdwa1rsj31l509p74y.jpg" alt="12-2.png"></p>
 <p>来到了变量没定义这一关，看似死局，因为我们没法修改前面的路由</p>
-<p>…………?</p>
+<p>…………？？？？？？？</p>
 <p>好像完全可以修改前面的路由，然后注释后面的全部代码，利用<code>..%2f</code>再构造正常路由就可以了：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/1/;alert(11)//test/xsstest11/..%2f..%2f..%2f..%2f..%2f/test/xsstest11/</span><br></pre></td></tr></table></figure>
 <p>一个理应正确的payload，但是却返回400，经过测试，发现只要我们企图<code>../</code>到根目录就会报错，那么只需要把test提前到前面就可以了。</p>
@@ -582,7 +582,7 @@
 <p>再精简下，payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test/;alert(11)//..%2f..%2f/xsstest11/</span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuig70vnsj31h60bxgm5.jpg" alt="11-success.png"></p>
-<p>然后px1642大哥又帮我精简了一个%2f…..复制粘贴毁一生</p>
+<p>然后px1642大哥又帮我精简了一个%2f…..<code>..%2f</code>一路复制粘贴毁一生</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test/;alert(11)//..%2f../xsstest11/</span><br></pre></td></tr></table></figure>
 <h2 id="第十二题"><a href="#第十二题" class="headerlink" title="第十二题"></a>第十二题</h2><p>题目：<a href="http://px1624.sinaapp.com/test/xsstest12/" target="_blank" rel="noopener">http://px1624.sinaapp.com/test/xsstest12/</a></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>alert(12) to win<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">if</span>(<span class="regexp">/\/xsstest12\//</span>.test(location.pathname.substr(<span class="number">0</span>,<span class="number">17</span>)))&#123;</span></span><br><span class="line"><span class="javascript"><span class="built_in">eval</span>(location.pathname)</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -596,7 +596,7 @@
 <p>原本路由是16字节，现在要求17个字节，明显是让我们加入一个<code>/</code>来满足JS语法正确</p>
 <p>相当于又回到了十一题的我们一开始讨论的情况，就是前面不允许我们加东西，只允许在后面填充，并且要求满足JS语法。</p>
 <p>回到了解决<strong>xsstest12变量不存在</strong>的问题</p>
-<h3 id="变量提升特性"><a href="#变量提升特性" class="headerlink" title="变量提升特性"></a>变量提升特性</h3><p>通常而言我们知道，一个变量应该先声明，后使用，比如python：</p>
+<h3 id="变量提升特性"><a href="#变量提升特性" class="headerlink" title="变量提升特性"></a>变量提升特性</h3><p>通常而言我们知道，一个变量应该先声明，后使用，假如不这样就会被教做人，比如python：</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuigcebguj313a0fzjsm.jpg" alt="11-0.png"></p>
 <p>而JS却不是，参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Grammar_and_types#%E5%A3%B0%E6%98%8E" target="_blank" rel="noopener">说明</a>：</p>
 <blockquote>
@@ -618,13 +618,14 @@
 <p>尝试过在各个网站领域 去搜索这种赋值方式，但是没有收获，决定厚着脸皮去问下原题作者：</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuiha9qhij30xp0s6ae5.jpg" alt="12-1-0.png"></p>
 <p>emmm…..</p>
-<p>又跟px1642老哥交流了下QAQ，发现官方也有这种赋值方式的说明，叫做<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解构赋值</a>：</p>
+<p>又跟px1642老哥交流了下，发现官方其实有这种赋值方式的说明…………..叫做<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment" target="_blank" rel="noopener">解构赋值</a>：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数组</span></span><br><span class="line"><span class="keyword">var</span> a, b, rest;</span><br><span class="line">[a, b] = [<span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 20</span></span><br><span class="line"><span class="comment">//对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//甚至可以省略var</span></span><br><span class="line">(&#123; c, d &#125; = &#123; <span class="attr">c</span>: <span class="number">10</span>, <span class="attr">d</span>: <span class="number">20</span> &#125;);</span><br><span class="line"><span class="built_in">console</span>.log(c); <span class="comment">// 10</span></span><br><span class="line"><span class="built_in">console</span>.log(d); <span class="comment">// 20</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//然后我们省略这个空格,就形成了</span></span><br><span class="line"><span class="keyword">var</span>[a,b]=[<span class="number">1</span>,<span class="number">2</span>]</span><br><span class="line"><span class="comment">//命令行中可以这么无var赋值，但是测试无法正常变量提升</span></span><br><span class="line">([c,d]=[<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line">(&#123;e,f&#125;=&#123;<span class="attr">e</span>:<span class="number">5</span>,<span class="attr">f</span>:<span class="number">6</span>&#125;)</span><br></pre></td></tr></table></figure>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://px1624.sinaapp.com/test//xsstest12/alert(23);var[xsstest12]=[]//..%2f..%2f/</span></span><br><span class="line"></span><br><span class="line">location.pathname</span><br><span class="line"><span class="string">"/test//xsstest12/alert(23);var[xsstest12]=[]//..%2f..%2f/"</span></span><br><span class="line">location.pathname.length</span><br><span class="line"><span class="number">57</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuih3retqj31h309kgm7.jpg" alt="12-5.png"></p>
 <p>进一步缩短，虽然会运行报错，但是不影响</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://px1624.sinaapp.com/test//xsstest12/alert(23);var[xsstest12]=/..%2f/</span></span><br><span class="line"></span><br><span class="line">location.pathname</span><br><span class="line"><span class="string">"/test//xsstest12/alert(23);var[xsstest12]=/..%2f/"</span></span><br><span class="line">location.pathname.length</span><br><span class="line"><span class="number">49</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuihgz8klj31hv09ejry.jpg" alt="12-6.png"></p>
+<p>噢..好像是弹12…但是这不重要emmm</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg</a><br><a href="https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A</a><br><a href="https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw</a><br><a href="https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g</a><br><a href="https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g</a></p>
 
   </div>
