@@ -46,7 +46,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuifhsu9lj313f0bowfu.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuifmv1uyj31gl0bsjs1.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuifz3bhmj311p0ksdhi.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvrdwa1rsj31l509p74y.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gl3tb9weggj311u07pdg6.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuig70vnsj31h60bxgm5.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuigcebguj313a0fzjsm.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuigi2w9aj31kd0dvmyc.jpg">
@@ -56,7 +56,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuiha9qhij30xp0s6ae5.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuih3retqj31h309kgm7.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuihgz8klj31hv09ejry.jpg">
-<meta property="og:updated_time" content="2020-11-24T05:46:34.769Z">
+<meta property="og:updated_time" content="2020-11-27T09:17:52.092Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二个XSS案例重新认识XSS-下">
 <meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。（然后突然增加了2题变成了12题了） 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含7-12题(共9k3字)，知识点大概包括：  当在字符串过滤中使用\的绕过方式 &amp;lt;!-- &amp;lt;script&amp;gt;可以突破&amp;lt;/script&amp;gt;标签的限制 浏览器对">
@@ -118,8 +118,10 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-上/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-上/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="/2020/06/28/windows下打造顺手的搬砖环境—PentestBox/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -567,12 +569,28 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://px1624.sinaapp.com/test//xsstest11/alert(1)/../</span></span><br><span class="line">/test<span class="comment">//xsstest11/alert(1)/../</span></span><br><span class="line">一个正则表达式，除以xsstest11这个变量,除以alert方法，然后由于多了一个alert路径，添加../路由回来</span><br></pre></td></tr></table></figure>
 <p>但看这个思路的话会存在一个<strong>变量问题</strong>(xsstest11未赋值)，然后拉去浏览器一访问，会发现另一个更严重的问题：<strong>我们写入的<code>alert(1)/../</code>没了。</strong></p>
 <p>再抓包看，会发现我们的<code>alert(1)/../</code>直接被浏览器吃了，压根没出现在数据包里。我们首先要解决之后的payload不会被浏览器吃的问题，不然我们根本没法往后加东西。</p>
-<h3 id="2f突破浏览器作妖"><a href="#2f突破浏览器作妖" class="headerlink" title="%2f突破浏览器作妖"></a>%2f突破浏览器作妖</h3><p>根据浏览器不URL解码的特性，而服务器会把URL编码<code>%2f</code>解码为<code>/</code>的特性差来进行绕过。</p>
+<h3 id="2f突破浏览器作妖"><a href="#2f突破浏览器作妖" class="headerlink" title="%2f突破浏览器作妖"></a>%2f突破浏览器作妖</h3><p>根据<strong>浏览器不URL解码%2f</strong>，而<strong>NGINX服务器会把URL编码<code>%2f</code>解码为<code>/</code>的特性差</strong>来进行绕过。</p>
+<blockquote>
+<p>只有NGINX服务器会解码URL，IIS/APACHE服务器不会解码。<a href="http://blog.phpdr.net/nginx-auto-decode.html" target="_blank" rel="noopener">参考1</a>、<a href="https://stackoverflow.com/questions/8264239/nginx-unescapes-2f-to-a-forward-slash-how-can-i-stop-it" target="_blank" rel="noopener">参考2</a></p>
+</blockquote>
 <p>只需要把<code>/</code>编码成<code>%2f</code>即可绕过（第一次做的时候，直接这个地方就趴下死了）</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuifz3bhmj311p0ksdhi.jpg" alt="11-1.png"></p>
 <p>然后根据报错慢慢修改，这里<code>..%2f</code>语法报错了，注释掉，再修改payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://px1624.sinaapp.com/test//xsstest11/alert(1)//..%2f..%2f</span><br></pre></td></tr></table></figure>
-<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvrdwa1rsj31l509p74y.jpg" alt="12-2.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/006iKNp3ly1gl3tb9weggj311u07pdg6.jpg" alt="11-22.png"></p>
+<blockquote>
+<p>额外讨论 //和..%2f的问题：数一数url中的<code>//</code>和<code>..%2f</code></p>
+<p>我们会发现如果把<code>//</code>理解为我们理想中的<strong>原目录原地跳</strong>就会发现多了一个<code>..%2f</code>，什么地方不对劲。</p>
+<p>假设服务器把<code>//</code>理解成一个子目录，需要往上层跳，会发现也不对劲，2个<code>//</code>一个<code>/alert(1)/</code>一共是多了三个子目录，但是我们只有2个<code>..%2f</code></p>
+<p>测试：</p>
+<p><a href="http://px1624.sinaapp.com/test////xsstest11/alert(1)//..%2f..%2f" target="_blank" rel="noopener">http://px1624.sinaapp.com/test////xsstest11/alert(1)//..%2f..%2f</a> 可以正常访问</p>
+<p><a href="http://px1624.sinaapp.com/test////xsstest11/alert(1)///..%2f..%2f" target="_blank" rel="noopener">http://px1624.sinaapp.com/test////xsstest11/alert(1)///..%2f..%2f</a> 无法访问</p>
+<ul>
+<li>在明文路径（如/xsstest11/）左侧的<code>//</code>解释为原地跳</li>
+<li>在最后的明文路径（如/alert(1)）右侧的<code>//</code>理解为子目录，非常的神奇</li>
+</ul>
+<p>但是规律应该不是通用的。</p>
+</blockquote>
 <p>来到了变量没定义这一关，看似死局，因为我们没法修改前面的路由</p>
 <p>…………？？？？？？？</p>
 <p>好像完全可以修改前面的路由，然后注释后面的全部代码，利用<code>..%2f</code>再构造正常路由就可以了：</p>
@@ -626,7 +644,8 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://px1624.sinaapp.com/test//xsstest12/alert(23);var[xsstest12]=/..%2f/</span></span><br><span class="line"></span><br><span class="line">location.pathname</span><br><span class="line"><span class="string">"/test//xsstest12/alert(23);var[xsstest12]=/..%2f/"</span></span><br><span class="line">location.pathname.length</span><br><span class="line"><span class="number">49</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkuihgz8klj31hv09ejry.jpg" alt="12-6.png"></p>
 <p>噢..好像是弹12…但是这不重要emmm</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg</a><br><a href="https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A</a><br><a href="https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw</a><br><a href="https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g</a><br><a href="https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g</a></p>
+<p><a href="https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/MNP1PW0bi0aL7dRr1aa2Tg</a><br><a href="https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/T44dQckTjc0M1loRzTRH0A</a><br><a href="https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/jx-UWFfSPOVPhWLsvGxPcw</a><br><a href="https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Q976z2ryfkEJQiSyl8aH8g</a><br><a href="https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/Nxjn_SUAfrB-K5z6YdlW8g</a></p>
 
   </div>
 </article>

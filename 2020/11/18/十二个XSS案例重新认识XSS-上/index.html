@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （一定程度上） JQuery元素的text方法与html方法的区别 JQuery的DOM XSS特性 $(&amp;qu">
+    <meta name="description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
 <meta name="keywords" content="web,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="十二个XSS案例重新认识XSS-上">
 <meta property="og:url" content="http://lalajun.com/2020/11/18/十二个XSS案例重新认识XSS-上/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （一定程度上） JQuery元素的text方法与html方法的区别 JQuery的DOM XSS特性 $(&amp;qu">
+<meta property="og:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui4s4ripj32240y7dpp.jpg">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui78qkc6j31rt0loq74.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7c833dj31gv0ic0t0.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7i4tp4j31w00vrwma.jpg">
-<meta property="og:updated_time" content="2020-11-24T05:27:18.466Z">
+<meta property="og:updated_time" content="2020-11-27T09:17:50.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二个XSS案例重新认识XSS-上">
-<meta name="twitter:description" content="前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （一定程度上） JQuery元素的text方法与html方法的区别 JQuery的DOM XSS特性 $(&amp;qu">
+<meta name="twitter:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
     
     
@@ -87,10 +87,8 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-下/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
-        
-        <li><a class="icon" href="/2020/06/28/windows下打造顺手的搬砖环境—PentestBox/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" href="/2020/11/18/十二个XSS案例重新认识XSS-下/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -161,7 +159,10 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题)</p>
+    <blockquote>
+<p>首发于<a href="https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g</a></p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题)</p>
 <p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：</p>
 <ul>
 <li>JS中 a[b] 等同于 a.b （一定程度上）</li>
@@ -274,7 +275,7 @@
 <blockquote>
 <p><code>$(console.log(1))</code>、<code>$(alert(1))</code>等<strong>表达式传参进入</strong>都是可以正常执行的。但是执行不是因为DOM操作的执行</p>
 <p>之所以执行只是单纯先执行alert(1)表达式，其结果再进入$()进行逻辑处理，我们传入的值不符合其预期，但是没有语法错误也是不会报错的。</p>
-<p>但是$(“console.log(1)”)、$(“alert(1)”) 跟标签一样作为<strong>字符串传参传入</strong>，就不会弹框啦</p>
+<p>但是$(“console.log(1)”)、$(“alert(1)”) 跟前面的标签一样，都是作为<strong>字符串传参传入</strong>，就不会弹框啦</p>
 </blockquote>
 <p>大致上只有单个标签<code>src=x 加上onerror</code>事件，会执行里面的JS代码，其他均不渲染执行。（如果有老哥知道原理的 可以跟我交流下，非常感谢）</p>
 <blockquote>
@@ -355,7 +356,7 @@
 </ol>
 <p>直接上payload：<code>*/if(true){alert(1);var a=&#39;;/*&#39;;//</code></p>
 <p>拆解一下payload每一个部分的作用：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">*<span class="regexp">/</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/注释两个插入点中间的代码</span></span><br><span class="line"><span class="regexp">if(true)&#123;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/为了引入一个&#123;来对应之后的&#125;结构</span></span><br><span class="line"><span class="regexp">alert(1);</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/自主js随便写</span></span><br><span class="line"><span class="regexp">var a='</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/为了在反射点2把/</span>*关进字符串，引入一个变量</span><br><span class="line"><span class="comment">//同时'也是闭合反射点1的字符串</span></span><br><span class="line">;</span><br><span class="line"><span class="comment">//为了在反射点1的语法正确</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//注释反射点2后面的尾巴</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">*<span class="regexp">/</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/注释两个插入点中间的代码</span></span><br><span class="line"><span class="regexp">if(true)&#123;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/为了引入一个&#123;来对应之后的&#125;结构</span></span><br><span class="line"><span class="regexp">alert(1);</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/自主js随便写，这里就弹个框</span></span><br><span class="line"><span class="regexp">var a='</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/为了在反射点2把/</span>*关进字符串，引入一个变量</span><br><span class="line"><span class="comment">//同时'也是闭合反射点1的字符串</span></span><br><span class="line">;</span><br><span class="line"><span class="comment">//;为了在反射点1的语法正确</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">//对于反射点1来说直接开始注释</span></span><br><span class="line"><span class="comment">';</span></span><br><span class="line"><span class="comment">//对于反射点2来说这是一个字符串的结束，再加上;</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//注释反射点2后面的尾巴</span></span><br></pre></td></tr></table></figure>
 <p>最后页面如下：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Give me xss bypass 3~</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./jquery-3.4.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    $(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">		<span class="keyword">var</span> px = <span class="string">'*/if(true)&#123;alert(1);var a='</span>;<span class="comment">/*';//';</span></span></span><br><span class="line"><span class="javascript">		<span class="keyword">if</span> (px != <span class="string">""</span>) &#123;</span></span><br><span class="line"><span class="javascript">			$(<span class="string">'xss'</span>).val(<span class="string">'*/if(true)&#123;alert(1);var a='</span>;<span class="comment">/*';//');</span></span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="undefined">	&#125;)</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>当然也可以精简一下<code>var a=</code>这一部分payload：</p>
@@ -423,7 +424,7 @@
 <p><code>http://px1624.sinaapp.com/test/xsstest4/?px=%27;反引号;{$(alert(1),%27</code></p>
 <h3 id="运算符进阶：更多的运算符"><a href="#运算符进阶：更多的运算符" class="headerlink" title="运算符进阶：更多的运算符"></a>运算符进阶：更多的运算符</h3><p>之前分析看似不行的道路实际上都还有骚操作，深刻教训：<strong>查文档请查<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference" target="_blank" rel="noopener">开发者文档</a></strong></p>
 <p>除了我们知道的一些常见的运算符号，还有一些少用的运算符比如<code>in</code>、<code>instanceof</code>。</p>
-<p><code>&#39;&#39; in alert(1)</code>在漏洞构造的时候 虽然由于数据类型不正确，执行会不成功，但是语法是正确的，同时由于先执行alert(1)函数，然后再处理关系运行符的执行顺序，可以正确执行弹框语句。</p>
+<p><code>&#39;&#39; in alert(1)</code>构造payload。虽然会由于数据类型不正确，运行时执行错误（字符串 in 一个表达式），但是JS解析时语法是正确的。同时由于执行顺序是先执行alert(1)函数，然后再处理关系运行符的执行顺序，可以正确执行弹框语句。</p>
 <p><code>&#39;in alert(1) in&#39;</code>writeup：<code>http://px1624.sinaapp.com/test/xsstest4/?px=%27in%20alert(1)%20in%27</code></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   $(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> px = <span class="string">''</span><span class="keyword">in</span> alert(<span class="number">1</span>) <span class="keyword">in</span><span class="string">''</span>;</span><br><span class="line">	<span class="keyword">if</span> (px != <span class="string">""</span>) &#123;</span><br><span class="line">		$(<span class="string">'xss'</span>).val(<span class="string">''</span><span class="keyword">in</span> alert(<span class="number">1</span>) <span class="keyword">in</span><span class="string">''</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 <p>罗列个运算符标识符清单：</p>
@@ -450,7 +451,7 @@
 <p>先来看看我们传入的参数收到了怎么样的解析，XSS总是逃不过看关键JS的命运，这里不看之后就看不懂了：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Tjs_Get:<span class="function"><span class="keyword">function</span>(<span class="params">parmtname</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//在url地址中找到&amp;和#的位置</span></span><br><span class="line">    <span class="keyword">var</span> sl = location.href.indexOf(<span class="string">'&amp;'</span>);</span><br><span class="line">    <span class="keyword">var</span> hl = location.href.indexOf(<span class="string">'#'</span>);</span><br><span class="line">    <span class="keyword">var</span> str = <span class="string">''</span>;</span><br><span class="line">    <span class="comment">//没有&amp;参数分割字符并且有#锚点字符，或者&amp;字符在锚点#之后并且有#锚点字符</span></span><br><span class="line">    <span class="comment">//就开始解析#锚点之后的参数</span></span><br><span class="line">    <span class="keyword">if</span> ((sl &lt; <span class="number">0</span> || sl &gt; hl) &amp;&amp; hl &gt; <span class="number">0</span>) str = location.hash.substr(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//否则解析get参数</span></span><br><span class="line">    <span class="keyword">else</span> str = location.search.substr(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//waf1：过滤%，置换为空</span></span><br><span class="line">    str=str.replace(<span class="regexp">/%/g</span>,<span class="string">""</span>);</span><br><span class="line">    <span class="comment">//清空包括?之前的字符，做一个html编码，waf2</span></span><br><span class="line">    <span class="keyword">var</span> SERVER_TEMP			= $.Tjs_HtmlEncode(str.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)); <span class="comment">//HtmlEncode 进行安全验证</span></span><br><span class="line">    <span class="comment">//get参数按照&amp;分割，读取参数名跟我们输出的参数名比对</span></span><br><span class="line">    <span class="comment">//如果一样就获取值</span></span><br><span class="line">    <span class="keyword">var</span> PAGE_PARMT_ARRAY	= SERVER_TEMP.split(<span class="string">"&amp;amp;"</span>);</span><br><span class="line">    <span class="keyword">if</span>(PAGE_PARMT_ARRAY.length==<span class="number">0</span>) <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">var</span> value=<span class="string">""</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;PAGE_PARMT_ARRAY.length;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(PAGE_PARMT_ARRAY[i]==<span class="string">""</span>) <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">var</span> GETname = PAGE_PARMT_ARRAY[i].substr(<span class="number">0</span>,PAGE_PARMT_ARRAY[i].indexOf(<span class="string">"="</span>));</span><br><span class="line">        <span class="keyword">if</span>(GETname == parmtname)&#123;</span><br><span class="line">            value = PAGE_PARMT_ARRAY[i].substr((PAGE_PARMT_ARRAY[i].indexOf(<span class="string">"="</span>)+<span class="number">1</span>),PAGE_PARMT_ARRAY[i].length);</span><br><span class="line">            <span class="keyword">return</span> value;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <ol>
-<li>分情况解析<strong>?之后的参数</strong>或者是<strong>#之后的参数</strong></li>
+<li>分情况解析<strong>?之后的参数</strong>（location.search）或者是<strong>#之后的参数</strong>（location.hash）</li>
 <li><code>%</code>被过滤，替换为空</li>
 <li>包括<code>?</code>之前的字符会被清空不被解析（经过测试为贪婪匹配即最后一个?为准）</li>
 <li>假如出现两个相同的参数名的参数，根据实现逻辑会取第一个的值</li>
@@ -561,7 +562,7 @@
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui6319gwj31py09oq5d.jpg" alt="换行符字符集2.png"></p>
 <p>使用<code>&quot;123?\u2028456?&quot;.replace(/.*\?/,&quot;&quot;)</code>进行一个个测试：</p>
 <p>发现<code>\n、\r、\u2028、\u2029</code>可以拦截<code>.</code>的匹配（ps.空白字符串没有给到惊喜….）</p>
-<p>那么\r、\n不行，试试<strong>\u2028</strong>和<strong>\u2029</strong></p>
+<p>既然\r、\n不行，试试<strong>\u2028</strong>和<strong>\u2029</strong></p>
 <p>取IE为例（因为要是浏览器有问题一般肯定是IE有问题，Edge也可），地址栏中直接<code>http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)</code>理所应当还是会被作为字符串。</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui6bv6gzj321i0t2djw.jpg" alt="IE-地址栏-2028.png"></p>
 <p>控制台执行location呢：<code>location=&quot;http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)&quot;</code></p>
@@ -592,7 +593,7 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    location=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??uin=\u2028/../../test/xsstest5/user.php?callback=alert(1)"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>然后用Edge打开页面（模拟受害者访问攻击者服务器页面）就可以自动跳转触发。</p>
 <p>回到使用xsstest6的触发点：缩短弹框函数</p>
-<p>其实利用原理<strong>JQuery $() DOM XSS特性</strong>在第二题中已经详细的分析了，就是<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>可以作为alert(1)的弹框替代，但是这么长一串反而超长了。</p>
+<p>其实利用原理<strong>JQuery DOM XSS特性-$()</strong>在第二题中已经详细的分析了，就是<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>可以作为alert(1)的弹框替代，但是这么长一串反而超长了。</p>
 <p>我们只要把img标签设置成一个变量就可以达到缩短长度的目的。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span></span><br><span class="line">$(a)</span><br><span class="line"><span class="comment">//弹框</span></span><br></pre></td></tr></table></figure>
 <p>理想中是想构建一个payload如下：</p>
