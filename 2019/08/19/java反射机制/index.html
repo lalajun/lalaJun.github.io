@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7btt38lc2j314u0nk0tx.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7btt9pcpvj31lq0bqabr.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1g7bttfgc0dj31v20j40vy.jpg">
-<meta property="og:updated_time" content="2019-12-30T02:35:42.255Z">
+<meta property="og:updated_time" content="2020-11-30T08:45:24.377Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java反射机制">
 <meta name="twitter:description" content="java反射机制真正反序列化漏洞的利用，还需要了解java反射原理。因为java反序列化的payload大多与反射机制密切相关。 在Java中的反射机制是指在运行状态中，对于任意一个类都能够知道这个类所有的属性和方法；并且对于任意一个对象，都能够调用它的任意一个方法；这种动态获取信息以及动态调用对象方法的功能成为Java语言的反射机制。让java可以在运行时，根据传入的类名字符串，去执行这个类存在">
@@ -212,8 +212,11 @@
 <h4 id="invoke"><a href="#invoke" class="headerlink" title="invoke"></a>invoke</h4><p>invoke方法位于Method类下，其的作用是传入参数，执行方法，<br><code>public Object invoke(Object obj, Object... args)</code><br>它的第一个参数是执行method的对象：</p>
 <ul>
 <li>如果这个方法是一个普通方法，那么第一个参数是类对象 </li>
-<li>如果这个方法是一个静态方法，那么第一个参数是类（之后会提到，这里其实不用那么死板，这个）<br>它接下来的参数才是需要传入的参数。</li>
+<li>如果这个方法是一个静态方法，那么第一个参数是类（之后会提到，这里其实不用那么死板）<br>它接下来的参数才是需要传入的参数。</li>
 </ul>
+<blockquote>
+<p>2020.11.30更新：方法是静态方法时，invoke的第一个参数是任何值都可以，因为他会被忽略。因为在java中调用静态方法是不需要有类实例的，因为可以直接类名.方法名(参数)的方式调用。</p>
+</blockquote>
 <p>由于我们的exec函数是一个普通方法，需要传入类对象，即<code>invoke(类对象，exec方法传入的参数)</code><br>之前说到Runtime的类对象不能通过newInstance()来获取对象（class.newInstance等于new class）,是因为Runtime的类构造函数是一个private构造函数，只能通过getRuntime方法返回一个对象。<br>获取类对象：<code>Class.forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;getRuntime&quot;).invoke(Class.forName(&quot;java.lang.Runtime&quot;))</code> (由于getRuntime是一个静态方法，invoke传入Runtime类，进行调用)<br><code>invoke(Class.forName(&quot;java.lang.Runtime&quot;).getMethod(&quot;getRuntime&quot;).invoke(Class.forName(&quot;java.lang.Runtime&quot;))，&quot;calc.exe&quot;)</code></p>
 <p>那么合成以上的操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"exec"</span>, String.class).invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>).invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>))，<span class="string">"calc.exe"</span>)</span><br></pre></td></tr></table></figure></p>
 <p>亲测可弹框,再简化一下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Class clazz = Class.forName(<span class="string">"java.lang.Runtime"</span>); </span><br><span class="line">clazz.getMethod(<span class="string">"exec"</span>, String.class).invoke(clazz.getMethod(<span class="string">"getRuntime"</span>).invoke(clazz), <span class="string">"calc.exe"</span>);</span><br></pre></td></tr></table></figure></p>
@@ -266,7 +269,10 @@
 <p>指定obj：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以下语句执行结果等同于Class.forName("java.lang.Runtime").getMethod(getRunime)</span></span><br><span class="line">method1.invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>),<span class="string">"getRuntime"</span>,<span class="keyword">new</span> Class[<span class="number">0</span>]);</span><br><span class="line"><span class="comment">//用于对比：以下语句等同于Class.forName("java.lang.Class").getMethod(getRunime)</span></span><br><span class="line"><span class="comment">//method1.invoke(Class.forName("java.lang.Class"),"getRuntime",new Class[0]);</span></span><br></pre></td></tr></table></figure></p>
 <p>合起来就是<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 反射调用</span></span><br><span class="line">Class.forName(<span class="string">"java.lang.Runtime"</span>).getMethod(<span class="string">"getRuntime"</span>)</span><br><span class="line"><span class="comment">// 经过变形的反射调用</span></span><br><span class="line">Class.forName(<span class="string">"java.lang.Class"</span>)</span><br><span class="line">    .getMethod(<span class="string">"getMethod"</span>, <span class="keyword">new</span> Class[] &#123;String.class, Class[].class &#125;)<span class="comment">//得到getMethod方法</span></span><br><span class="line">    .invoke(Class.forName(<span class="string">"java.lang.Runtime"</span>),<span class="string">"getRuntime"</span>,<span class="keyword">new</span> Class[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure></p>
 <p>现在我们只是以<code>Class.forName(&quot;java.lang.Class&quot;)</code>开头获取到了Runtime类下的getRuntime方法。还没有执行。</p>
-<h3 id="invoke-静态方法的obj不那么严格"><a href="#invoke-静态方法的obj不那么严格" class="headerlink" title="invoke 静态方法的obj不那么严格"></a>invoke 静态方法的obj不那么严格</h3><p>在调用invoke执行前，还需要讲另一个invoke非常神奇的特性，不那么严格校验的obj。<br>回顾之前总结的invoke传参规则：</p>
+<h3 id="invoke-静态方法的obj不那么严格"><a href="#invoke-静态方法的obj不那么严格" class="headerlink" title="invoke 静态方法的obj不那么严格"></a>invoke 静态方法的obj不那么严格</h3><blockquote>
+<p>2020.11.30更新：方法是静态方法时，invoke的第一个参数是任何值都可以，因为他会被忽略。因为在java中调用静态方法是不需要有类实例的，因为可以直接类名.方法名(参数)的方式调用。<br>以下是自己摸索得出一个不确定发现结论的过程。</p>
+</blockquote>
+<p>在调用invoke执行前，还需要讲另一个invoke非常神奇的特性，不那么严格校验的obj。<br>回顾之前总结的invoke传参规则：</p>
 <blockquote>
 <p>它的第一个参数是执行method的对象obj：</p>
 <ul>

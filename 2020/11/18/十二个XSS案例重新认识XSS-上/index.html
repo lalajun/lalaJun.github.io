@@ -6,13 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
+    <meta name="description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[“b”] 等同于 a.b">
 <meta name="keywords" content="web,XSS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="十二个XSS案例重新认识XSS-上">
 <meta property="og:url" content="http://lalajun.com/2020/11/18/十二个XSS案例重新认识XSS-上/index.html">
 <meta property="og:site_name" content="啦啦菌NODE">
-<meta property="og:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
+<meta property="og:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[“b”] 等同于 a.b">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui4s4ripj32240y7dpp.jpg">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui78qkc6j31rt0loq74.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7c833dj31gv0ic0t0.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7i4tp4j31w00vrwma.jpg">
-<meta property="og:updated_time" content="2020-11-27T09:17:50.269Z">
+<meta property="og:updated_time" content="2020-12-11T09:29:36.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二个XSS案例重新认识XSS-上">
-<meta name="twitter:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[b] 等同于 a.b （">
+<meta name="twitter:description" content="首发于https://mp.weixin.qq.com/s/wa1dj-SX0WHhj7aywmq_9g  前言前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题) 觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：  JS中 a[“b”] 等同于 a.b">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/006iKNp3ly1gkvsxtoz2cj312u07g0t6.jpg">
     
     
@@ -165,7 +165,7 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前段时间看到了px1624的10题XSS案例，一直留着留着，终于拿出来看看了。还好网站没关。(现在已经变成了12题)</p>
 <p>觉得是一个JS基础不是很好的菜鸡补充了解一些JS基础和奇怪姿势的很好的案例，此文包含1-6题（共1w800字），知识点大概包括：</p>
 <ul>
-<li>JS中 a[b] 等同于 a.b （一定程度上）</li>
+<li>JS中 a[“b”] 等同于 a.b：JS属性访问器</li>
 <li>JQuery元素的text方法与html方法的区别</li>
 <li>JQuery的DOM XSS特性 <code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code> 可以弹框</li>
 <li>JS中constructor的原理</li>
@@ -218,7 +218,7 @@
 <li>window.location.search</li>
 <li>字符串操作：substring、split</li>
 <li>JQuery的DOM对象操作，html、append、after、before等</li>
-<li>a[b] 等同于 a.b （一定程度上）</li>
+<li>a[“b”] 等同于 a.b</li>
 <li>JQuery元素的text属性会解析html编码</li>
 </ul>
 <ol>
@@ -227,17 +227,21 @@
 <p>为URL中的参数部分（？开始的部分，包括？），GET参数。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">URL: <span class="string">"http://px1624.sinaapp.com/test/xsstest1/?a1&amp;b1"</span></span><br><span class="line"><span class="built_in">window</span>.location.search: <span class="string">"?a1&amp;b1"</span></span><br><span class="line"><span class="comment">//substring(1)从第一位开始截取到最后一位</span></span><br><span class="line"><span class="built_in">window</span>.location.search.substring(<span class="number">1</span>): <span class="string">"a1&amp;b1"</span> </span><br><span class="line"><span class="comment">//query.split("&amp;")根据&amp;分割成数组</span></span><br><span class="line">query.split(<span class="string">"&amp;"</span>): [<span class="string">"a1"</span>,<span class="string">"b1"</span>]</span><br></pre></td></tr></table></figure>
 <ol start="2">
-<li><strong>JQuery的DOM对象操作</strong>  与 <strong>a[b] 等同于 a.b</strong></li>
+<li><strong>JQuery的DOM对象操作</strong>  与 <strong>a[“b”] 等同于 a.b</strong></li>
 </ol>
 <p>取值a1,b1结束后，把值分别填入<code>$(&quot;#xx&quot;)[x]($(&quot;#xx&quot;)[y]());</code>的x和y中。</p>
 <p><code>$(&#39;#xx&#39;)</code> 就是JQuery语法里面的DOM元素选择器，等同于<code>document.getElementById(&#39;xx&#39;);</code>，这里选中了id=xx 的div标签。</p>
-<p><strong>利用a[b] 等同于 a.b的JS特性</strong>，来进行转换来看，（a1,b1为之前我们&amp;分割的两个字符串）：</p>
-<p><code>$(&quot;#xx&quot;)[a1]($(&quot;#xx&quot;)[b1]());</code>-&gt;<code>$(&quot;#xx&quot;).a1($(&quot;#xx&quot;).b1());</code></p>
+<p><strong>利用a[“b”] 等同于 a.b的JS特性</strong>，来进行转换来看，（a1,b1为之前我们&amp;分割的两个字符串）：</p>
+<p><code>$(&quot;#xx&quot;)[a1]($(&quot;#xx&quot;)[b1]());</code>-&gt;<code>$(&quot;#xx&quot;).a1变量的值($(&quot;#xx&quot;).b1变量的值());</code></p>
 <blockquote>
-<p>但是a[b]不完全等价于a.b，前者b可以是一个动态的输入的字符串，但是后者就不可以，比如：</p>
-<p>lala=”append”</p>
-<p><code>a[lala](123)</code> 调用成功</p>
-<p>a.lala(123) 调用失败</p>
+<p>经过px1624的鞭挞：对这个原理再剖析下，原来算是半懂，讲出来容易误导：(又在文档中找到了<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Property_Accessors" target="_blank" rel="noopener">官方描述-属性访问器</a>)</p>
+<p>首先抛开题目内容，我们建立一个对象a：<code>a={key:&quot;value&quot;}</code></p>
+<p>我们有两种方式去获取到这个value：<code>a.key</code>或者 <code>a[&quot;key&quot;]</code>（注意这里是个字符串）；这两者等价。</p>
+<p>然后我们再引入一个字符串 <code>str=&quot;key&quot;</code>；那么<code>a.key==a[&quot;key&quot;]==a[str]</code></p>
+<p>再回到题目：$(“#xx”)是一个对象（相当于上面的a）；a1是一个字符串 a1=”a1-value”</p>
+<p>那么通过上面的等式变通下：<code>$(&quot;#xx&quot;)[a1]==$[&quot;#xx&quot;][&quot;a1-value&quot;]==$[&quot;#xx&quot;].a1-value</code></p>
+<p>所以<code>$(&quot;#xx&quot;)[a1]</code>变换后写做<code>$(&quot;#xx&quot;).a1变量的值</code></p>
+<p>但是在日常表述中 a1=”123” 我们说a1 其实说的就是 ”123“，再此处进行细节说明之后，之后还是按照表述方便来。</p>
 </blockquote>
 <p>这边显而易见，我们可控输入<strong>a1</strong>、<strong>b1</strong>最后控制id为xx的DOM节点的<strong>方法</strong>。</p>
 <ol start="3">
@@ -279,7 +283,7 @@
 </blockquote>
 <p>大致上只有单个标签<code>src=x 加上onerror</code>事件，会执行里面的JS代码，其他均不渲染执行。（如果有老哥知道原理的 可以跟我交流下，非常感谢）</p>
 <blockquote>
-<p>这种这种执行规则被px1642老哥在WP种写作JQuery的DOM XSS，但是个人理解，这不算在漏洞范畴，而是特性范畴。</p>
+<p>这种这种执行规则被px1624老哥在WP种写作JQuery的DOM XSS，但是个人理解，这不算在漏洞范畴，而是特性范畴。</p>
 <p>最大的问题就是引入最新的3.5.1版本JQuery，在命令行中输入<code>$(&quot;&lt;img src=x onerror=alert(1)&gt;&quot;)</code>仍然会弹框。看以往JQuery 漏洞修复都是过滤器过滤location.hash这类外部数据输入点（会存在#，编码等情况），从而完成修复的。$()直接引入字符串变量的，应该不算是漏洞？？？</p>
 </blockquote>
 <p>至此就对两类触发原理进行了区分</p>
@@ -301,7 +305,7 @@
 <p>我们一路变形有啥意义么，通常而言，要替换弹框就是为了绕过关键词的检测，但是现在<code>alert(1)</code>关键词还在，完全就是花里胡哨。</p>
 <p>实际上现在”alert(1)”已经变为字符串了，针对<strong>字符串</strong>，可以使用<strong>16进制，8进制</strong>转码，我们用8进制转码：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">""</span>[<span class="string">"\163\165\142\163\164\162"</span>][<span class="string">"\143\157\156\163\164\162\165\143\164\157\162"</span>](<span class="string">"\141\154\145\162\164\50\61\51"</span>)()</span><br></pre></td></tr></table></figure>
-<p>弹框的变形替换就完成了，可以根据环境放入标签中，比如IMG标签中，针对<strong>JS代码</strong>还可以使用<strong>unicode编码</strong>：</p>
+<p>弹框的变形替换就完成了，可以根据环境放入标签中，比如IMG标签中，针对<strong>JS代码</strong>还可以使用<strong>HTML编码</strong>：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">x</span> <span class="attr">onerror</span>=<span class="string">"&amp;#34;&amp;#49;&amp;#34;&amp;#91;&amp;#34;&amp;#92;&amp;#49;&amp;#54;&amp;#51;&amp;#92;&amp;#49;&amp;#54;&amp;#53;&amp;#92;&amp;#49;&amp;#52;&amp;#50;&amp;#92;&amp;#49;&amp;#54;&amp;#51;&amp;#92;&amp;#49;&amp;#54;&amp;#52;&amp;#92;&amp;#49;&amp;#54;&amp;#50;&amp;#34;&amp;#93;&amp;#91;&amp;#34;&amp;#92;&amp;#49;&amp;#52;&amp;#51;&amp;#92;&amp;#49;&amp;#53;&amp;#55;&amp;#92;&amp;#49;&amp;#53;&amp;#54;&amp;#92;&amp;#49;&amp;#54;&amp;#51;&amp;#92;&amp;#49;&amp;#54;&amp;#52;&amp;#92;&amp;#49;&amp;#54;&amp;#50;&amp;#92;&amp;#49;&amp;#54;&amp;#53;&amp;#92;&amp;#49;&amp;#52;&amp;#51;&amp;#92;&amp;#49;&amp;#54;&amp;#52;&amp;#92;&amp;#49;&amp;#53;&amp;#55;&amp;#92;&amp;#49;&amp;#54;&amp;#50;&amp;#34;&amp;#93;&amp;#40;&amp;#34;&amp;#92;&amp;#49;&amp;#52;&amp;#49;&amp;#92;&amp;#49;&amp;#53;&amp;#52;&amp;#92;&amp;#49;&amp;#52;&amp;#53;&amp;#92;&amp;#49;&amp;#54;&amp;#50;&amp;#92;&amp;#49;&amp;#54;&amp;#52;&amp;#92;&amp;#53;&amp;#48;&amp;#92;&amp;#54;&amp;#49;&amp;#92;&amp;#53;&amp;#49;&amp;#34;&amp;#41;&amp;#40;&amp;#41;"</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>完事</p>
 <h2 id="第三题"><a href="#第三题" class="headerlink" title="第三题"></a>第三题</h2><p>题目：<a href="http://px1624.sinaapp.com/test/xsstest3/" target="_blank" rel="noopener">http://px1624.sinaapp.com/test/xsstest3/</a></p>
@@ -422,6 +426,7 @@
 <p><code>http://px1624.sinaapp.com/test/xsstest4/?px=%27;反引号;{alert(%27</code>（13个字符gainover解法）</p>
 <p>由于当前有JQuery环境，还可以利用之前提到的<code>$(alert(1))</code>来弹框，writeup2：</p>
 <p><code>http://px1624.sinaapp.com/test/xsstest4/?px=%27;反引号;{$(alert(1),%27</code></p>
+<p>直接括号也可：<code>http://px1624.sinaapp.com/test/xsstest4/?px=%27;反引号;{(alert(1),%27</code></p>
 <h3 id="运算符进阶：更多的运算符"><a href="#运算符进阶：更多的运算符" class="headerlink" title="运算符进阶：更多的运算符"></a>运算符进阶：更多的运算符</h3><p>之前分析看似不行的道路实际上都还有骚操作，深刻教训：<strong>查文档请查<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference" target="_blank" rel="noopener">开发者文档</a></strong></p>
 <p>除了我们知道的一些常见的运算符号，还有一些少用的运算符比如<code>in</code>、<code>instanceof</code>。</p>
 <p><code>&#39;&#39; in alert(1)</code>构造payload。虽然会由于数据类型不正确，运行时执行错误（字符串 in 一个表达式），但是JS解析时语法是正确的。同时由于执行顺序是先执行alert(1)函数，然后再处理关系运行符的执行顺序，可以正确执行弹框语句。</p>
@@ -521,8 +526,8 @@
 <p>先给出两种不考虑waf情况的理论poc（js中的参数形式与锚点形式）：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">参数形式：<span class="string">"http://px1624.sinaapp.com/test/xsstest6/?uin=../test/xsstest5/user.php?callback=alert(1)"</span></span><br><span class="line"><span class="comment">//在js处理中会取location.search.substr(1),即：</span></span><br><span class="line">uin=../test/xsstest5/user.php?callback=alert(<span class="number">1</span>)</span><br><span class="line">锚点形式：<span class="string">"http://px1624.sinaapp.com/test/xsstest6/#uin=../test/xsstest5/user.php?callback=alert(1)"</span></span><br><span class="line"><span class="comment">//在js处理中会取location.hash.substr(1),即：</span></span><br><span class="line">uin=../test/xsstest5/user.php?callback=alert(<span class="number">1</span>)</span><br><span class="line"><span class="comment">//script标签的引入地址都是：</span></span><br><span class="line"><span class="string">"http://px1624.sinaapp.com/pxpath/../test/xsstest5/user.php?callback=alert(1)"</span></span><br></pre></td></tr></table></figure>
 <p>可以抽象进入<code>str.replace(/.*\?/,&quot;&quot;)</code>的str目前为<code>123?456</code>的格式，并且这个<code>123?456</code>是不能被删掉的全都要的数据。</p>
-<p>我们知道常见的换行符有<code>/r、/n</code>，我们来到到谷歌浏览器命令行试验一下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"123?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"456" (匹配到了"123?")</span></span><br><span class="line"><span class="string">"123\r?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"123456" (匹配到了"?",123\456中间有一个看不见的/r)</span></span><br><span class="line"><span class="comment">//可以发现利用换行符的确可以截断</span></span><br><span class="line"><span class="comment">//由于我们是要一个?的，但是肯定会被匹配死掉一个，需要引入一个替死鬼</span></span><br><span class="line"><span class="string">"?123\r?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"123?456" (匹配到了第一个"?"，中间有一个看不见的/r)</span></span><br><span class="line"><span class="comment">//这里涉及到为哈不匹配第二个"?"呢，因为他们都满足条件正则条件</span></span><br><span class="line"><span class="comment">//这种情况在JS中就会匹配第一个符合条件的。</span></span><br></pre></td></tr></table></figure>
+<p>我们知道常见的换行符有<code>\r、\n</code>，我们来到到谷歌浏览器命令行试验一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"123?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"456" (匹配到了"123?")</span></span><br><span class="line"><span class="string">"123\r?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"123456" (匹配到了"?",123\456中间有一个看不见的\r)</span></span><br><span class="line"><span class="comment">//可以发现利用换行符的确可以截断</span></span><br><span class="line"><span class="comment">//由于我们是要一个?的，但是肯定会被匹配死掉一个，需要引入一个替死鬼</span></span><br><span class="line"><span class="string">"?123\r?456"</span>.replace(<span class="regexp">/.*\?/</span>,<span class="string">""</span>)</span><br><span class="line"><span class="comment">//"123?456" (匹配到了第一个"?"，中间有一个看不见的\r)</span></span><br><span class="line"><span class="comment">//这里涉及到为哈不匹配第二个"?"呢，因为他们都满足条件正则条件</span></span><br><span class="line"><span class="comment">//这种情况在JS中就会匹配第一个符合条件的。</span></span><br></pre></td></tr></table></figure>
 <p>来带入到具体数据：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uin=../test/xsstest5/user.php?callback=alert(<span class="number">1</span>)</span><br><span class="line"><span class="comment">//加上我们说的开头的替死鬼?</span></span><br><span class="line">?uin=../test/xsstest5/user.php?callback=alert(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>再来确定换行符应该放的位置，我们会发现好像不是能够随便放置的：</p>
@@ -568,8 +573,8 @@
 <p>控制台执行location呢：<code>location=&quot;http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest5/user.php?callback=alert(1)&quot;</code></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui78qkc6j31rt0loq74.jpg" alt="IE-location-2028.png"></p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7c833dj31gv0ic0t0.jpg" alt="IE-location-2028-success.png"></p>
-<p>完美解析弹框。我们的/u2028被解析成了一个字符传入。</p>
-<p>来看看其他浏览器，比如火狐，我们的/u2028会被解析成URL形式，然后被WAF1干掉%，谷歌也是一样的，GG：</p>
+<p>完美解析弹框。我们的\u2028被解析成了一个字符传入。</p>
+<p>来看看其他浏览器，比如火狐，我们的\u2028会被解析成URL形式，然后被WAF1干掉%，谷歌也是一样的，GG：</p>
 <p><img src="http://ww1.sinaimg.cn/large/006iKNp3gy1gkui7i4tp4j31w00vrwma.jpg" alt="火狐-false-2028.png"></p>
 <p>此外，这边之前说到的<strong>当作子目录形式</strong>的payload也是可以的：</p>
 <p><code>location=&quot;http://px1624.sinaapp.com/test/xsstest6/??uin=\u2028/../../test/xsstest5/user.php?callback=alert(1)&quot;</code></p>
@@ -636,7 +641,7 @@
 <p>当然在callback值中由于长度问题，不能使用<code>$(window.name)</code>，使用<code>$(name)</code>长度刚好，writeup：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"lala"</span> <span class="attr">name</span>=<span class="string">"&lt;img src=x onerror=alert(1)&gt;"</span> <span class="attr">src</span>=<span class="string">""</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"lala"</span>).src=<span class="string">"http://px1624.sinaapp.com/test/xsstest6/??\u2028&amp;uin=../test/xsstest6/user.php?callback=$(name)"</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>使用Edge、或者IE打开均可。</p>
-<h4 id="拷问"><a href="#拷问" class="headerlink" title="拷问"></a>拷问</h4><p>在和px1642大哥提到题目的时候，被指着文章进行无情的鞭挞QAQ，由于做了挺久了，问了几个问题一个都回答不好，害。</p>
+<h4 id="拷问"><a href="#拷问" class="headerlink" title="拷问"></a>拷问</h4><p>在和px1624大哥提到题目的时候，被指着文章进行无情的鞭挞QAQ，由于做了挺久了，问了几个问题一个都回答不好，害。</p>
 <ol>
 <li><strong>为什么如上payload中，iframe标签的name属性由<code>&lt;img src=x onerror=alert(1)&gt;</code>修改为<code>alert(1)</code>不可以弹框呢？</strong></li>
 </ol>
